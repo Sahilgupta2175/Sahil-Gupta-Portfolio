@@ -102,14 +102,14 @@ const ProjectsSection = () => {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   {project.liveUrl && (
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
                       <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                         Live Demo
                         <ExternalLink className="w-4 h-4 ml-2" />
                       </a>
                     </Button>
                   )}
-                  <Button asChild variant="outline">
+                  <Button asChild variant="outline" className="w-full sm:w-auto">
                     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                       View Code
                       <Github className="w-4 h-4 ml-2" />

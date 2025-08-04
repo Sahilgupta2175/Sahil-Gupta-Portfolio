@@ -16,7 +16,7 @@ const AboutSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
               <div className="space-y-4 text-gray-600 dark:text-gray-300">

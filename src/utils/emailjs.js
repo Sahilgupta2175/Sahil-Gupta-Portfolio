@@ -32,6 +32,15 @@ export const sendEmail = async (formData) => {
       message: formData.message,
       to_name: 'Sahil Gupta', // Your name
       reply_to: formData.email,
+      current_time: new Date().toLocaleString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }),
     };
 
     const result = await emailjs.send(
@@ -87,6 +96,15 @@ export const sendAutoReply = async (formData) => {
       user_message: formData.message,
       from_name: 'Sahil Gupta',
       reply_to: 'guptasahil2175@gmail.com',
+      current_time: new Date().toLocaleString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }),
     };
 
     const result = await emailjs.send(

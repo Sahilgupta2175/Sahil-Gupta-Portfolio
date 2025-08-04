@@ -24,6 +24,9 @@ const ContactSection = () => {
       message: formData.get("message"),
     };
 
+    // Debug: Log form values to console
+    console.log('Form Values being sent:', formValues);
+
     try {
       // Validate EmailJS configuration
       if (!validateEmailConfig()) {

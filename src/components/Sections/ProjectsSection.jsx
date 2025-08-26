@@ -30,6 +30,7 @@ const ProjectsSection = () => {
         "Automated email notifications accelerating file retrieval by 75%",
         "Frontend optimizations reducing average file access time by 40%",
       ],
+      liveUrl: "https://inshare-sg.vercel.app/",
       githubUrl: "https://github.com/Sahilgupta2175/InShare-Application-Project",
       period: "Mar - Apr 2025",
     },

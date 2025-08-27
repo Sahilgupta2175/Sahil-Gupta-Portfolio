@@ -5,6 +5,32 @@ import { Button } from "../ui/button";
 const ProjectsSection = () => {
   const projects = [
     {
+      title: "Zerodha - Stock Trading Platform",
+      description:
+        "Full-stack stock trading platform replicating Zerodha's functionality with real-time portfolio management, order execution, and user authentication. Features comprehensive dashboard for tracking holdings, positions, and market data with seamless buy/sell operations.",
+      technologies: [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Mongoose",
+        "JWT Authentication",
+        "Axios",
+        "CSS3",
+        "Vite",
+        "RESTful APIs",
+      ],
+      features: [
+        "Secure user authentication system with JWT tokens and cookie-based sessions, supporting 100% secure login/logout functionality across multiple browser sessions",
+        "Real-time portfolio management dashboard tracking 13+ holdings with live P&L calculations, displaying ₹31.43k current value and +5.20% profit metrics",
+        "Interactive trading interface enabling seamless buy/sell order execution with instant portfolio updates and margin calculations (₹3.74k available margin)",
+        "Comprehensive RESTful API architecture with 8+ endpoints handling user data, orders, holdings, and positions with <2s response time and proper error handling",
+      ],
+      liveUrl: "https://zerodha-sg.vercel.app", 
+      githubUrl: "https://github.com/Sahilgupta2175/Zerodha-project",
+      period: "Jul - Aug 2025",
+    },
+    {
       title: "Wanderlust",
       description:
         "A comprehensive accommodation booking platform that connects travelers with unique stays. Features complete user authentication, property listings, and advanced search capabilities.",
@@ -44,34 +70,8 @@ const ProjectsSection = () => {
       ],
       liveUrl: "https://inshare-sg.vercel.app/",
       githubUrl:
-        "https://github.com/Sahilgupta2175/InShare-Application-Project",
+        "https://github.com/Sahilgupta2175/inshare-project",
       period: "Mar - Apr 2025",
-    },
-    {
-      title: "Zerodha - Stock Trading Platform",
-      description:
-        "Full-stack stock trading platform replicating Zerodha's functionality with real-time portfolio management, order execution, and user authentication. Features comprehensive dashboard for tracking holdings, positions, and market data with seamless buy/sell operations.",
-      technologies: [
-        "React.js",
-        "Node.js",
-        "Express.js",
-        "MongoDB",
-        "Mongoose",
-        "JWT Authentication",
-        "Axios",
-        "CSS3",
-        "Vite",
-        "RESTful APIs",
-      ],
-      features: [
-        "Secure user authentication system with JWT tokens and cookie-based sessions, supporting 100% secure login/logout functionality across multiple browser sessions",
-        "Real-time portfolio management dashboard tracking 13+ holdings with live P&L calculations, displaying ₹31.43k current value and +5.20% profit metrics",
-        "Interactive trading interface enabling seamless buy/sell order execution with instant portfolio updates and margin calculations (₹3.74k available margin)",
-        "Comprehensive RESTful API architecture with 8+ endpoints handling user data, orders, holdings, and positions with <2s response time and proper error handling",
-      ],
-      liveUrl: "https://zerodha-sg.vercel.app", 
-      githubUrl: "https://github.com/Sahilgupta2175/Zerodha-project",
-      period: "Jul - Aug 2025",
     },
     {
       title: "Netflix UI Clone",

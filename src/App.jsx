@@ -10,6 +10,7 @@ import Footer from "./components/Layout/Footer";
 // Section Components
 import HeroSection from "./components/Sections/HeroSection";
 import AboutSection from "./components/Sections/AboutSection";
+import EducationSection from "./components/Sections/EducationSection";
 import SkillsSection from "./components/Sections/SkillsSection";
 import ProjectsSection from "./components/Sections/ProjectsSection";
 import ExperienceSection from "./components/Sections/ExperienceSection";
@@ -38,6 +39,7 @@ export default function App() {
 
       <HeroSection scrollToSection={scrollToSection} />
       <AboutSection />
+      <EducationSection />
       <SkillsSection />
       <ProjectsSection />
       <ExperienceSection />

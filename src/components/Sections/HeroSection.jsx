@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, Linkedin, Github, ChevronDown } from "lucide-react";
+import { Mail, Linkedin, Github, ChevronDown, Download, Eye } from "lucide-react";
 import { Button } from "../ui/button";
 
 const HeroSection = ({ scrollToSection }) => {
@@ -34,15 +34,48 @@ const HeroSection = ({ scrollToSection }) => {
               <Button
                 size="lg"
                 onClick={() => scrollToSection("projects")}
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white w-full sm:w-auto transition-all duration-300"
               >
                 View My Work
                 <ChevronDown className="w-4 h-4 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="w-full sm:w-auto">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={() => scrollToSection("contact")} 
+                className="w-full sm:w-auto border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+              >
                 Get In Touch
                 <Mail className="w-4 h-4 ml-2" />
               </Button>
+              <div className="relative group">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white w-full sm:w-auto transition-all duration-300"
+                  asChild
+                >
+                  <a 
+                    href="/resume/Sahil Gupta Resume.pdf" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Resume
+                  </a>
+                </Button>
+
+                <div className="absolute top-full left-0 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                  <a 
+                    href="/resume/Sahil Gupta Resume.pdf" 
+                    download="Sahil_Gupta_Resume.pdf"
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 whitespace-nowrap"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download
+                  </a>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 pt-8">

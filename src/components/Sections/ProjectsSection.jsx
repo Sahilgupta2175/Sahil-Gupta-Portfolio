@@ -49,7 +49,7 @@ const ProjectsSection = () => {
       ],
       liveUrl: "https://wanderlust-nlnm.onrender.com/",
       githubUrl: "https://github.com/Sahilgupta2175/Wanderlust",
-      period: "May - July 2025",
+      period: "May - Jul 2025",
     },
     {
       title: "InShare Application",

@@ -26,7 +26,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 overflow-x-hidden">
       <Navigation
         isDark={isDark}
         toggleTheme={toggleTheme}

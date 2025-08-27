@@ -2,8 +2,8 @@ import React from "react";
 
 const EducationSection = () => {
     return (
-        <section id="education" className="py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="education" className="py-20 w-full">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center space-x-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
                         <span>📚 Education</span>

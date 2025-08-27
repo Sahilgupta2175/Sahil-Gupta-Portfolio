@@ -4,8 +4,8 @@ import { Button } from "../ui/button";
 
 const HeroSection = ({ scrollToSection }) => {
   return (
-    <section id="home" className="pt-16 sm:pt-20 min-h-screen flex items-center">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <section id="home" className="pt-16 sm:pt-20 min-h-screen flex items-center w-full">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="inline-flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium">

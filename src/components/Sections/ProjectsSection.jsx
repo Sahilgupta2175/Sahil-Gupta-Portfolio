@@ -111,105 +111,112 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" className="py-20 w-full">
+    <section id="projects" className="py-12 sm:py-16 lg:py-20 w-full">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="inline-flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             <span>🚀 Featured Work</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 px-2">
             Projects That Showcase My Skills
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
             A collection of projects that demonstrate my ability to build
             scalable, user-friendly applications using modern web technologies.
           </p>
         </div>
 
-        <div className="space-y-8">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-2xl transition-all duration-300"
-            >
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                  <h3 className="text-2xl font-bold mb-2 sm:mb-0">
-                    {project.title}
-                  </h3>
-                  <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
-                    {project.period}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span
-                      key={techIndex}
-                      className="px-3 py-1 bg-white/20 rounded-lg text-sm font-medium"
-                    >
-                      {tech}
+        <div className="space-y-6 sm:space-y-8">
+          {projects.map((project, index) => {
+            // Determine if this is a compact project (fewer features or shorter description)
+            const isCompact = project.features.length <= 4 || project.description.length < 200;
+            
+            return (
+              <div
+                key={index}
+                className={`bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-xl sm:hover:shadow-2xl transition-all duration-300 ${
+                  isCompact ? 'max-w-4xl mx-auto' : ''
+                }`}
+              >
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-6 text-white">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-0 leading-tight">
+                      {project.title}
+                    </h3>
+                    <span className="text-xs sm:text-sm bg-white/20 px-2 py-1 sm:px-3 sm:py-1 rounded-full flex-shrink-0 w-fit">
+                      {project.period}
                     </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-6">
-                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  {project.description}
-                </p>
-
-                <div className="mb-6">
-                  <ul className="space-y-2">
-                    {project.features.map((feature, featureIndex) => (
-                      <li
-                        key={featureIndex}
-                        className="flex items-start space-x-3"
+                  </div>
+                  <div className={`flex flex-wrap gap-1.5 sm:gap-2 ${isCompact ? 'max-w-none' : ''}`}>
+                    {project.technologies.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-2 py-0.5 sm:px-3 sm:py-1 bg-white/20 rounded-md sm:rounded-lg text-xs sm:text-sm font-medium"
                       >
-                        <div className="w-5 h-5 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <div className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"></div>
-                        </div>
-                        <span className="text-gray-600 dark:text-gray-300 text-sm">
-                          {feature}
-                        </span>
-                      </li>
+                        {tech}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {project.liveUrl && (
+                <div className={`p-4 sm:p-6 ${isCompact ? 'space-y-4' : ''}`}>
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  <div className="mb-4 sm:mb-6">
+                    <ul className={`space-y-2 sm:space-y-3 ${isCompact ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3' : ''}`}>
+                      {project.features.map((feature, featureIndex) => (
+                        <li
+                          key={featureIndex}
+                          className="flex items-start space-x-3"
+                        >
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-600 dark:bg-green-400 rounded-full"></div>
+                          </div>
+                          <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {project.liveUrl && (
+                      <Button
+                        asChild
+                        className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto text-sm sm:text-base py-2 sm:py-2.5 px-4 sm:px-6"
+                      >
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Live Demo
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+                        </a>
+                      </Button>
+                    )}
                     <Button
                       asChild
-                      className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                      variant="outline"
+                      className="w-full sm:w-auto text-sm sm:text-base py-2 sm:py-2.5 px-4 sm:px-6"
                     >
                       <a
-                        href={project.liveUrl}
+                        href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Live Demo
-                        <ExternalLink className="w-4 h-4 ml-2" />
+                        View Code
+                        <Github className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
                       </a>
                     </Button>
-                  )}
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                  >
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Code
-                      <Github className="w-4 h-4 ml-2" />
-                    </a>
-                  </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

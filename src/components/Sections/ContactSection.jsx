@@ -69,77 +69,77 @@ const ContactSection = () => {
   }, [submitStatus]);
 
   return (
-    <section id="contact" className="py-20 w-full">
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 w-full">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-pink-50 dark:bg-pink-900/20 text-pink-700 dark:text-pink-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="inline-flex items-center space-x-2 bg-pink-50 dark:bg-pink-900/20 text-pink-700 dark:text-pink-400 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             <span>📬 Get In Touch</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Let's Build Something Amazing Together</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 px-2">Let's Build Something Amazing Together</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
             Whether you have a project in mind, want to collaborate, or just want to say hello, I'd love to hear from
             you.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-4 rounded-lg">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white">
-                  <Mail className="w-5 h-5" />
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Contact Information</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-lg">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <h4 className="font-semibold">Email</h4>
-                  <p className="text-gray-600 dark:text-gray-400">guptasahil2175@gmail.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-4 p-4 rounded-lg">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-600 to-blue-600 rounded-lg flex items-center justify-center text-white">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-semibold">Phone</h4>
-                  <p className="text-gray-600 dark:text-gray-400">+91 9956564108</p>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-sm sm:text-base">Email</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm break-all">guptasahil2175@gmail.com</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4 p-4 rounded-lg">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center text-white">
-                  <MapPin className="w-5 h-5" />
+              <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-lg">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-600 to-blue-600 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <h4 className="font-semibold">Location</h4>
-                  <p className="text-gray-600 dark:text-gray-400">Orai, Uttar Pradesh, India</p>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-sm sm:text-base">Phone</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">+91 9956564108</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 rounded-lg">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-sm sm:text-base">Location</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Orai, Uttar Pradesh, India</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
-            <h3 className="text-2xl font-bold mb-6">Send me a message</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Send me a message</h3>
 
             {submitStatus.type && (
               <div
-                className={`mb-6 p-4 rounded-lg flex items-center space-x-3 ${
+                className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg flex items-start space-x-3 ${
                   submitStatus.type === "success"
                     ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
                     : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800"
                 }`}
               >
                 {submitStatus.type === "success" ? (
-                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
                 )}
-                <p className="text-sm">{submitStatus.message}</p>
+                <p className="text-xs sm:text-sm leading-relaxed">{submitStatus.message}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Name *
@@ -150,7 +150,7 @@ const ContactSection = () => {
                     name="name"
                     required
                     disabled={isSubmitting}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                   />
                 </div>
                 <div>
@@ -163,7 +163,7 @@ const ContactSection = () => {
                     name="email"
                     required
                     disabled={isSubmitting}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -177,7 +177,7 @@ const ContactSection = () => {
                   name="subject"
                   required
                   disabled={isSubmitting}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 />
               </div>
               <div>
@@ -187,17 +187,17 @@ const ContactSection = () => {
                 <textarea
                   id="message"
                   name="message"
-                  rows={5}
+                  rows={4}
                   required
                   disabled={isSubmitting}
                   placeholder="Tell me about your project or just say hello!"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-vertical disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-vertical disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[100px] sm:min-h-[120px]"
                 ></textarea>
               </div>
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed py-3 sm:py-4 text-sm sm:text-base font-medium touch-friendly"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}

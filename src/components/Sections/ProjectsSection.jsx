@@ -8,7 +8,13 @@ const ProjectsSection = () => {
       title: "Wanderlust",
       description:
         "A comprehensive accommodation booking platform that connects travelers with unique stays. Features complete user authentication, property listings, and advanced search capabilities.",
-      technologies: ["React.js", "Node.js", "Express.js", "MongoDB", "Mongoose"],
+      technologies: [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Mongoose",
+      ],
       features: [
         "Full-stack accommodation booking platform with secure user authentication",
         "Advanced search and filter system increasing user session time by 60%",
@@ -23,7 +29,13 @@ const ProjectsSection = () => {
       title: "InShare Application",
       description:
         "A secure file sharing platform designed for seamless document exchange. Supports large file uploads with real-time progress tracking and email notifications.",
-      technologies: ["Node.js", "Express.js", "MongoDB", "Multer", "Nodemailer"],
+      technologies: [
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Multer",
+        "Nodemailer",
+      ],
       features: [
         "Secure file sharing platform supporting 100MB+ uploads for 2000+ users",
         "Intuitive drag-and-drop interface with real-time progress tracking",
@@ -31,8 +43,35 @@ const ProjectsSection = () => {
         "Frontend optimizations reducing average file access time by 40%",
       ],
       liveUrl: "https://inshare-sg.vercel.app/",
-      githubUrl: "https://github.com/Sahilgupta2175/InShare-Application-Project",
+      githubUrl:
+        "https://github.com/Sahilgupta2175/InShare-Application-Project",
       period: "Mar - Apr 2025",
+    },
+    {
+      title: "Zerodha - Stock Trading Platform",
+      description:
+        "Full-stack stock trading platform replicating Zerodha's functionality with real-time portfolio management, order execution, and user authentication. Features comprehensive dashboard for tracking holdings, positions, and market data with seamless buy/sell operations.",
+      technologies: [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Mongoose",
+        "JWT Authentication",
+        "Axios",
+        "CSS3",
+        "Vite",
+        "RESTful APIs",
+      ],
+      features: [
+        "Secure user authentication system with JWT tokens and cookie-based sessions, supporting 100% secure login/logout functionality across multiple browser sessions",
+        "Real-time portfolio management dashboard tracking 13+ holdings with live P&L calculations, displaying ₹31.43k current value and +5.20% profit metrics",
+        "Interactive trading interface enabling seamless buy/sell order execution with instant portfolio updates and margin calculations (₹3.74k available margin)",
+        "Comprehensive RESTful API architecture with 8+ endpoints handling user data, orders, holdings, and positions with <2s response time and proper error handling",
+      ],
+      liveUrl: "https://zerodha-sg.vercel.app", 
+      githubUrl: "https://github.com/Sahilgupta2175/Zerodha-project",
+      period: "Jul - Aug 2025",
     },
     {
       title: "Netflix UI Clone",
@@ -46,7 +85,8 @@ const ProjectsSection = () => {
         "Lightning-fast authentication flows with 300ms response times",
       ],
       liveUrl: "https://netflix-clone-ft.vercel.app/",
-      githubUrl: "https://github.com/Sahilgupta2175/Hunar-intern-project/tree/main/Netflix%20clone",
+      githubUrl:
+        "https://github.com/Sahilgupta2175/Hunar-intern-project/tree/main/Netflix%20clone",
       period: "Jun - Jul 2024",
     },
   ];
@@ -58,10 +98,12 @@ const ProjectsSection = () => {
           <div className="inline-flex items-center space-x-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
             <span>🚀 Featured Work</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Projects That Showcase My Skills</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            Projects That Showcase My Skills
+          </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            A collection of projects that demonstrate my ability to build scalable, user-friendly applications using
-            modern web technologies.
+            A collection of projects that demonstrate my ability to build
+            scalable, user-friendly applications using modern web technologies.
           </p>
         </div>
 
@@ -73,12 +115,19 @@ const ProjectsSection = () => {
             >
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                  <h3 className="text-2xl font-bold mb-2 sm:mb-0">{project.title}</h3>
-                  <span className="text-sm bg-white/20 px-3 py-1 rounded-full">{project.period}</span>
+                  <h3 className="text-2xl font-bold mb-2 sm:mb-0">
+                    {project.title}
+                  </h3>
+                  <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
+                    {project.period}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, techIndex) => (
-                    <span key={techIndex} className="px-3 py-1 bg-white/20 rounded-lg text-sm font-medium">
+                    <span
+                      key={techIndex}
+                      className="px-3 py-1 bg-white/20 rounded-lg text-sm font-medium"
+                    >
                       {tech}
                     </span>
                   ))}
@@ -86,16 +135,23 @@ const ProjectsSection = () => {
               </div>
 
               <div className="p-6">
-                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">{project.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                  {project.description}
+                </p>
 
                 <div className="mb-6">
                   <ul className="space-y-2">
                     {project.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start space-x-3">
+                      <li
+                        key={featureIndex}
+                        className="flex items-start space-x-3"
+                      >
                         <div className="w-5 h-5 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                           <div className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"></div>
                         </div>
-                        <span className="text-gray-600 dark:text-gray-300 text-sm">{feature}</span>
+                        <span className="text-gray-600 dark:text-gray-300 text-sm">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -103,15 +159,30 @@ const ProjectsSection = () => {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   {project.liveUrl && (
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
-                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <Button
+                      asChild
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                    >
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         Live Demo
                         <ExternalLink className="w-4 h-4 ml-2" />
                       </a>
                     </Button>
                   )}
-                  <Button asChild variant="outline" className="w-full sm:w-auto">
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                  >
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       View Code
                       <Github className="w-4 h-4 ml-2" />
                     </a>

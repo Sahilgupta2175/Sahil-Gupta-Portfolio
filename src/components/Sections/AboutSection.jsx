@@ -39,32 +39,6 @@ const AboutSection = () => {
               </div>
             </div>
           </div>
-
-          {/* <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
-                SG
-              </div>
-              <h3 className="text-xl font-bold">Sahil Gupta</h3>
-              <p className="text-gray-600 dark:text-gray-400">Computer Science Student</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">GLA University, Mathura</p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3">
-                <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm">guptasahil2175@gmail.com</span>
-              </div>
-              <div className="flex items-center space-x-3 p-3">
-                <Phone className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm">+91 9956564108</span>
-              </div>
-              <div className="flex items-center space-x-3 p-3">
-                <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm">Orai, Uttar Pradesh, India</span>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </section>

@@ -115,25 +115,6 @@ const ContactSection = () => {
                   <p className="text-gray-600 dark:text-gray-400">Orai, Uttar Pradesh, India</p>
                 </div>
               </div>
-
-              <div className="flex space-x-4 pt-4">
-                <a
-                  href="https://linkedin.com/in/sahilgupta2175"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center text-white transition-colors"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://github.com/Sahilgupta2175"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg flex items-center justify-center text-white transition-colors"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-              </div>
             </div>
           </div>
 

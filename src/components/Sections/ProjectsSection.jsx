@@ -9,16 +9,16 @@ const ProjectsSection = () => {
       description:
         "Full-stack stock trading platform replicating Zerodha's functionality with real-time portfolio management, order execution, and user authentication. Features comprehensive dashboard for tracking holdings, positions, and market data with seamless buy/sell operations.",
       technologies: [
+        "CSS3",
         "React.js",
+        "Vite",
+        "Axios",
         "Node.js",
-        "Express.js",
+        "Express",
+        "RESTful APIs",
         "MongoDB",
         "Mongoose",
-        "JWT Authentication",
-        "Axios",
-        "CSS3",
-        "Vite",
-        "RESTful APIs",
+        "JWT Authentication"
       ],
       features: [
         "Secure user authentication system with JWT tokens and cookie-based sessions, supporting 100% secure login/logout functionality across multiple browser sessions",
@@ -31,53 +31,72 @@ const ProjectsSection = () => {
       period: "Jul - Aug 2025",
     },
     {
-      title: "Wanderlust",
-      description:
-        "A comprehensive accommodation booking platform that connects travelers with unique stays. Features complete user authentication, property listings, and advanced search capabilities.",
+      title: "Wanderlust - Property Rental Platform",
+      description: "A full-stack property rental web application inspired by Airbnb, built with Node.js and Express.js. Features comprehensive property management, real-time search functionality, interactive maps, secure user authentication, and cloud-based image storage. Implements MVC architecture with MongoDB for scalable data management and responsive frontend design.",
       technologies: [
-        "React.js",
+        "HTML5",
+        "CSS3",
+        "Bootstrap",
+        "JavaScript",
+        "EJS Templating",
         "Node.js",
         "Express.js",
+        "Multer",
+        "Flash Messages",
+        "Session Management",
+        "Passport.js",
+        "Joi Validation",
         "MongoDB",
-        "Mongoose",
+        "Mongoose ODM",
+        "Cloudinary API",
+        "Mapbox API"
       ],
       features: [
-        "Full-stack accommodation booking platform with secure user authentication",
-        "Advanced search and filter system increasing user session time by 60%",
-        "Responsive React UI ensuring seamless cross-device compatibility",
-        "Optimized backend APIs with 30% faster response times",
+        "Implemented intelligent search and instant filtering using MongoDB regex queries across multiple fields, achieving <200ms response time for 100+ property listings.",
+        "Integrated Mapbox Geocoding API for interactive maps with precise markers, delivering 99% accuracy across 50+ cities.",
+        "Built a secure authentication & authorization system with Passport.js, bcrypt, session management, custom middleware, and Joi validation ensuring 100% access security.  ",
+        "Developed a scalable image upload pipeline using Cloudinary & Multer with automatic optimization, CDN delivery, and 70% faster load times for 10+ images per property."
       ],
       liveUrl: "https://wanderlust-nlnm.onrender.com/",
       githubUrl: "https://github.com/Sahilgupta2175/Wanderlust",
-      period: "May - Jul 2025",
+      period: "May - Jul 2025"
     },
     {
       title: "InShare Application",
-      description:
-        "A secure file sharing platform designed for seamless document exchange. Supports large file uploads with real-time progress tracking and email notifications.",
+      description: "A secure file sharing web application that allows users to upload, share, and download files with temporary links. Built with Node.js and Express, featuring real-time file management and secure file transfer capabilities.",
       technologies: [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
         "Node.js",
         "Express.js",
-        "MongoDB",
         "Multer",
-        "Nodemailer",
+        "MongoDB / File System",
+        "UUID",
+        "Path",
+        "Crypto"
       ],
       features: [
-        "Secure file sharing platform supporting 100MB+ uploads for 2000+ users",
-        "Intuitive drag-and-drop interface with real-time progress tracking",
-        "Automated email notifications accelerating file retrieval by 75%",
-        "Frontend optimizations reducing average file access time by 40%",
+        "Built a secure file upload system supporting multiple formats up to 100MB with real-time progress tracking (95% accuracy).",
+        "Implemented UUID-based encrypted link generation with temporary storage; files auto-delete after 24 hours or first download.", 
+        "Developed responsive file management dashboard for viewing, organizing, and managing uploads across devices.",
+        "Integrated usage analytics to track sharing metrics and download statistics, enabling data-driven insights.",
+        "Ensured high security & performance with input validation, file type restrictions, and fast uploads at 2–5MB/s.",
       ],
       liveUrl: "https://inshare-sg.vercel.app/",
-      githubUrl:
-        "https://github.com/Sahilgupta2175/inshare-project",
+      githubUrl: "https://github.com/Sahilgupta2175/inshare-project",
       period: "Mar - Apr 2025",
     },
     {
       title: "Netflix UI Clone",
       description:
         "A pixel-perfect recreation of Netflix's homepage with dynamic content loading. Features responsive design and smooth animations for an authentic user experience.",
-      technologies: ["HTML5", "CSS3", "JavaScript", "TMDB API"],
+      technologies: [
+        "HTML5", 
+        "CSS3", 
+        "JavaScript", 
+        "TMDB API"
+      ],
       features: [
         "Recreated Netflix's homepage UI with 95% visual accuracy",
         "Dynamic content loading using The Movie Database (TMDB) API",

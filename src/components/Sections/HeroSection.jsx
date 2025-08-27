@@ -64,8 +64,12 @@ const HeroSection = ({ scrollToSection }) => {
           <div className="relative order-first lg:order-last">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl border border-gray-200 dark:border-gray-700">
               <div className="text-center space-y-4 sm:space-y-6">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mx-auto">
-                  SG
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white overflow-hidden mx-auto">
+                  <img 
+                    src="/Sahil Photo.jpg" 
+                    alt="Sahil Gupta" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold">Sahil Gupta</h3>
@@ -74,6 +78,7 @@ const HeroSection = ({ scrollToSection }) => {
                 <div className="flex justify-center space-x-3 sm:space-x-4">
                   <a
                     href="mailto:guptasahil2175@gmail.com"
+                    aria-label="Email"
                     className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors touch-friendly"
                   >
                     <Mail className="w-4 h-4" />
@@ -82,6 +87,7 @@ const HeroSection = ({ scrollToSection }) => {
                     href="https://linkedin.com/in/sahilgupta2175"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="LinkedIn"
                     className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors touch-friendly"
                   >
                     <Linkedin className="w-4 h-4" />
@@ -90,6 +96,7 @@ const HeroSection = ({ scrollToSection }) => {
                     href="https://github.com/Sahilgupta2175"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="GitHub"
                     className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors touch-friendly"
                   >
                     <Github className="w-4 h-4" />

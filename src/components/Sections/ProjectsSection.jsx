@@ -30,7 +30,7 @@ const ProjectsSection = () => {
       githubUrl: "https://github.com/Sahilgupta2175/Zerodha-project",
       period: "Jul - Aug 2025",
     },
-    // Other projects remain the same
+    
     {
       title: "Wanderlust - Property Rental Platform",
       description: "A full-stack property rental web application inspired by Airbnb, built with Node.js and Express.js. Features comprehensive property management, real-time search functionality, interactive maps, secure user authentication, and cloud-based image storage. Implements MVC architecture with MongoDB for scalable data management and responsive frontend design.",
@@ -172,7 +172,7 @@ const ProjectsSection = () => {
                     </div>
                   ))}
                 </div>
-{/*  */}
+
                 <div className="flex flex-col sm:flex-row gap-3">
                   {project.liveUrl && (
                     <Button

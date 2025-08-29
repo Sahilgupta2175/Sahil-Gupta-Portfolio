@@ -1,6 +1,5 @@
 import emailjs from '@emailjs/browser';
 
-// EmailJS configuration
 const emailjsConfig = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
   templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -8,7 +7,6 @@ const emailjsConfig = {
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
 };
 
-// Initialize EmailJS
 export const initEmailJS = () => {
   if (emailjsConfig.publicKey) {
     emailjs.init(emailjsConfig.publicKey);
@@ -17,10 +15,8 @@ export const initEmailJS = () => {
   }
 };
 
-// Send main email function
 export const sendEmail = async (formData) => {
   try {
-    // Check if all required config is available
     if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
       throw new Error('EmailJS configuration is incomplete. Please check your .env file.');
     }
@@ -77,10 +73,8 @@ export const sendEmail = async (formData) => {
   }
 };
 
-// Send auto-reply email function
 export const sendAutoReply = async (formData) => {
   try {
-    // Check if auto-reply template is configured
     if (!emailjsConfig.autoReplyTemplateId) {
       console.warn('Auto-reply template not configured. Skipping auto-reply.');
       return {
@@ -122,7 +116,6 @@ export const sendAutoReply = async (formData) => {
     };
   } catch (error) {
     console.error('Auto-reply Error:', error);
-    // Don't fail the main process if auto-reply fails
     return {
       success: false,
       error: error,
@@ -131,20 +124,16 @@ export const sendAutoReply = async (formData) => {
   }
 };
 
-// Combined function to send both emails
 export const sendEmailWithAutoReply = async (formData) => {
   try {
-    // Send main email first
     const mainResult = await sendEmail(formData);
     
     if (!mainResult.success) {
       return mainResult;
     }
 
-    // Send auto-reply if main email succeeded
     const autoReplyResult = await sendAutoReply(formData);
     
-    // Return success even if auto-reply fails
     return {
       success: true,
       mainEmail: mainResult,
@@ -163,7 +152,6 @@ export const sendEmailWithAutoReply = async (formData) => {
   }
 };
 
-// Validate email configuration
 export const validateEmailConfig = () => {
   const isValid = emailjsConfig.serviceId && 
                   emailjsConfig.templateId && 

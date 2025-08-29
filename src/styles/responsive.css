@@ -1,6 +1,4 @@
-/* Enhanced Responsive Design Utilities */
 
-/* Mobile-first approach with custom breakpoints */
 @media (max-width: 374px) {
   /* Extra small mobile devices */
   .text-responsive-xs {

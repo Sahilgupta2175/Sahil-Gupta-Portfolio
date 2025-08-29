@@ -58,7 +58,7 @@ const ProjectsSection = () => {
         "Built a secure authentication & authorization system with Passport.js, bcrypt, session management, custom middleware, and Joi validation ensuring 100% access security.  ",
         "Developed a scalable image upload pipeline using Cloudinary & Multer with automatic optimization, CDN delivery, and 70% faster load times for 10+ images per property."
       ],
-      liveUrl: "https://wanderlust-nlnm.onrender.com/",
+      liveUrl: "https://wanderlust-sg.vercel.app/",
       githubUrl: "https://github.com/Sahilgupta2175/Wanderlust",
       period: "May - Jul 2025"
     },

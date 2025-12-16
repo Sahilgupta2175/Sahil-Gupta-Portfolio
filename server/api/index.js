@@ -10,28 +10,39 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://sahilgupta-sg.vercel.app',
-    'https://sahil-gupta-portfolio.vercel.app'
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 }));
 app.use(express.json());
 
-// MongoDB Connection
+// MongoDB Connection with retry logic
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected && mongoose.connection.readyState === 1) return;
   
+  if (!process.env.MONGODB_URI) {
+    console.error('MONGODB_URI is not defined in environment variables');
+    throw new Error('MongoDB URI is not configured');
+  }
+
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
     isConnected = true;
-    console.log('MongoDB Connected');
+    console.log('✅ MongoDB Connected Successfully');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('❌ MongoDB connection error:', error.message);
+    isConnected = false;
     throw error;
   }
 };
+
+// Connect to MongoDB on startup
+connectDB().catch(err => console.error('Initial MongoDB connection failed:', err.message));
 
 // Contact Schema
 const contactSchema = new mongoose.Schema({

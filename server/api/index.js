@@ -44,9 +44,31 @@ const contactSchema = new mongoose.Schema({
 
 const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
 
-// Health Check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running!', timestamp: new Date() });
+// Health Check - Enhanced with system status
+app.get('/api/health', async (req, res) => {
+  const healthCheck = {
+    status: 'Server is running!',
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'production',
+    mongodb: {
+      connected: mongoose.connection.readyState === 1,
+      state: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState]
+    }
+  };
+  
+  res.status(200).json(healthCheck);
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Portfolio Backend API',
+    endpoints: {
+      health: '/api/health',
+      contact: '/api/contact'
+    }
+  });
 });
 
 // Contact POST endpoint

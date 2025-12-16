@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://sahil-gupta-portfolio.vercel.app',  // Replace with your actual frontend URL
+    'https://sahilgupta-sg.vercel.app',  // Replace with your actual frontend URL
     process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true

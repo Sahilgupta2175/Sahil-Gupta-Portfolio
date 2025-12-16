@@ -52,7 +52,11 @@ const About = () => {
             <div className="about-image-wrapper">
               <div className="about-image-bg" />
               <div className="about-image">
-                <div className="about-avatar">SG</div>
+                <img 
+                  src="/Sahil_Photo.jpg" 
+                  alt="Sahil Gupta" 
+                  className="about-avatar-img"
+                />
               </div>
               
               {/* Floating Cards */}

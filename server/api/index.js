@@ -5,14 +5,14 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 
-// Middleware
+// Middleware - CORS must allow your frontend
 app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://sahilgupta-sg.vercel.app',
-    'https://sahil-gupta-portfolio.vercel.app',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+    'https://sahil-gupta-portfolio.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 }));
 app.use(express.json());
@@ -29,6 +29,7 @@ const connectDB = async () => {
     console.log('MongoDB Connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
+    throw error;
   }
 };
 

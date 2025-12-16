@@ -12,7 +12,15 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const app = express();
 
 // Middleware
-app.use(cors());
+// Configure CORS to allow your frontend domains
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://sahil-gupta-portfolio.vercel.app',  // Replace with your actual frontend URL
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection

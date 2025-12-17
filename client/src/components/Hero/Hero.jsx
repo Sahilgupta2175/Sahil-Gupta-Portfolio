@@ -206,7 +206,11 @@ const Hero = () => {
             <div className="hero-image-wrapper">
               <div className="hero-image-bg" />
               <div className="hero-image">
-                <div className="hero-avatar">👨‍💻</div>
+                <img 
+                  src="/Sahil_Photo.jpg" 
+                  alt="Sahil Gupta" 
+                  className="hero-avatar-img"
+                />
               </div>
               <div className="hero-image-ring" />
               <div className="hero-image-ring hero-image-ring-2" />

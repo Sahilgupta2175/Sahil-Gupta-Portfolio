@@ -13,7 +13,7 @@ const projectsData = [
     image: '🚗',
     technologies: ['React 19.2.0', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'TailwindCSS', 'Vite', 'Socket.IO', 'JWT', 'Razorpay', 'Google Gemini AI', 'Cloudinary', 'Twilio', 'SendGrid', 'Nodemailer', 'React Router DOM', 'Zustand', 'React Hook Form', 'Axios', 'React Datepicker', 'React Toastify', 'Bcrypt.js', 'Helmet', 'Express Validator', 'Multer', 'PDFKit', 'CSV Writer', 'Node Cron', 'Morgan', 'Pino' ],
     category: 'Full-Stack Web Application',
-    liveUrl: 'https://vehicle-rental-services.vercel.app',
+    liveUrl: 'https://vrs-frontend-sg.vercel.app',
     githubUrl: 'https://github.com/Sahilgupta2175/vehicle-rental-services',
     featured: true
   },

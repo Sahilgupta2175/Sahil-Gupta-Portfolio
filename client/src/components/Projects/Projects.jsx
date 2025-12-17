@@ -7,6 +7,33 @@ import './Projects.css';
 const projectsData = [
   {
     id: 1,
+    title: 'Vehicle Rental Services Platform',
+    description: 'A comprehensive full-stack vehicle rental management system with multi-role authentication, real-time notifications, AI-powered chatbot, and integrated payment gateway for seamless rental operations.',
+    longDescription: 'Vehicle Rental Services is a modern, enterprise-grade web application designed to revolutionize vehicle rental operations. The platform features a sophisticated multi-role system with separate dashboards for Users, Vendors, and Admins. Users can browse and book vehicles with real-time availability checking, while vendors manage their fleet and track earnings. The admin dashboard provides comprehensive analytics and system management tools. Key features include JWT-based secure authentication with email verification, Razorpay payment gateway integration for secure transactions, Google Gemini-powered AI chatbot for 24/7 customer support, real-time notifications via Socket.IO, SMS alerts through Twilio, and automated email notifications. The system includes advanced booking management with date/time pickers, automated confirmation emails, booking status tracking, and PDF report generation. Vehicle management is enhanced with Cloudinary image uploads, detailed search filters by type, price, and location, and availability tracking. Additional features include rate limiting and security measures (Helmet, XSS protection), responsive design for all devices, CSV data export capabilities, automated cron jobs for booking management, and comprehensive transaction tracking with refund management.',
+    image: '🚗',
+    technologies: ['React 19.2.0', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'TailwindCSS', 'Vite', 'Socket.IO', 'JWT', 'Razorpay', 'Google Gemini AI', 'Cloudinary', 'Twilio', 'SendGrid', 'Nodemailer', 'React Router DOM',
+      'Zustand',
+      'React Hook Form',
+      'Axios',
+      'React Datepicker',
+      'React Toastify',
+      'Bcrypt.js',
+      'Helmet',
+      'Express Validator',
+      'Multer',
+      'PDFKit',
+      'CSV Writer',
+      'Node Cron',
+      'Morgan',
+      'Pino'
+    ],
+    category: 'Full-Stack Web Application',
+    liveUrl: 'https://vehicle-rental-services.vercel.app',
+    githubUrl: 'https://github.com/Sahilgupta2175/vehicle-rental-services',
+    featured: true
+  },
+  {
+    id: 2,
     title: 'Zerodha - Stock Trading Platform',
     description: 'Full-stack stock trading platform replicating Zerodha\'s functionality with real-time portfolio management, order execution, and user authentication.',
     longDescription: 'Full-stack stock trading platform replicating Zerodha\'s functionality with real-time portfolio management, order execution, and user authentication. Features comprehensive dashboard for tracking holdings, positions, and market data with seamless buy/sell operations. Secure user authentication system with JWT tokens and cookie-based sessions.',
@@ -18,7 +45,7 @@ const projectsData = [
     featured: true
   },
   {
-    id: 2,
+    id: 3,
     title: 'Wanderlust - Property Rental Platform',
     description: 'A full-stack property rental web application inspired by Airbnb with comprehensive property management and interactive maps.',
     longDescription: 'A full-stack property rental web application inspired by Airbnb, built with Node.js and Express.js. Features comprehensive property management, real-time search functionality, interactive maps with Mapbox, secure user authentication with Passport.js, and cloud-based image storage with Cloudinary. Implements MVC architecture with MongoDB.',
@@ -30,7 +57,7 @@ const projectsData = [
     featured: true
   },
   {
-    id: 3,
+    id: 4,
     title: 'InShare - File Sharing Application',
     description: 'A secure file sharing web application that allows users to upload, share, and download files with temporary links.',
     longDescription: 'A secure file sharing web application that allows users to upload, share, and download files with temporary links. Built with Node.js and Express, featuring real-time file management, UUID-based encrypted link generation with temporary storage, and files auto-delete after 24 hours or first download.',
@@ -42,7 +69,7 @@ const projectsData = [
     featured: true
   },
   {
-    id: 4,
+    id: 5,
     title: 'Netflix UI Clone',
     description: 'A pixel-perfect recreation of Netflix\'s homepage with dynamic content loading using TMDB API.',
     longDescription: 'A pixel-perfect recreation of Netflix\'s homepage with dynamic content loading. Features responsive design and smooth animations for an authentic user experience. Dynamic content loading using The Movie Database (TMDB) API with 95% visual accuracy.',

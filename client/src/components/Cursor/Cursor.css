@@ -1,7 +1,7 @@
-/* Hide default cursor */
-* {
+/* Custom cursor disabled - using default pointer */
+/* * {
   cursor: none !important;
-}
+} */
 
 .cursor-dot {
   position: fixed;

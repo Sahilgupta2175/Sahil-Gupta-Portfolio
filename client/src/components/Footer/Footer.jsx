@@ -115,18 +115,8 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © {currentYear} Sahil Gupta. Made with <FiHeart className="heart-icon" /> in India
+            © {currentYear} Sahil Gupta.
           </p>
-          
-          <motion.button
-            className="scroll-top-btn"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Scroll to top"
-          >
-            <FiArrowUp />
-          </motion.button>
         </div>
       </div>
     </footer>

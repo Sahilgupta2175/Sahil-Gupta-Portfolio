@@ -146,25 +146,6 @@ const About = () => {
                 Download Resume
               </motion.a>
             </motion.div>
-
-            {/* Tech Stack Preview */}
-            <motion.div className="about-tech" variants={itemVariants}>
-              <span className="tech-label">Tech I work with:</span>
-              <div className="tech-icons">
-                {['⚛️', '🟢', '🐍', '🔷', '🎨', '📱'].map((icon, i) => (
-                  <motion.span
-                    key={i}
-                    className="tech-icon"
-                    whileHover={{ scale: 1.2, y: -5 }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.8 + i * 0.1 }}
-                  >
-                    {icon}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
           </div>
         </motion.div>
       </div>

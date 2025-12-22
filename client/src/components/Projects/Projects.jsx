@@ -12,7 +12,7 @@ const projectsData = [
     longDescription: 'Vehicle Rental Services is a secure, enterprise-grade web platform for managing end-to-end vehicle rental operations. It offers role-based dashboards for Users, Vendors, and Admins, enabling seamless vehicle booking with real-time availability, fleet and earnings management, and system-wide analytics. The platform includes JWT authentication with email verification, Razorpay payments, an AI-powered chatbot, real-time notifications, SMS and email alerts, and advanced booking management with reports and exports. Enhanced security, responsive design, automated processes, and comprehensive transaction and refund tracking ensure a reliable and scalable rental solution.',
     image: '🚗',
     technologies: ['React 19.2.0', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'TailwindCSS', 'Vite', 'Socket.IO', 'JWT', 'Razorpay', 'Google Gemini AI', 'Cloudinary', 'Twilio', 'SendGrid', 'Nodemailer', 'React Router DOM', 'Zustand', 'React Hook Form', 'Axios', 'React Datepicker', 'React Toastify', 'Bcrypt.js', 'Helmet', 'Express Validator', 'Multer', 'PDFKit', 'CSV Writer', 'Node Cron', 'Morgan', 'Pino' ],
-    category: 'Full-Stack Web Application',
+    category: 'web',
     liveUrl: 'https://vrs-frontend-sg.vercel.app',
     githubUrl: 'https://github.com/Sahilgupta2175/vehicle-rental-services',
     featured: true

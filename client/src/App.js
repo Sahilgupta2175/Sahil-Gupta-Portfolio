@@ -9,7 +9,7 @@ import Projects from './components/Projects/Projects';
 import Experience from './components/Experience/Experience';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
-import Cursor from './components/Cursor/Cursor';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Loader from './components/Loader/Loader';
 import './App.css';
 
@@ -32,7 +32,6 @@ function App() {
           <Loader key="loader" />
         ) : (
           <div className="app" key="app">
-            <Cursor />
             <div className="animated-bg" />
             <div className="noise-overlay" />
             <Navbar />
@@ -45,6 +44,7 @@ function App() {
               <Contact />
             </main>
             <Footer />
+            <ScrollToTop />
           </div>
         )}
       </AnimatePresence>

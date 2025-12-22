@@ -70,8 +70,6 @@ const projectsData = [
 const categories = [
   { key: 'all', label: 'All Projects' },
   { key: 'web', label: 'Web Apps' },
-  { key: 'mobile', label: 'Mobile' },
-  { key: 'design', label: 'Design' }
 ];
 
 const Projects = () => {

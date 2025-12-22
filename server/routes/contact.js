@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const Contact = require('../models/Contact');
+const getNotificationEmailHTML = require('../templates/notificationEmail');
+const getAutoReplyEmailHTML = require('../templates/autoReplyEmail');
 
 // Create email transporter
 const createTransporter = () => {
@@ -39,6 +41,7 @@ router.post('/', async (req, res) => {
       from: process.env.EMAIL_USER,
       to: 'guptasahil2175@gmail.com', // Your email where you want to receive messages
       subject: `Portfolio Contact: ${subject}`,
+      html: getNotificationEmailHTML(name, email, subject, message),
       text: `Hey Sahil,
 
 You got a new message from your portfolio!
@@ -59,6 +62,7 @@ Reply directly to ${email} to respond.`
       from: process.env.EMAIL_USER,
       to: email,
       subject: `Thanks for reaching out, ${name}!`,
+      html: getAutoReplyEmailHTML(name, message),
       text: `Hi ${name},
 
 Thanks for getting in touch! I've received your message and will get back to you as soon as I can.

@@ -38,46 +38,18 @@ router.post('/', async (req, res) => {
     const transporter = createTransporter();
     
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Sahil Gupta Portfolio" <${process.env.EMAIL_USER}>`,
       to: 'guptasahil2175@gmail.com', // Your email where you want to receive messages
       subject: `Portfolio Contact: ${subject}`,
-      html: getNotificationEmailHTML(name, email, subject, message),
-      text: `Hey Sahil,
-
-You got a new message from your portfolio!
-
-From: ${name}
-Email: ${email}
-Subject: ${subject}
-
-Message:
-${message}
-
----
-Reply directly to ${email} to respond.`
+      html: getNotificationEmailHTML(name, email, subject, message)
     };
 
     // Send auto-reply to the person who contacted
     const autoReplyOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Sahil Gupta" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Thanks for reaching out, ${name}!`,
-      html: getAutoReplyEmailHTML(name, message),
-      text: `Hi ${name},
-
-Thanks for getting in touch! I've received your message and will get back to you as soon as I can.
-
-Here's what you sent:
-"${message}"
-
-In the meantime, feel free to check out my work:
-- GitHub: https://github.com/Sahilgupta2175
-- LinkedIn: https://linkedin.com/in/sahilgupta2175
-
-Talk soon!
-
-Best,
-Sahil Gupta`
+      html: getAutoReplyEmailHTML(name, message)
     };
 
     // Send both emails

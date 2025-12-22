@@ -298,8 +298,7 @@
   }
 
   .timeline-marker {
-    flex-direction: row;
-    gap: 16px;
+    display: none;
   }
 
   .marker-line {

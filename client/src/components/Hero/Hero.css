@@ -477,6 +477,14 @@
   .floating-icon {
     display: none;
   }
+
+  .scroll-indicator {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 30px auto 0;
+  }
 }
 
 @media (max-width: 480px) {

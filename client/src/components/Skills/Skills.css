@@ -199,23 +199,42 @@
 @media (max-width: 768px) {
   .skills-tabs {
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
   }
 
   .skill-tab {
     padding: 12px 20px;
-    font-size: 14px;
+    font-size: 13px;
+    flex: 1 1 calc(50% - 12px);
+    max-width: calc(50% - 6px);
+    min-width: 140px;
+    justify-content: center;
   }
 
   .skills-grid {
     grid-template-columns: 1fr;
   }
 
+  .tech-stack-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
   .tech-item {
-    padding: 16px 20px;
-    min-width: 80px;
+    padding: 16px 12px;
+    min-width: unset;
+    width: 100%;
+    aspect-ratio: 1;
+    justify-content: center;
   }
 
   .tech-item-icon {
     font-size: 28px;
+  }
+
+  .tech-item-name {
+    font-size: 11px;
   }
 }

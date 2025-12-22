@@ -327,4 +327,15 @@
   .float-card-title {
     font-size: 12px;
   }
+
+  .about-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .about-cta .btn {
+    width: 100%;
+  }
 }

@@ -35,7 +35,7 @@ const educationData = [
     field: 'Science Stream',
     institution: 'Brij Kunwar Devi Aldrich Public School, Orai',
     period: 'May 2022',
-    cgpa: '84.2%',
+    cgpa: 'Percentage: 84.2%',
     icon: '🏫'
   }
 ];
@@ -102,7 +102,6 @@ const Experience = () => {
                 variants={itemVariants}
               >
                 <div className="timeline-marker">
-                  <div className="marker-dot" />
                   <div className="marker-line" />
                 </div>
 

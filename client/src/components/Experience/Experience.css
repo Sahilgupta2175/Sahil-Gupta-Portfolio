@@ -223,7 +223,7 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--primary);
-  margin-left: 8px;
+  /* margin-left: 8px; */
 }
 
 /* Certifications */
@@ -319,5 +319,14 @@
     flex-direction: row;
     align-items: center;
     gap: 16px;
+  }
+
+  .timeline-period,
+  .timeline-location {
+    align-items: center;
+  }
+
+  .certification-item {
+    align-items: center;
   }
 }

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FiArrowRight, FiClock, FiExternalLink } from 'react-icons/fi';
+import { FiArrowRight, FiClock, FiExternalLink, FiFileText } from 'react-icons/fi';
 import { listBlogs } from '../../services/blogsService';
 import './Blogs.css';
 
-// `preview` mode: show top 3 latest + a "View All" CTA.
-// Without preview: show every published blog (used on /blogs).
+// Blog cards intentionally mirror the Project card structure (image area,
+// header with icon + meta, title, excerpt, tags) so the homepage looks
+// uniform. The whole <a> is the click target — no "View Details" button.
 const Blogs = ({ preview = true }) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +26,7 @@ const Blogs = ({ preview = true }) => {
     return () => { cancelled = true; };
   }, [preview]);
 
-  const tagsFromData = Array.from(
-    new Set(blogs.flatMap((b) => b.tags || []))
-  );
+  const tagsFromData = Array.from(new Set(blogs.flatMap((b) => b.tags || [])));
   const tags = [{ key: 'all', label: 'All' }, ...tagsFromData.map((t) => ({ key: t, label: t }))];
 
   const visibleBlogs = activeTag === 'all'
@@ -107,28 +106,31 @@ const Blogs = ({ preview = true }) => {
               >
                 <div className="blog-image">
                   {blog.coverImage ? (
-                    <img src={blog.coverImage} alt={blog.title} />
+                    <img src={blog.coverImage} alt={blog.title} className="blog-img" />
                   ) : (
-                    <div className="blog-image-placeholder">📝</div>
+                    <span className="blog-emoji">📝</span>
                   )}
                 </div>
 
                 <div className="blog-content">
-                  <div className="blog-meta">
-                    {(blog.tags || []).slice(0, 2).map((tag) => (
-                      <span key={tag} className="blog-tag">{tag}</span>
-                    ))}
-                    <span className="blog-readtime">
-                      <FiClock /> {blog.readTime || '5 min read'}
-                    </span>
+                  <div className="blog-header">
+                    <FiFileText className="blog-icon" />
+                    <div className="blog-links">
+                      <span className="blog-readtime">
+                        <FiClock /> {blog.readTime || '5 min read'}
+                      </span>
+                      <FiExternalLink className="blog-external" />
+                    </div>
                   </div>
 
                   <h3 className="blog-title">{blog.title}</h3>
-                  <p className="blog-excerpt">{blog.excerpt}</p>
+                  <p className="blog-description">{blog.excerpt}</p>
 
-                  <span className="blog-link">
-                    Read on the source <FiExternalLink />
-                  </span>
+                  <div className="blog-tech">
+                    {(blog.tags || []).slice(0, 4).map((tag, i) => (
+                      <span key={i} className="tech-tag">{tag}</span>
+                    ))}
+                  </div>
                 </div>
               </motion.a>
             ))}

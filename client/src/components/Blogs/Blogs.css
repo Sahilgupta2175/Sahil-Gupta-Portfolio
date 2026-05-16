@@ -1,10 +1,14 @@
-/* Blogs section — matches Projects card styling so the homepage feels uniform */
+/* Blog cards mirror the Project card styles 1:1 so the homepage stays
+   visually consistent. The only structural difference is there's no
+   .blog-overlay / "View Details" button — clicking the card opens the
+   external blog post directly. */
 
 .blogs {
   background: var(--bg-primary);
   position: relative;
 }
 
+/* Filter — identical to .projects-filter */
 .blogs-filter {
   display: flex;
   justify-content: center;
@@ -13,13 +17,15 @@
   flex-wrap: wrap;
 }
 
+/* Grid — same min-card width and gap as projects */
 .blogs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   margin-bottom: 60px;
 }
 
+/* Card — same chrome as .project-card */
 .blog-card {
   display: flex;
   flex-direction: column;
@@ -37,79 +43,95 @@
   box-shadow: var(--shadow-glow);
 }
 
+/* Image area — same 200px height and gradient background as .project-image */
 .blog-image {
   position: relative;
   height: 200px;
   background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-  overflow: hidden;
-}
-
-.blog-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-normal);
-}
-
-.blog-card:hover .blog-image img {
-  transform: scale(1.05);
-}
-
-.blog-image-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 64px;
-  background: var(--gradient-glass);
+  overflow: hidden;
 }
 
+.blog-emoji {
+  font-size: 64px;
+  transition: all var(--transition-normal);
+}
+
+.blog-card:hover .blog-emoji {
+  transform: scale(1.1);
+}
+
+.blog-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all var(--transition-normal);
+}
+
+.blog-card:hover .blog-img {
+  transform: scale(1.05);
+}
+
+/* Content — same padding as .project-content */
 .blog-content {
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   flex: 1;
 }
 
-.blog-meta {
+/* Header — mirrors .project-header: leading icon, trailing meta */
+.blog-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  justify-content: space-between;
   align-items: center;
-  font-size: 12px;
-  color: var(--text-muted);
+  margin-bottom: 16px;
 }
 
-.blog-tag {
-  padding: 4px 10px;
-  background: rgba(99, 102, 241, 0.1);
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--primary-light);
+.blog-icon {
+  font-size: 28px;
+  color: var(--primary);
+}
+
+.blog-links {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 .blog-readtime {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-left: auto;
 }
 
 .blog-readtime svg {
-  font-size: 12px;
+  font-size: 13px;
 }
 
+.blog-external {
+  font-size: 18px;
+  color: var(--text-muted);
+  transition: all var(--transition-normal);
+}
+
+.blog-card:hover .blog-external {
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* Title — same font, weight, color transition as .project-title */
 .blog-title {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
-  transition: color var(--transition-normal);
+  margin-bottom: 10px;
+  transition: all var(--transition-normal);
   line-height: 1.3;
 }
 
@@ -117,10 +139,12 @@
   color: var(--primary);
 }
 
-.blog-excerpt {
+/* Excerpt — same 3-line clamp as .project-description */
+.blog-description {
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-secondary);
+  margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -129,25 +153,19 @@
   flex: 1;
 }
 
-.blog-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary-light);
-  transition: gap var(--transition-normal);
+/* Tags reuse the global .tech-tag class — identical look to projects */
+.blog-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.blog-card:hover .blog-link {
-  gap: 10px;
-}
-
+/* View More button — same alignment as .projects-more */
 .blogs-more {
   text-align: center;
 }
 
+/* Loading / empty states */
 .blogs-loading,
 .blogs-empty {
   display: flex;

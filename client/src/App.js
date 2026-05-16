@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar/Navbar';
-import Hero from './components/Hero/Hero';
-import About from './components/About/About';
-import Skills from './components/Skills/Skills';
-import Projects from './components/Projects/Projects';
-import Experience from './components/Experience/Experience';
-import Contact from './components/Contact/Contact';
-import Footer from './components/Footer/Footer';
-import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import HomePage from './pages/HomePage';
+import AllProjects from './pages/AllProjects';
+import AllBlogs from './pages/AllBlogs';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import RequireAdmin from './pages/admin/RequireAdmin';
 import Loader from './components/Loader/Loader';
 import './App.css';
 
@@ -17,11 +14,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time for smoother transition
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
+    const timer = setTimeout(() => setLoading(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,21 +24,20 @@ function App() {
         {loading ? (
           <Loader key="loader" />
         ) : (
-          <div className="app" key="app">
-            <div className="animated-bg" />
-            <div className="noise-overlay" />
-            <Navbar />
-            <main>
-              <Hero />
-              <About />
-              <Skills />
-              <Projects />
-              <Experience />
-              <Contact />
-            </main>
-            <Footer />
-            <ScrollToTop />
-          </div>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/projects" element={<AllProjects />} />
+            <Route path="/blogs" element={<AllBlogs />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <RequireAdmin>
+                  <AdminDashboard />
+                </RequireAdmin>
+              }
+            />
+          </Routes>
         )}
       </AnimatePresence>
     </Router>

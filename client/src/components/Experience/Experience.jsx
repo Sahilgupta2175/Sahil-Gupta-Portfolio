@@ -1,25 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiBriefcase, FiCalendar, FiMapPin } from 'react-icons/fi';
+import { listExperience } from '../../services/experienceService';
+import { fallbackExperience } from '../../data/fallback';
 import './Experience.css';
-
-const experienceData = [
-  {
-    id: 1,
-    role: 'Trainee - Job Oriented Value Added Course',
-    company: 'GLA University',
-    location: 'Remote',
-    period: 'Jun 2024 - Jul 2024',
-    description: 'Intensive training program focused on practical industry skills and database management.',
-    achievements: [
-      'Gained hands-on experience with PostgreSQL through instructor-led sessions',
-      'Achieved Top 3 Performer status among 50 interns in the summer cohort',
-      'Developed practical skills in database design and SQL queries'
-    ],
-    technologies: ['PostgreSQL', 'SQL', 'Database Design']
-  }
-];
 
 const educationData = [
   {
@@ -41,30 +26,27 @@ const educationData = [
 ];
 
 const Experience = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
+  const [experiences, setExperiences] = useState([]);
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  useEffect(() => {
+    let cancelled = false;
+    listExperience()
+      .then((data) => {
+        if (cancelled) return;
+        setExperiences(data && data.length ? data : fallbackExperience);
+      })
+      .catch(() => !cancelled && setExperiences(fallbackExperience));
+    return () => { cancelled = true; };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
-
   const itemVariants = {
     hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
   };
 
   return (
@@ -88,16 +70,15 @@ const Experience = () => {
         </motion.div>
 
         <div className="experience-content">
-          {/* Timeline */}
           <motion.div
             className="experience-timeline"
             variants={containerVariants}
             initial="hidden"
             animate={inView ? 'visible' : 'hidden'}
           >
-            {experienceData.map((exp, index) => (
+            {experiences.map((exp) => (
               <motion.div
-                key={exp.id}
+                key={exp._id || exp.id}
                 className="timeline-item"
                 variants={itemVariants}
               >
@@ -111,39 +92,50 @@ const Experience = () => {
                 >
                   <div className="timeline-header">
                     <div className="timeline-icon">
-                      <FiBriefcase />
+                      {exp.logo ? (
+                        <img src={exp.logo} alt={exp.company} className="timeline-logo" />
+                      ) : (
+                        <FiBriefcase />
+                      )}
                     </div>
                     <div className="timeline-meta">
                       <span className="timeline-period">
                         <FiCalendar /> {exp.period}
                       </span>
-                      <span className="timeline-location">
-                        <FiMapPin /> {exp.location}
-                      </span>
+                      {exp.location && (
+                        <span className="timeline-location">
+                          <FiMapPin /> {exp.location}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <h3 className="timeline-role">{exp.role}</h3>
                   <h4 className="timeline-company">{exp.company}</h4>
-                  <p className="timeline-description">{exp.description}</p>
+                  {exp.description && (
+                    <p className="timeline-description">{exp.description}</p>
+                  )}
 
-                  <ul className="timeline-achievements">
-                    {exp.achievements.map((achievement, i) => (
-                      <li key={i}>{achievement}</li>
-                    ))}
-                  </ul>
+                  {exp.achievements?.length > 0 && (
+                    <ul className="timeline-achievements">
+                      {exp.achievements.map((achievement, i) => (
+                        <li key={i}>{achievement}</li>
+                      ))}
+                    </ul>
+                  )}
 
-                  <div className="timeline-tech">
-                    {exp.technologies.map((tech, i) => (
-                      <span key={i} className="tech-tag">{tech}</span>
-                    ))}
-                  </div>
+                  {exp.technologies?.length > 0 && (
+                    <div className="timeline-tech">
+                      {exp.technologies.map((tech, i) => (
+                        <span key={i} className="tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </motion.div>
             ))}
           </motion.div>
 
-          {/* Education Sidebar */}
           <motion.div
             className="experience-sidebar"
             initial={{ opacity: 0, x: 30 }}

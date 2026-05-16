@@ -19,7 +19,15 @@ const projectSchema = new mongoose.Schema({
   }],
   image: {
     type: String,
-    required: true
+    default: ''
+  },
+  imagePublicId: {
+    type: String,
+    default: ''
+  },
+  emoji: {
+    type: String,
+    default: ''
   },
   liveUrl: {
     type: String
@@ -36,10 +44,14 @@ const projectSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  order: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = mongoose.model('Project', projectSchema);
+module.exports = mongoose.models.Project || mongoose.model('Project', projectSchema);

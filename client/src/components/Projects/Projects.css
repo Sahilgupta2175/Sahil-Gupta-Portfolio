@@ -78,6 +78,32 @@
   transition: all var(--transition-normal);
 }
 
+.project-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all var(--transition-normal);
+}
+
+.project-card:hover .project-img {
+  transform: scale(1.05);
+}
+
+.projects-loading,
+.projects-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--text-secondary);
+}
+
+.modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .project-card:hover .project-emoji {
   transform: scale(1.1);
 }

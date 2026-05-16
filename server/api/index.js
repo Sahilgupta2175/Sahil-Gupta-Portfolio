@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 
+// New route modules — share the same models/middleware as server/index.js
+const projectRoutes = require('../routes/projects');
+const blogRoutes = require('../routes/blogs');
+const experienceRoutes = require('../routes/experience');
+const authRoutes = require('../routes/auth');
+
 const app = express();
 
 // HTML Email Template for Admin Notification
@@ -181,11 +187,35 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://sahilgupta-sg.vercel.app',
-  ],
-  methods: ['GET', 'POST', 'OPTIONS'],
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 app.use(express.json());
+
+// Ensure Mongo is connected before the resourceful routes run.
+// `connectDB` is declared further down — it's captured by closure and
+// resolved at request time, so the order of declarations is fine.
+app.use(async (req, res, next) => {
+  // Auth login doesn't touch Mongo; skip the wait to keep login snappy.
+  if (req.path.startsWith('/api/auth')) return next();
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Mount the resourceful routes. The contact + health endpoints below
+// stay inline to preserve the existing email behavior on Vercel.
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/experience', experienceRoutes);
 
 // MongoDB Connection with retry logic
 let isConnected = false;

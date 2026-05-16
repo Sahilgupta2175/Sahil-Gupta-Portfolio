@@ -198,7 +198,7 @@ const ProjectsPanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing projects {loading ? '…' : `(${items.length})`}</h2>
+        <h2>Existing Projects {loading ? '…' : `(${items.length})`}</h2>
         {!loading && items.length === 0 && <p className="admin-muted">No projects yet.</p>}
         {items.map((p) => (
           <article key={p._id} className="admin-list-item">

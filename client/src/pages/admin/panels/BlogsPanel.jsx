@@ -167,7 +167,7 @@ const BlogsPanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing blogs {loading ? '…' : `(${items.length})`}</h2>
+        <h2>Existing Blogs {loading ? '…' : `(${items.length})`}</h2>
         {!loading && items.length === 0 && <p className="admin-muted">No blogs yet.</p>}
         {items.map((b) => (
           <article key={b._id} className="admin-list-item">

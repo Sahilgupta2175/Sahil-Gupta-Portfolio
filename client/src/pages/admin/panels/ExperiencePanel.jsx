@@ -176,7 +176,7 @@ const ExperiencePanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing entries {loading ? '…' : `(${items.length})`}</h2>
+        <h2>Existing Experiences {loading ? '…' : `(${items.length})`}</h2>
         {!loading && items.length === 0 && <p className="admin-muted">No experience entries yet.</p>}
         {items.map((e) => (
           <article key={e._id} className="admin-list-item">

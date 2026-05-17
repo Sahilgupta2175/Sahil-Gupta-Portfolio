@@ -45,6 +45,13 @@
   flex-wrap: wrap;
 }
 
+/* Group the Refresh + Sign out buttons in the dashboard top-right */
+.admin-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .admin-title {
   font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 40px);
@@ -236,6 +243,33 @@
   font-size: 22px;
   color: var(--text-primary);
   margin-bottom: 4px;
+}
+
+/* Heading row: title on the left, refresh icon on the right.
+   Used by every panel's "Existing X" section. */
+.admin-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-list-header h2 {
+  margin-bottom: 0;
+}
+
+.refresh-btn {
+  flex-shrink: 0;
+}
+
+/* Spin animation for any refresh icon while loading. Applied via
+   className={loading ? 'spin' : ''} on the FiRefreshCw icon. */
+.spin {
+  animation: admin-refresh-spin 0.9s linear infinite;
+}
+
+@keyframes admin-refresh-spin {
+  to { transform: rotate(360deg); }
 }
 
 .admin-muted {

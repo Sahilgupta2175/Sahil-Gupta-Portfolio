@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
 import {
   listExperience,
   createExperience,
@@ -24,7 +24,7 @@ const EMPTY = {
   currentImage: ''
 };
 
-const ExperiencePanel = () => {
+const ExperiencePanel = ({ refreshSignal = 0 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -39,7 +39,8 @@ const ExperiencePanel = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { refresh(); }, []);
+  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
+  useEffect(() => { refresh(); }, [refreshSignal]);
 
   const startEdit = (e) => {
     setForm({
@@ -176,7 +177,19 @@ const ExperiencePanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing Experiences {loading ? '…' : `(${items.length})`}</h2>
+        <div className="admin-list-header">
+          <h2>Existing Experiences {loading ? '…' : `(${items.length})`}</h2>
+          <button
+            type="button"
+            className="icon-btn refresh-btn"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh experience"
+            aria-label="Refresh experience"
+          >
+            <FiRefreshCw className={loading ? 'spin' : ''} />
+          </button>
+        </div>
         {!loading && items.length === 0 && <p className="admin-muted">No experience entries yet.</p>}
         {items.map((e) => (
           <article key={e._id} className="admin-list-item">

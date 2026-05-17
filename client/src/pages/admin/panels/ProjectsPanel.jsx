@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
 import {
   listProjects,
   createProject,
@@ -28,7 +28,7 @@ const EMPTY = {
   currentImage: ''
 };
 
-const ProjectsPanel = () => {
+const ProjectsPanel = ({ refreshSignal = 0 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -43,7 +43,8 @@ const ProjectsPanel = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { refresh(); }, []);
+  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
+  useEffect(() => { refresh(); }, [refreshSignal]);
 
   const startEdit = (p) => {
     setForm({
@@ -198,7 +199,19 @@ const ProjectsPanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing Projects {loading ? '…' : `(${items.length})`}</h2>
+        <div className="admin-list-header">
+          <h2>Existing Projects {loading ? '…' : `(${items.length})`}</h2>
+          <button
+            type="button"
+            className="icon-btn refresh-btn"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh projects"
+            aria-label="Refresh projects"
+          >
+            <FiRefreshCw className={loading ? 'spin' : ''} />
+          </button>
+        </div>
         {!loading && items.length === 0 && <p className="admin-muted">No projects yet.</p>}
         {items.map((p) => (
           <article key={p._id} className="admin-list-item">

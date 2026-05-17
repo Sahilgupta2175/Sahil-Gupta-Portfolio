@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
 import {
   listAllCurrentWork,
   createCurrentWork,
@@ -22,7 +22,7 @@ const EMPTY = {
   active: true
 };
 
-const CurrentWorkPanel = () => {
+const CurrentWorkPanel = ({ refreshSignal = 0 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -37,7 +37,8 @@ const CurrentWorkPanel = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { refresh(); }, []);
+  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
+  useEffect(() => { refresh(); }, [refreshSignal]);
 
   const startEdit = (item) => {
     setForm({
@@ -186,7 +187,19 @@ const CurrentWorkPanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Current Work {loading ? '…' : `(${items.length})`}</h2>
+        <div className="admin-list-header">
+          <h2>Current Work {loading ? '…' : `(${items.length})`}</h2>
+          <button
+            type="button"
+            className="icon-btn refresh-btn"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh current work"
+            aria-label="Refresh current work"
+          >
+            <FiRefreshCw className={loading ? 'spin' : ''} />
+          </button>
+        </div>
         {!loading && items.length === 0 && (
           <p className="admin-muted">
             Nothing yet — add what you're working on right now. The section won't

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiDownload, FiMail, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { FiTrash2, FiDownload, FiMail, FiCheckCircle, FiXCircle, FiRefreshCw } from 'react-icons/fi';
 import { listSubscribers, deleteSubscriber } from '../../../services/subscribersService';
 
 // Read-only-ish panel: admin can see everyone on the list, sort active vs.
 // unsubscribed, and remove rows. Creation happens via the public footer
 // form — not from the dashboard.
-const SubscribersPanel = () => {
+const SubscribersPanel = ({ refreshSignal = 0 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('active');
@@ -18,7 +18,8 @@ const SubscribersPanel = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { refresh(); }, []);
+  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
+  useEffect(() => { refresh(); }, [refreshSignal]);
 
   const onDelete = async (id) => {
     if (!window.confirm('Permanently delete this subscriber? They will receive no future emails.')) return;
@@ -88,6 +89,14 @@ const SubscribersPanel = () => {
               </button>
             ))}
           </div>
+          <button
+            className="btn btn-secondary btn-small"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh subscribers"
+          >
+            <FiRefreshCw className={loading ? 'spin' : ''} /> Refresh
+          </button>
           <button
             className="btn btn-secondary btn-small"
             onClick={exportCsv}

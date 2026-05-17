@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
 import {
   listBlogs,
   createBlog,
@@ -23,7 +23,7 @@ const EMPTY = {
   currentImage: ''
 };
 
-const BlogsPanel = () => {
+const BlogsPanel = ({ refreshSignal = 0 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -38,7 +38,8 @@ const BlogsPanel = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { refresh(); }, []);
+  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
+  useEffect(() => { refresh(); }, [refreshSignal]);
 
   const startEdit = (b) => {
     setForm({
@@ -167,7 +168,19 @@ const BlogsPanel = () => {
       </form>
 
       <div className="admin-list">
-        <h2>Existing Blogs {loading ? '…' : `(${items.length})`}</h2>
+        <div className="admin-list-header">
+          <h2>Existing Blogs {loading ? '…' : `(${items.length})`}</h2>
+          <button
+            type="button"
+            className="icon-btn refresh-btn"
+            onClick={refresh}
+            disabled={loading}
+            title="Refresh blogs"
+            aria-label="Refresh blogs"
+          >
+            <FiRefreshCw className={loading ? 'spin' : ''} />
+          </button>
+        </div>
         {!loading && items.length === 0 && <p className="admin-muted">No blogs yet.</p>}
         {items.map((b) => (
           <article key={b._id} className="admin-list-item">

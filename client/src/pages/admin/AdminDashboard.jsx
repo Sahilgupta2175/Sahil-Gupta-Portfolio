@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiLogOut, FiExternalLink } from 'react-icons/fi';
+import { FiLogOut, FiExternalLink, FiRefreshCw } from 'react-icons/fi';
 import { logout } from '../../services/authService';
 import ProjectsPanel from './panels/ProjectsPanel';
 import BlogsPanel from './panels/BlogsPanel';
@@ -21,6 +21,15 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState('current');
 
+  // Bumping this number tells every mounted panel to re-fetch its data.
+  // Each panel passes refreshSignal into its useEffect dependency array,
+  // so a change here triggers a fresh GET. Only the active panel is
+  // actually mounted at any time, so this effectively refreshes
+  // whichever section the user is looking at. Per-panel refresh icons
+  // do the same thing locally.
+  const [refreshSignal, setRefreshSignal] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -28,6 +37,14 @@ const AdminDashboard = () => {
   const onLogout = () => {
     logout();
     navigate('/admin/login');
+  };
+
+  const onRefreshAll = () => {
+    setRefreshing(true);
+    setRefreshSignal((s) => s + 1);
+    // Spin the icon briefly to give visual feedback. The panel does its
+    // own loading-state spinner on top of this so the user sees both.
+    setTimeout(() => setRefreshing(false), 600);
   };
 
   return (
@@ -46,9 +63,18 @@ const AdminDashboard = () => {
                 </Link>
               </p>
             </div>
-            <button className="btn btn-secondary" onClick={onLogout}>
-              <FiLogOut /> Sign out
-            </button>
+            <div className="admin-header-actions">
+              <button
+                className="btn btn-secondary"
+                onClick={onRefreshAll}
+                title="Reload the data for the active section"
+              >
+                <FiRefreshCw className={refreshing ? 'spin' : ''} /> Refresh
+              </button>
+              <button className="btn btn-secondary" onClick={onLogout}>
+                <FiLogOut /> Sign out
+              </button>
+            </div>
           </header>
 
           <nav className="admin-tabs">
@@ -64,11 +90,11 @@ const AdminDashboard = () => {
           </nav>
 
           <section className="admin-panel">
-            {tab === 'current' && <CurrentWorkPanel />}
-            {tab === 'projects' && <ProjectsPanel />}
-            {tab === 'blogs' && <BlogsPanel />}
-            {tab === 'experience' && <ExperiencePanel />}
-            {tab === 'subscribers' && <SubscribersPanel />}
+            {tab === 'current' && <CurrentWorkPanel refreshSignal={refreshSignal} />}
+            {tab === 'projects' && <ProjectsPanel refreshSignal={refreshSignal} />}
+            {tab === 'blogs' && <BlogsPanel refreshSignal={refreshSignal} />}
+            {tab === 'experience' && <ExperiencePanel refreshSignal={refreshSignal} />}
+            {tab === 'subscribers' && <SubscribersPanel refreshSignal={refreshSignal} />}
           </section>
         </div>
       </main>

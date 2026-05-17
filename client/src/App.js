@@ -10,13 +10,20 @@ import RequireAdmin from './pages/admin/RequireAdmin';
 import Loader from './components/Loader/Loader';
 import './App.css';
 
+// Skip the intro SG loader when the user lands directly on (or refreshes)
+// an admin page — they're an authenticated user doing real work, no need
+// to make them sit through a 2.5s animation every time.
+const isAdminPath = () =>
+  typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !isAdminPath());
 
   useEffect(() => {
+    if (!loading) return;
     const timer = setTimeout(() => setLoading(false), 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
 
   return (
     <Router>

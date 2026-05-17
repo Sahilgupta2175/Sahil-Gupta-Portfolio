@@ -170,9 +170,6 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
           <a href="mailto:${subscriber.email}" style="color: #667eea; text-decoration: none; font-weight: 500;">${subscriber.email}</a>
         </div>
 
-        <div class="info-label">Source</div>
-        <div class="info-value">${subscriber.source || 'footer'}</div>
-
         <div class="info-label">Subscribed at (IST)</div>
         <div class="info-value">${subscribedAtIST}</div>
 

@@ -22,13 +22,9 @@ const getContentBlastEmailHTML = require('../templates/contentBlastEmail');
 
 // Resolve the backend URL once. Unsubscribe links must point at the API
 // (the only host that can flip `active`). Falls back to localhost for dev.
-const backendUrl = () =>
-  process.env.BACKEND_URL ||
-  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-  'http://localhost:5000';
+const backendUrl = () => process.env.BACKEND_URL;
 
-const frontendUrl = () =>
-  process.env.FRONTEND_URL || 'http://localhost:3000';
+const frontendUrl = () => process.env.FRONTEND_URL;
 
 const unsubscribeUrl = (token) =>
   `${backendUrl()}/api/subscribers/unsubscribe?token=${encodeURIComponent(token)}`;

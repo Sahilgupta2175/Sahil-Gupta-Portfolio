@@ -208,9 +208,16 @@
   color: var(--text-primary);
 }
 
-/* CTA */
+/* CTA — the two resume buttons. Without explicit flex+gap on the
+   desktop layout, the anchor tags sit flush against each other. The
+   tablet/mobile breakpoints below already turn this into a flex
+   container; this base rule makes the gap apply at all widths. */
 .about-cta {
   margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
 }
 
 /* Tech Stack */

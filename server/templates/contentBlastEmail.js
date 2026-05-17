@@ -38,23 +38,22 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
     .icon { animation: pop 2s ease-in-out infinite; display: inline-block; }
     @keyframes pop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     .social-link:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
+    /* Mobile breakpoint mirrors templates/autoReplyEmail.js exactly.
+       Social pills and CTA stay in their natural inline-block layout —
+       Gmail mobile uses an effective viewport wider than 600px CSS px,
+       so this @media never fires there. That matches the contact auto-
+       reply behavior shown in the user's screenshots (3 buttons in a
+       row, CTA as a normal pill, not full-width). */
     @media only screen and (max-width: 600px) {
-      body { padding: 20px 10px !important; }
-      .email-container { border-radius: 12px !important; }
-      .header { padding: 40px 20px !important; }
-      .header h1 { font-size: 26px !important; }
-      .content { padding: 30px 20px !important; }
-      .greeting { font-size: 20px !important; }
-      .feature-body { padding: 22px 20px !important; }
-      .feature-title { font-size: 20px !important; }
-      .feature-excerpt { padding: 16px 18px !important; font-size: 14px !important; }
-      .action-button { display: block !important; padding: 14px 20px !important; font-size: 15px !important; }
-      .social-link {
-        display: block !important;
-        width: 100% !important;
-        margin: 8px 0 !important;
-        box-sizing: border-box;
-      }
+      body { padding: 20px 10px; }
+      .email-container { border-radius: 12px; }
+      .header { padding: 40px 20px; }
+      .header h1 { font-size: 26px; }
+      .content { padding: 30px 20px; }
+      .greeting { font-size: 20px; }
+      .feature-body { padding: 22px 20px; }
+      .feature-title { font-size: 20px; }
+      .feature-excerpt { padding: 16px 18px; font-size: 14px; }
     }
   </style>
 </head>

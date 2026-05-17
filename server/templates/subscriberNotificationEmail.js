@@ -35,13 +35,18 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
     .info-value { font-size: 16px; color: #333; margin-bottom: 15px; }
     .action-button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; font-size: 16px; }
     .footer-links a { color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 500; }
+    /* Mobile breakpoint mirrors templates/notificationEmail.js exactly.
+       The Reply/Open button is intentionally NOT forced to block on
+       mobile because Gmail mobile uses an effective viewport >600px and
+       the contact-notification email renders it as a normal centered
+       pill (see user's screenshot #2). On a truly narrow viewport the
+       inline-block button still centers via the parent's text-align. */
     @media only screen and (max-width: 600px) {
-      body { padding: 20px 10px !important; }
-      .email-container { border-radius: 12px !important; }
-      .header { padding: 30px 20px !important; }
-      .header h1 { font-size: 24px !important; }
-      .content { padding: 30px 20px !important; }
-      .action-button { display: block !important; text-align: center !important; }
+      body { padding: 20px 10px; }
+      .email-container { border-radius: 12px; }
+      .header { padding: 30px 20px; }
+      .header h1 { font-size: 24px; }
+      .content { padding: 30px 20px; }
     }
   </style>
 </head>

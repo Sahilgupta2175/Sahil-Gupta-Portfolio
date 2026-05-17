@@ -36,19 +36,20 @@ const getSubscriberWelcomeEmailHTML = (subscriber, unsubscribeUrl, portfolioUrl)
     .info-box p { color: #6b7280; margin-bottom: 10px; font-size: 15px; }
     .social-link:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
     .footer-unsub a { color: #9ca3af; text-decoration: underline; }
+    /* Mobile breakpoint mirrors templates/autoReplyEmail.js exactly.
+       Note: we intentionally DO NOT force social-links to stack here.
+       Gmail mobile uses an effective viewport wider than 600px CSS
+       pixels, so this @media never fires there anyway — the buttons
+       render in a row in the mobile app, which matches the existing
+       contact auto-reply behavior. On a truly narrow viewport (<600
+       real CSS pixels) the inline-block buttons wrap naturally. */
     @media only screen and (max-width: 600px) {
-      body { padding: 20px 10px !important; }
-      .email-container { border-radius: 12px !important; }
-      .header { padding: 40px 20px !important; }
-      .header h1 { font-size: 26px !important; }
-      .content { padding: 30px 20px !important; }
-      .greeting { font-size: 20px !important; }
-      .social-link {
-        display: block !important;
-        width: 100% !important;
-        margin: 8px 0 !important;
-        box-sizing: border-box;
-      }
+      body { padding: 20px 10px; }
+      .email-container { border-radius: 12px; }
+      .header { padding: 40px 20px; }
+      .header h1 { font-size: 26px; }
+      .content { padding: 30px 20px; }
+      .greeting { font-size: 20px; }
     }
   </style>
 </head>

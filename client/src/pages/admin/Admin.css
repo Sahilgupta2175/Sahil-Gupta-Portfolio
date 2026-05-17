@@ -197,6 +197,29 @@
   border-color: var(--primary);
 }
 
+/* Theme the popup options too. The closed-state <select> trigger picks
+   up the dark styling above, but the dropdown list itself defaults to
+   the OS/browser light theme — most modern browsers (Chrome, Edge,
+   Firefox, recent Safari) DO respect background-color + color on
+   <option>, so styling them here matches the rest of the admin UI.
+   color-scheme: dark hints to the browser to use dark scrollbar +
+   highlight colors inside the popup as well. */
+.admin-field select {
+  color-scheme: dark;
+}
+
+.admin-field select option {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 10px 14px;
+}
+
+.admin-field select option:checked,
+.admin-field select option:hover {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
 .admin-field input[type="file"] {
   padding: 8px;
   background: transparent;

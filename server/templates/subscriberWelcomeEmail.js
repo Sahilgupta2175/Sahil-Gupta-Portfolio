@@ -173,11 +173,55 @@ const getSubscriberWelcomeEmailHTML = (subscriber, unsubscribeUrl, portfolioUrl)
         font-size: 20px;
       }
       .social-links {
-        flex-direction: column;
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
       }
       .social-link {
-        width: 100%;
-        justify-content: center;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .social-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      }
+      @media only screen and (max-width: 600px) {
+        body {
+          padding: 20px 10px;
+        }
+        .email-container {
+          border-radius: 12px;
+        }
+        .header {
+          padding: 40px 20px;
+        }
+        .header h1 {
+          font-size: 26px;
+        }
+        .content {
+          padding: 30px 20px;
+        }
+        .greeting {
+          font-size: 20px;
+        }
+        .social-links {
+          flex-direction: column;
+        }
+        .social-link {
+          width: 100%;
+          justify-content: center;
+        }
       }
     }
   </style>

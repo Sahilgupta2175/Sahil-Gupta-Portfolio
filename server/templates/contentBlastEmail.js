@@ -205,6 +205,8 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       font-weight: 700;
       margin-bottom: 10px;
     }
+    
+    /* Clean Mobile Query */
     @media only screen and (max-width: 600px) {
       body {
         padding: 20px 10px;
@@ -251,9 +253,9 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
 <body>
   <div class="email-container">
     <div class="header">
-      <div class="icon">${headerEmoji}</div>
-      <h1>${headerTitle}</h1>
-      <p>${headerSub}</p>
+      <div class="icon">\${headerEmoji}</div>
+      <h1>\${headerTitle}</h1>
+      <p>\${headerSub}</p>
     </div>
 
     <div class="content">
@@ -265,16 +267,16 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       </p>
 
       <div class="feature-card">
-        ${cover ? `<img src="${cover}" alt="${item.title}" class="feature-cover" />` : ''}
+        \${cover ? \`<img src="\${cover}" alt="\${item.title}" class="feature-cover" />\` : ''}
         <div class="feature-body">
-          <h2 class="feature-title">${item.title}</h2>
-          ${excerpt ? `<div class="feature-excerpt">${excerpt}</div>` : ''}
-          ${chips.length ? `<div class="chips">${chips.map((c) => `<span class="chip">${c}</span>`).join('')}</div>` : ''}
+          <h2 class="feature-title">\${item.title}</h2>
+          \${excerpt ? \`<div class="feature-excerpt">\${excerpt}</div>\` : ''}
+          \${chips.length ? \`<div class="chips">\${chips.map((c) => \`<span class="chip">\${c}</span>\`).join('')}</div>\` : ''}
         </div>
       </div>
 
       <div class="cta-row">
-        <a href="${ctaUrl}" class="action-button">${ctaLabel} →</a>
+        <a href="\${ctaUrl}" class="action-button">\${ctaLabel} →</a>
       </div>
 
       <div style="text-align: center; margin: 40px 0;">
@@ -288,7 +290,7 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
           <a href="https://linkedin.com/in/sahilgupta2175" class="social-link">
             <span>💼</span> LinkedIn
           </a>
-          <a href="${portfolioUrl}" class="social-link">
+          <a href="\${portfolioUrl}" class="social-link">
             <span>🌐</span> Portfolio
           </a>
         </div>
@@ -300,19 +302,19 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       <p style="margin-top: 15px;">Full-Stack Developer | MERN Stack Specialist</p>
       <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
         You're getting this because you subscribed at
-        <a href="${portfolioUrl}" style="color: #667eea; text-decoration: none;">${portfolioUrl.replace(/^https?:\/\//, '')}</a>.
+        <a href="\${portfolioUrl}" style="color: #667eea; text-decoration: none;">\${portfolioUrl.replace(/^https?:\\/\\//, '')}</a>.
       </p>
       <p style="margin-top: 10px; font-size: 12px; color: #9ca3af;">
-        Don't want these emails? <a href="${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a> in one click.
+        Don't want these emails? <a href="\${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a> in one click.
       </p>
       <p style="margin-top: 10px; font-size: 12px; color: #9ca3af;">
-        © ${new Date().getFullYear()} Sahil Gupta. All rights reserved.
+        © \${new Date().getFullYear()} Sahil Gupta. All rights reserved.
       </p>
     </div>
   </div>
 </body>
 </html>
-  `;
+  \`;
 };
 
 module.exports = getContentBlastEmailHTML;

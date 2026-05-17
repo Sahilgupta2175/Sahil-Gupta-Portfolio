@@ -3,6 +3,7 @@ const router = express.Router();
 const Blog = require('../models/Blog');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
+const { blastNewContent } = require('../utils/notify');
 
 const parseArrayField = (value) => {
   if (Array.isArray(value)) return value;
@@ -66,6 +67,15 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     const blog = new Blog(buildBlogPayload(req.body, req.file));
     await blog.save();
     res.status(201).json(blog);
+
+    // Fire-and-forget blast — only for newly-created PUBLISHED blogs.
+    // We don't await: the admin's "Add blog" save returns immediately while
+    // the emails go out in the background.
+    if (blog.published) {
+      blastNewContent('blog', blog).catch((e) =>
+        console.error('Blog blast failed:', e.message)
+      );
+    }
   } catch (error) {
     console.error('Create blog error:', error);
     res.status(500).json({ message: error.message || 'Server error', type: error.name });

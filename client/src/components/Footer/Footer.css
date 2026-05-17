@@ -172,6 +172,34 @@ a.footer-contact-item:hover {
   white-space: nowrap;
 }
 
+.newsletter-btn:disabled,
+.newsletter-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Inline subscribe feedback under the form */
+.newsletter-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.newsletter-message.success {
+  color: #4ade80;
+}
+
+.newsletter-message.error {
+  color: #f87171;
+}
+
+.newsletter-message svg {
+  flex-shrink: 0;
+}
+
 /* Footer Bottom */
 .footer-bottom {
   display: flex;

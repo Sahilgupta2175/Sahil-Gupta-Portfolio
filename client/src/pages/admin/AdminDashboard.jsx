@@ -6,13 +6,15 @@ import ProjectsPanel from './panels/ProjectsPanel';
 import BlogsPanel from './panels/BlogsPanel';
 import ExperiencePanel from './panels/ExperiencePanel';
 import CurrentWorkPanel from './panels/CurrentWorkPanel';
+import SubscribersPanel from './panels/SubscribersPanel';
 import './Admin.css';
 
 const TABS = [
   { key: 'current', label: 'Current Work' },
   { key: 'projects', label: 'Projects' },
   { key: 'blogs', label: 'Blogs' },
-  { key: 'experience', label: 'Experience' }
+  { key: 'experience', label: 'Experience' },
+  { key: 'subscribers', label: 'Subscribers' }
 ];
 
 const AdminDashboard = () => {
@@ -66,6 +68,7 @@ const AdminDashboard = () => {
             {tab === 'projects' && <ProjectsPanel />}
             {tab === 'blogs' && <BlogsPanel />}
             {tab === 'experience' && <ExperiencePanel />}
+            {tab === 'subscribers' && <SubscribersPanel />}
           </section>
         </div>
       </main>

@@ -13,6 +13,7 @@ const projectRoutes = require('./routes/projects');
 const blogRoutes = require('./routes/blogs');
 const experienceRoutes = require('./routes/experience');
 const currentWorkRoutes = require('./routes/currentWork');
+const subscriberRoutes = require('./routes/subscribers');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/experience', experienceRoutes);
 app.use('/api/current-work', currentWorkRoutes);
+app.use('/api/subscribers', subscriberRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {

@@ -3,6 +3,7 @@ const router = express.Router();
 const Project = require('../models/Project');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
+const { blastNewContent } = require('../utils/notify');
 
 // Body fields that arrive as JSON strings inside multipart/form-data
 // need to be parsed back into arrays before we save.
@@ -73,6 +74,12 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     const project = new Project(buildProjectPayload(req.body, req.file));
     await project.save();
     res.status(201).json(project);
+
+    // Fire-and-forget — email subscribers about the new project. Not awaited
+    // so the admin's save returns immediately.
+    blastNewContent('project', project).catch((e) =>
+      console.error('Project blast failed:', e.message)
+    );
   } catch (error) {
     console.error('Create project error:', error);
     res.status(500).json({ message: error.message || 'Server error', type: error.name });

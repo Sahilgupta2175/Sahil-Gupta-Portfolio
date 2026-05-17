@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
-import { FiGithub, FiLinkedin, FiMail} from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiMail, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { subscribe } from '../../services/subscribersService';
 import './Footer.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  // Local state for the "Stay Updated" form. `status` is one of:
+  // 'idle' | 'submitting' | 'success' | 'error' — drives the inline message.
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (status === 'submitting') return;
+    setStatus('submitting');
+    setMessage('');
+    try {
+      const res = await subscribe(email);
+      setStatus('success');
+      setMessage(res.message || 'Subscribed!');
+      setEmail('');
+    } catch (err) {
+      setStatus('error');
+      setMessage(err.response?.data?.message || 'Something went wrong. Try again.');
+    }
+  };
 
   const navLinks = [
     { name: 'Home', to: 'hero' },
@@ -94,21 +117,36 @@ const Footer = () => {
             <p className="newsletter-text">
               Subscribe to get updates on my latest projects and blog posts.
             </p>
-            <form className="newsletter-form">
+            <form className="newsletter-form" onSubmit={handleSubscribe}>
               <input
                 type="email"
+                required
                 placeholder="Enter your email"
                 className="newsletter-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={status === 'submitting'}
               />
               <motion.button
                 type="submit"
                 className="newsletter-btn"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={status === 'submitting'}
               >
-                Subscribe
+                {status === 'submitting' ? 'Subscribing…' : 'Subscribe'}
               </motion.button>
             </form>
+            {status === 'success' && (
+              <p className="newsletter-message success">
+                <FiCheckCircle /> {message}
+              </p>
+            )}
+            {status === 'error' && (
+              <p className="newsletter-message error">
+                <FiAlertCircle /> {message}
+              </p>
+            )}
           </div>
         </div>
 

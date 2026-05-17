@@ -92,9 +92,11 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       margin: 30px 0;
     }
     .feature-cover {
-      width: 100%;
+      width: 100% !important;
+      max-width: 100%;
       height: auto;
       display: block;
+      -ms-interpolation-mode: bicubic;
     }
     .feature-body {
       padding: 28px 26px;
@@ -187,17 +189,47 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       color: #9ca3af;
       text-decoration: underline;
     }
+    /* Tablet */
+    @media only screen and (max-width: 768px) {
+      .email-container { max-width: 100%; }
+    }
+    /* Phones */
     @media only screen and (max-width: 600px) {
       body { padding: 20px 10px; }
       .email-container { border-radius: 12px; }
       .header { padding: 40px 20px; }
+      .icon { font-size: 52px; margin-bottom: 14px; }
       .header h1 { font-size: 26px; }
-      .content { padding: 30px 20px; }
+      .header p { font-size: 14px; }
+      .content { padding: 32px 22px; }
       .greeting { font-size: 20px; }
+      .lead { font-size: 15px; }
       .feature-body { padding: 22px 20px; }
+      .feature-title { font-size: 20px; }
+      .feature-excerpt { padding: 16px 18px; font-size: 14px; }
+      .chip { font-size: 11px; padding: 3px 10px; }
+      .action-button {
+        display: block;
+        padding: 14px 20px;
+        font-size: 15px;
+      }
       .social-links { flex-direction: column; }
       .social-link { width: 100%; justify-content: center; }
-      .action-button { display: block; }
+      .footer { padding: 30px 22px; }
+      .footer-signature { font-size: 16px; }
+    }
+    /* Tiny phones */
+    @media only screen and (max-width: 420px) {
+      body { padding: 12px 6px; }
+      .header { padding: 32px 16px; }
+      .icon { font-size: 44px; }
+      .header h1 { font-size: 22px; }
+      .content { padding: 24px 16px; }
+      .greeting { font-size: 18px; }
+      .feature-body { padding: 18px 16px; }
+      .feature-title { font-size: 18px; }
+      .feature-excerpt { padding: 14px 16px; font-size: 13px; }
+      .footer { padding: 26px 16px; }
     }
   </style>
 </head>
@@ -218,7 +250,7 @@ const getContentBlastEmailHTML = (kind, item, unsubscribeUrl, portfolioUrl) => {
       </p>
 
       <div class="feature-card">
-        ${cover ? `<img src="${cover}" alt="${item.title}" class="feature-cover" />` : ''}
+        ${cover ? `<img src="${cover}" alt="${item.title}" class="feature-cover" width="100%" style="width:100%;max-width:100%;height:auto;display:block;" />` : ''}
         <div class="feature-body">
           <h2 class="feature-title">${item.title}</h2>
           ${excerpt ? `<div class="feature-excerpt">${excerpt}</div>` : ''}

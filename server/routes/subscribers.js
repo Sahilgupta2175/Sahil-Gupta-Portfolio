@@ -30,12 +30,17 @@ router.post('/', async (req, res) => {
       subscriber = await Subscriber.create({ email, source: req.body.source || 'footer' });
     }
 
-    // Fire-and-forget so the response is fast even if Gmail is slow.
-    sendWelcomeAndNotify(subscriber).catch((e) =>
-      console.error('sendWelcomeAndNotify error:', e.message)
-    );
-
     res.status(201).json({ success: true, message: 'Subscribed! Check your inbox for a confirmation.' });
+
+    // Defer the email work to the next tick so the HTTP response is
+    // fully flushed to the socket before any SMTP work begins. With this
+    // the front-end's spinner disappears as soon as the DB write returns
+    // (sub-second), regardless of how long Gmail takes.
+    setImmediate(() => {
+      sendWelcomeAndNotify(subscriber).catch((e) =>
+        console.error('sendWelcomeAndNotify error:', e.message)
+      );
+    });
   } catch (error) {
     console.error('Subscribe error:', error);
     res.status(500).json({ success: false, message: error.message || 'Server error' });

@@ -118,13 +118,41 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       margin: 0 10px;
       font-weight: 500;
     }
+    /* Tablet */
+    @media only screen and (max-width: 768px) {
+      .email-container { max-width: 100%; }
+    }
+    /* Phones */
     @media only screen and (max-width: 600px) {
       body { padding: 20px 10px; }
       .email-container { border-radius: 12px; }
       .header { padding: 30px 20px; }
+      .icon { font-size: 40px; margin-bottom: 12px; }
       .header h1 { font-size: 24px; }
-      .content { padding: 30px 20px; }
-      .action-button { display: block; text-align: center; }
+      .header p { font-size: 14px; }
+      .content { padding: 30px 22px; }
+      .greeting { font-size: 16px; }
+      .info-card { padding: 18px; }
+      .info-value { font-size: 15px; }
+      .count-pill { font-size: 13px; padding: 3px 12px; }
+      .action-button {
+        display: block;
+        text-align: center;
+        padding: 14px 20px;
+        font-size: 15px;
+      }
+      .footer { padding: 24px 20px; }
+    }
+    /* Tiny phones */
+    @media only screen and (max-width: 420px) {
+      body { padding: 12px 6px; }
+      .header { padding: 26px 14px; }
+      .icon { font-size: 36px; }
+      .header h1 { font-size: 20px; }
+      .content { padding: 24px 16px; }
+      .info-card { padding: 16px; }
+      .info-value { font-size: 14px; }
+      .footer { padding: 22px 14px; font-size: 13px; }
     }
   </style>
 </head>

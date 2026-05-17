@@ -30,12 +30,19 @@ const unsubscribeUrl = (token) =>
   `${backendUrl()}/api/subscribers/unsubscribe?token=${encodeURIComponent(token)}`;
 
 // Lazy transporter so missing creds don't break server boot.
+// `pool: true` keeps a small SMTP connection pool open instead of doing a
+// full TLS + auth handshake on every send — the difference is roughly
+// 1–2 seconds per email on a corporate proxy. maxConnections=3 lets us
+// fan out parallel sends without overwhelming Gmail.
 let _transporter = null;
 const getTransporter = () => {
   if (_transporter) return _transporter;
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
   _transporter = nodemailer.createTransport({
     service: 'gmail',
+    pool: true,
+    maxConnections: 3,
+    maxMessages: 100,
     auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
   });
   return _transporter;
@@ -55,30 +62,28 @@ const sendOne = async (mail) => {
 const sendWelcomeAndNotify = async (subscriber) => {
   const portfolio = frontendUrl();
   const unsubUrl = unsubscribeUrl(subscriber.unsubscribeToken);
+  const adminDashboardUrl = `${portfolio}/admin`;
 
-  // Welcome email to the subscriber
-  try {
-    await sendOne({
-      to: subscriber.email,
-      subject: "Welcome — you're subscribed! ✨",
-      html: getSubscriberWelcomeEmailHTML(subscriber, unsubUrl, portfolio)
-    });
-  } catch (e) {
-    console.error('Welcome email failed:', e.message);
-  }
+  // Run both sends in parallel — they're independent. Without Promise.all
+  // the admin notification has to wait for the full SMTP exchange of the
+  // welcome email to finish before it even starts (~3-5s extra latency).
+  const welcomeTask = sendOne({
+    to: subscriber.email,
+    subject: "Welcome — you're subscribed! ✨",
+    html: getSubscriberWelcomeEmailHTML(subscriber, unsubUrl, portfolio)
+  }).catch((e) => console.error('Welcome email failed:', e.message));
 
-  // Notification to the admin
-  try {
-    const totalCount = await Subscriber.countDocuments({ active: true });
-    const adminDashboardUrl = `${portfolio}/admin`;
-    await sendOne({
-      to: process.env.EMAIL_USER,
-      subject: `🎉 New subscriber: ${subscriber.email}`,
-      html: getSubscriberNotificationEmailHTML(subscriber, totalCount, adminDashboardUrl)
-    });
-  } catch (e) {
-    console.error('Admin notify email failed:', e.message);
-  }
+  const notifyTask = Subscriber.countDocuments({ active: true })
+    .then((totalCount) =>
+      sendOne({
+        to: process.env.EMAIL_USER,
+        subject: `🎉 New subscriber: ${subscriber.email}`,
+        html: getSubscriberNotificationEmailHTML(subscriber, totalCount, adminDashboardUrl)
+      })
+    )
+    .catch((e) => console.error('Admin notify email failed:', e.message));
+
+  await Promise.all([welcomeTask, notifyTask]);
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -141,15 +141,41 @@ const getSubscriberWelcomeEmailHTML = (subscriber, unsubscribeUrl, portfolioUrl)
       color: #9ca3af;
       text-decoration: underline;
     }
+    /* Tablet + small laptop */
+    @media only screen and (max-width: 768px) {
+      .email-container { max-width: 100%; }
+    }
+    /* Phones */
     @media only screen and (max-width: 600px) {
       body { padding: 20px 10px; }
       .email-container { border-radius: 12px; }
       .header { padding: 40px 20px; }
+      .icon { font-size: 52px; margin-bottom: 14px; }
       .header h1 { font-size: 26px; }
-      .content { padding: 30px 20px; }
+      .header p { font-size: 14px; }
+      .content { padding: 32px 22px; }
       .greeting { font-size: 20px; }
+      .lead { font-size: 15px; }
+      .perks-preview { padding: 20px; }
+      .info-box { padding: 22px; }
+      .info-box h3 { font-size: 16px; }
+      .info-box p { font-size: 14px; }
       .social-links { flex-direction: column; }
       .social-link { width: 100%; justify-content: center; }
+      .footer { padding: 30px 22px; }
+      .footer-signature { font-size: 16px; }
+    }
+    /* Tiny phones */
+    @media only screen and (max-width: 420px) {
+      body { padding: 12px 6px; }
+      .header { padding: 32px 16px; }
+      .icon { font-size: 44px; }
+      .header h1 { font-size: 22px; }
+      .content { padding: 24px 16px; }
+      .greeting { font-size: 18px; }
+      .perks-preview { padding: 16px; font-size: 14px; }
+      .info-box { padding: 18px; }
+      .footer { padding: 26px 16px; }
     }
   </style>
 </head>

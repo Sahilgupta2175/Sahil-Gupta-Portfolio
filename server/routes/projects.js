@@ -48,7 +48,8 @@ router.get('/', async (req, res) => {
     if (category) filter.category = category;
     if (featured) filter.featured = featured === 'true';
 
-    const projects = await Project.find(filter).sort({ order: 1, createdAt: -1 });
+    // Newest first — admin's most recent additions always appear at the top.
+    const projects = await Project.find(filter).sort({ createdAt: -1 });
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message || 'Server error', type: error.name });

@@ -5,9 +5,11 @@ import { logout } from '../../services/authService';
 import ProjectsPanel from './panels/ProjectsPanel';
 import BlogsPanel from './panels/BlogsPanel';
 import ExperiencePanel from './panels/ExperiencePanel';
+import CurrentWorkPanel from './panels/CurrentWorkPanel';
 import './Admin.css';
 
 const TABS = [
+  { key: 'current', label: 'Current Work' },
   { key: 'projects', label: 'Projects' },
   { key: 'blogs', label: 'Blogs' },
   { key: 'experience', label: 'Experience' }
@@ -15,7 +17,7 @@ const TABS = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [tab, setTab] = useState('projects');
+  const [tab, setTab] = useState('current');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,6 +62,7 @@ const AdminDashboard = () => {
           </nav>
 
           <section className="admin-panel">
+            {tab === 'current' && <CurrentWorkPanel />}
             {tab === 'projects' && <ProjectsPanel />}
             {tab === 'blogs' && <BlogsPanel />}
             {tab === 'experience' && <ExperiencePanel />}

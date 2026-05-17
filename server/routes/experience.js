@@ -37,7 +37,8 @@ const buildExpPayload = (body, file) => {
 // GET /api/experience — public, sorted by display order then newest first
 router.get('/', async (req, res) => {
   try {
-    const items = await Experience.find().sort({ order: 1, createdAt: -1 });
+    // Newest first — most recent role at the top of the timeline.
+    const items = await Experience.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {
     res.status(500).json({ message: error.message || 'Server error', type: error.name });

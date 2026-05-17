@@ -114,10 +114,15 @@ const run = async () => {
     console.log(`🧹 Removed ${cleanup.deletedCount} test project(s)`);
   }
 
-  // 2. Upsert each project — match by title so re-runs update instead of duplicating
+  // 2. Upsert each project — match by title so re-runs update instead of duplicating.
+  //    Timestamps are staggered (1 minute apart, descending) so the order
+  //    declared in `projects[]` matches the latest-first sort: index 0 gets
+  //    the most recent createdAt, index N gets the oldest.
+  const now = Date.now();
   let created = 0;
   let updated = 0;
-  for (const p of projects) {
+  for (let i = 0; i < projects.length; i++) {
+    const p = { ...projects[i], createdAt: new Date(now - i * 60_000) };
     const existing = await Project.findOne({ title: p.title });
     if (existing) {
       Object.assign(existing, p);

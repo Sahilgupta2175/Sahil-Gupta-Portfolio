@@ -14,175 +14,38 @@ const getSubscriberWelcomeEmailHTML = (subscriber, unsubscribeUrl, portfolioUrl)
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>You're subscribed!</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-      padding: 40px 20px;
-    }
-    .email-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    }
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 50px 30px;
-      text-align: center;
-      position: relative;
-    }
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
-      opacity: 0.3;
-    }
-    .icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-      animation: wave 2s ease-in-out infinite;
-      display: inline-block;
-    }
-    @keyframes wave {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(20deg); }
-      75% { transform: rotate(-20deg); }
-    }
-    .header h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-      font-weight: 700;
-      position: relative;
-    }
-    .header p {
-      font-size: 16px;
-      opacity: 0.95;
-      position: relative;
-    }
-    .content {
-      padding: 50px 40px;
-    }
-    .greeting {
-      font-size: 24px;
-      color: #667eea;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-    .message-preview {
-      background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
-      border-left: 4px solid #f472b6;
-      padding: 25px;
-      margin: 30px 0;
-      border-radius: 12px;
-      color: #4b5563;
-      line-height: 1.8;
-    }
-    .info-box {
-      background: white;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 30px;
-      margin: 30px 0;
-    }
-    .info-box h3 {
-      color: #667eea;
-      font-size: 18px;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-    }
-    .info-box p {
-      color: #6b7280;
-      margin-bottom: 10px;
-      font-size: 15px;
-    }
-    .social-links {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .social-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .social-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-    }
-    .footer {
-      background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
-      padding: 40px 30px;
-      text-align: center;
-      color: #6b7280;
-      font-size: 14px;
-      border-top: 3px solid #667eea;
-    }
-    .footer-signature {
-      font-size: 18px;
-      color: #667eea;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .footer-unsub {
-      margin-top: 18px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .footer-unsub a {
-      color: #9ca3af;
-      text-decoration: underline;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 40px 20px; }
+    .email-container { max-width: 800px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 50px 30px; text-align: center; position: relative; }
+    .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>'); opacity: 0.3; }
+    .icon { font-size: 64px; margin-bottom: 20px; animation: wave 2s ease-in-out infinite; display: inline-block; }
+    @keyframes wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(20deg); } 75% { transform: rotate(-20deg); } }
+    .header h1 { font-size: 32px; margin-bottom: 10px; font-weight: 700; position: relative; }
+    .header p { font-size: 16px; opacity: 0.95; position: relative; }
+    .content { padding: 50px 40px; }
+    .greeting { font-size: 24px; color: #667eea; font-weight: 700; margin-bottom: 20px; }
+    .message-preview { background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%); border-left: 4px solid #f472b6; padding: 25px; margin: 30px 0; border-radius: 12px; font-style: italic; color: #4b5563; line-height: 1.8; position: relative; }
+    .message-preview::before { content: '"'; font-size: 48px; color: #f472b6; opacity: 0.3; position: absolute; margin-left: -15px; margin-top: -15px; }
+    .info-box { background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 30px; margin: 30px 0; }
+    .info-box h3 { color: #667eea; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; }
+    .info-box p { color: #6b7280; margin-bottom: 10px; font-size: 15px; }
+    .social-links { display: flex; gap: 15px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+    .social-link { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; }
+    .social-link:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
+    .footer { background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%); padding: 40px 30px; text-align: center; color: #6b7280; font-size: 14px; border-top: 3px solid #667eea; }
+    .footer-signature { font-size: 18px; color: #667eea; font-weight: 700; margin-bottom: 10px; }
+    .footer-unsub { margin-top: 18px; font-size: 12px; color: #9ca3af; }
+    .footer-unsub a { color: #9ca3af; text-decoration: underline; }
     @media only screen and (max-width: 600px) {
-      body {
-        padding: 20px 10px;
-      }
-      .email-container {
-        border-radius: 12px;
-      }
-      .header {
-        padding: 40px 20px;
-      }
-      .header h1 {
-        font-size: 26px;
-      }
-      .content {
-        padding: 30px 20px;
-      }
-      .greeting {
-        font-size: 20px;
-      }
-      .social-links {
-        flex-direction: column;
-      }
-      .social-link {
-        width: 100%;
-        justify-content: center;
-      }
+      body { padding: 20px 10px; }
+      .email-container { border-radius: 12px; }
+      .header { padding: 40px 20px; }
+      .header h1 { font-size: 26px; }
+      .content { padding: 30px 20px; }
+      .greeting { font-size: 20px; }
+      .social-links { flex-direction: column; }
+      .social-link { width: 100%; justify-content: center; }
     }
   </style>
 </head>

@@ -1,7 +1,15 @@
-// Admin alert when a new subscriber joins. Mirrors notificationEmail.js
-// (the contact-form admin alert) — purple gradient background, info card
-// with labeled rows, big CTA to view the dashboard.
-const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboardUrl) => {
+// Admin alert when a new subscriber joins.
+//
+// Visual structure is a faithful mirror of templates/notificationEmail.js
+// (the new-contact-message admin alert) — same body gradient, same header
+// gradient + emoji icon, same .info-card / .info-label / .info-value
+// rows, same .action-button, same .footer with links, same 600px
+// breakpoint.
+//
+// `subscribedAtIST` is a pre-formatted string passed in from notify.js —
+// it's formatted with timeZone: 'Asia/Kolkata' so the timestamp reflects
+// IST regardless of the server's process timezone (Vercel runs in UTC).
+const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboardUrl, subscribedAtIST) => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -36,10 +44,6 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       padding: 40px 30px;
       text-align: center;
     }
-    .icon {
-      font-size: 48px;
-      margin-bottom: 15px;
-    }
     .header h1 {
       font-size: 28px;
       margin-bottom: 10px;
@@ -48,6 +52,10 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
     .header p {
       font-size: 16px;
       opacity: 0.95;
+    }
+    .icon {
+      font-size: 48px;
+      margin-bottom: 15px;
     }
     .content {
       padding: 40px 30px;
@@ -100,6 +108,7 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       font-weight: 600;
       margin: 20px 0;
       font-size: 16px;
+      transition: transform 0.2s;
     }
     .footer {
       background: #f9fafb;
@@ -118,41 +127,26 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       margin: 0 10px;
       font-weight: 500;
     }
-    /* Tablet */
-    @media only screen and (max-width: 768px) {
-      .email-container { max-width: 100%; }
-    }
-    /* Phones */
     @media only screen and (max-width: 600px) {
-      body { padding: 20px 10px; }
-      .email-container { border-radius: 12px; }
-      .header { padding: 30px 20px; }
-      .icon { font-size: 40px; margin-bottom: 12px; }
-      .header h1 { font-size: 24px; }
-      .header p { font-size: 14px; }
-      .content { padding: 30px 22px; }
-      .greeting { font-size: 16px; }
-      .info-card { padding: 18px; }
-      .info-value { font-size: 15px; }
-      .count-pill { font-size: 13px; padding: 3px 12px; }
+      body {
+        padding: 20px 10px;
+      }
+      .email-container {
+        border-radius: 12px;
+      }
+      .header {
+        padding: 30px 20px;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+      .content {
+        padding: 30px 20px;
+      }
       .action-button {
         display: block;
         text-align: center;
-        padding: 14px 20px;
-        font-size: 15px;
       }
-      .footer { padding: 24px 20px; }
-    }
-    /* Tiny phones */
-    @media only screen and (max-width: 420px) {
-      body { padding: 12px 6px; }
-      .header { padding: 26px 14px; }
-      .icon { font-size: 36px; }
-      .header h1 { font-size: 20px; }
-      .content { padding: 24px 16px; }
-      .info-card { padding: 16px; }
-      .info-value { font-size: 14px; }
-      .footer { padding: 22px 14px; font-size: 13px; }
     }
   </style>
 </head>
@@ -167,22 +161,20 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
     <div class="content">
       <div class="greeting">Hey Sahil! 👋</div>
       <p style="margin-bottom: 20px; color: #4b5563;">
-        Your mailing list just grew — a new person wants to hear about your work.
+        Great news — your mailing list just grew. Here are the details:
       </p>
 
       <div class="info-card">
         <div class="info-label">Email</div>
         <div class="info-value">
-          <a href="mailto:${subscriber.email}" style="color: #667eea; text-decoration: none; font-weight: 500;">
-            ${subscriber.email}
-          </a>
+          <a href="mailto:${subscriber.email}" style="color: #667eea; text-decoration: none; font-weight: 500;">${subscriber.email}</a>
         </div>
 
         <div class="info-label">Source</div>
         <div class="info-value">${subscriber.source || 'footer'}</div>
 
-        <div class="info-label">Subscribed at</div>
-        <div class="info-value">${new Date(subscriber.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</div>
+        <div class="info-label">Subscribed at (IST)</div>
+        <div class="info-value">${subscribedAtIST}</div>
 
         <div class="info-label">Total active subscribers</div>
         <div class="info-value"><span class="count-pill">${totalCount}</span></div>

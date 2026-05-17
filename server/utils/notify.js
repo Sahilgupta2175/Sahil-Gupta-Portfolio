@@ -3,16 +3,19 @@
 // need any new credentials.
 //
 // HTML for each email lives in server/templates/* so it sits alongside
-// the existing contact-form templates and uses the same visual language
-// (light pastel background, white card, purple-gradient header, info-card
-// blocks with colored left borders, pill-shaped social links, signature
-// footer).
+// the existing contact-form templates and uses the same visual language.
 //
-// Gmail caveats to keep in mind:
-//   - Hard cap of ~500 sends/day per account
-//   - Sending one email per subscriber (not BCC) for better deliverability
-//   - 250ms delay between sends so we don't trip Gmail's burst limits
-// If the subscriber list grows past ~50, consider switching to Resend.
+// Send timing — IMPORTANT:
+//   sendWelcomeAndNotify() MUST be awaited by callers. We do NOT use
+//   setImmediate / fire-and-forget anymore because that broke in two
+//   environments:
+//     (1) Vercel serverless: after res.json() the function instance is
+//         frozen until the next request, so deferred callbacks never
+//         run until a new request wakes the instance up.
+//     (2) Corporate proxies: SMTP handshake can take 10-30 seconds and
+//         dropping the work into the void leaves it unobservable.
+//   With connection pooling (pool: true), parallel sends (Promise.all)
+//   and an eager pre-warm below, the awaited path is ~1-2 seconds.
 
 const nodemailer = require('nodemailer');
 const Subscriber = require('../models/Subscriber');
@@ -20,20 +23,34 @@ const getSubscriberWelcomeEmailHTML = require('../templates/subscriberWelcomeEma
 const getSubscriberNotificationEmailHTML = require('../templates/subscriberNotificationEmail');
 const getContentBlastEmailHTML = require('../templates/contentBlastEmail');
 
-// Resolve the backend URL once. Unsubscribe links must point at the API
-// (the only host that can flip `active`). Falls back to localhost for dev.
-const backendUrl = () => process.env.BACKEND_URL;
+// ---------- URL helpers ----------
+const backendUrl = () =>
+  process.env.BACKEND_URL ||
+  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+  'http://localhost:5000';
 
-const frontendUrl = () => process.env.FRONTEND_URL;
+const frontendUrl = () =>
+  process.env.FRONTEND_URL || 'http://localhost:3000';
 
 const unsubscribeUrl = (token) =>
   `${backendUrl()}/api/subscribers/unsubscribe?token=${encodeURIComponent(token)}`;
 
-// Lazy transporter so missing creds don't break server boot.
-// `pool: true` keeps a small SMTP connection pool open instead of doing a
-// full TLS + auth handshake on every send — the difference is roughly
-// 1–2 seconds per email on a corporate proxy. maxConnections=3 lets us
-// fan out parallel sends without overwhelming Gmail.
+// ---------- Date helper ----------
+// Always format dates in IST regardless of server timezone (Vercel runs in
+// UTC). Without `timeZone: 'Asia/Kolkata'` the same .toLocaleString call
+// shows 12:00 PM IST as 06:30 AM UTC in the admin notification email.
+const formatIST = (date) =>
+  new Date(date).toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Kolkata'
+  });
+
+// ---------- Transporter ----------
+// pool: true keeps a small SMTP connection pool open instead of doing a
+// fresh TLS + AUTH handshake on every send. maxConnections=3 lets parallel
+// sends actually run in parallel. The pool persists until the Node process
+// dies (or the serverless instance is reclaimed).
 let _transporter = null;
 const getTransporter = () => {
   if (_transporter) return _transporter;
@@ -48,6 +65,19 @@ const getTransporter = () => {
   return _transporter;
 };
 
+// Pre-warm the SMTP pool at module load — verify() opens a connection and
+// performs the AUTH handshake immediately. Without this, the very first
+// subscriber pays the full 1-3s connection cost on top of the actual send.
+// Errors here are non-fatal: we'll retry lazily on the first real send.
+const warmupTransporter = () => {
+  const t = getTransporter();
+  if (!t) return;
+  t.verify()
+    .then(() => console.log('📧 SMTP transporter ready (pool pre-warmed)'))
+    .catch((e) => console.warn('⚠️  SMTP pre-warm failed (will retry on send):', e.message));
+};
+warmupTransporter();
+
 // ---------- send helpers ----------
 const sendOne = async (mail) => {
   const t = getTransporter();
@@ -59,14 +89,14 @@ const sendOne = async (mail) => {
   return true;
 };
 
+// Sends both emails (welcome to the subscriber, notification to the admin)
+// in parallel. Caller MUST await — see top-of-file note on why fire-and-
+// forget is broken in our environments.
 const sendWelcomeAndNotify = async (subscriber) => {
   const portfolio = frontendUrl();
   const unsubUrl = unsubscribeUrl(subscriber.unsubscribeToken);
   const adminDashboardUrl = `${portfolio}/admin`;
 
-  // Run both sends in parallel — they're independent. Without Promise.all
-  // the admin notification has to wait for the full SMTP exchange of the
-  // welcome email to finish before it even starts (~3-5s extra latency).
   const welcomeTask = sendOne({
     to: subscriber.email,
     subject: "Welcome — you're subscribed! ✨",
@@ -78,7 +108,12 @@ const sendWelcomeAndNotify = async (subscriber) => {
       sendOne({
         to: process.env.EMAIL_USER,
         subject: `🎉 New subscriber: ${subscriber.email}`,
-        html: getSubscriberNotificationEmailHTML(subscriber, totalCount, adminDashboardUrl)
+        html: getSubscriberNotificationEmailHTML(
+          subscriber,
+          totalCount,
+          adminDashboardUrl,
+          formatIST(subscriber.createdAt)
+        )
       })
     )
     .catch((e) => console.error('Admin notify email failed:', e.message));
@@ -88,9 +123,9 @@ const sendWelcomeAndNotify = async (subscriber) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Blasts new content to every active subscriber. Fire-and-forget from the
-// route handler — DO NOT await this, or admins will wait ~250ms × N for
-// their "Add blog" save to return.
+// Blast helper for new blog / project. Iterates sequentially with a small
+// gap between sends so Gmail doesn't flag bursty behavior. Subscribers
+// each get their own unsubscribe token.
 const blastNewContent = async (kind, item) => {
   if (!kind || !item) return;
   if (!getTransporter()) {
@@ -120,7 +155,6 @@ const blastNewContent = async (kind, item) => {
       failed++;
       console.error(`Blast to ${sub.email} failed:`, e.message);
     }
-    // Be polite to Gmail's burst limits.
     await sleep(250);
   }
   console.log(`📣 Blast done. ok=${ok} failed=${failed}`);
@@ -131,5 +165,6 @@ module.exports = {
   blastNewContent,
   unsubscribeUrl,
   frontendUrl,
-  backendUrl
+  backendUrl,
+  formatIST
 };

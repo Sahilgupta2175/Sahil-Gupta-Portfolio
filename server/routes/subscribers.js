@@ -30,17 +30,25 @@ router.post('/', async (req, res) => {
       subscriber = await Subscriber.create({ email, source: req.body.source || 'footer' });
     }
 
-    res.status(201).json({ success: true, message: 'Subscribed! Check your inbox for a confirmation.' });
+    // Send both emails BEFORE responding. Fire-and-forget (setImmediate)
+    // turned out to be broken in two ways:
+    //  - On Vercel the serverless instance freezes after res.json(),
+    //    so the deferred callback never ran until the next request woke
+    //    the instance back up — that's why the email only arrived when
+    //    you opened the admin dashboard.
+    //  - On a corporate proxy the SMTP handshake is so slow that
+    //    "deferred" effectively means "ten seconds from now, maybe".
+    // Awaiting guarantees delivery. With pool: true, parallel sends and
+    // an eagerly pre-warmed SMTP connection this typically completes in
+    // 1-2 seconds, which is acceptable for a subscribe action.
+    try {
+      await sendWelcomeAndNotify(subscriber);
+    } catch (e) {
+      // Already logged internally; never fail the request over email.
+      console.error('sendWelcomeAndNotify error:', e.message);
+    }
 
-    // Defer the email work to the next tick so the HTTP response is
-    // fully flushed to the socket before any SMTP work begins. With this
-    // the front-end's spinner disappears as soon as the DB write returns
-    // (sub-second), regardless of how long Gmail takes.
-    setImmediate(() => {
-      sendWelcomeAndNotify(subscriber).catch((e) =>
-        console.error('sendWelcomeAndNotify error:', e.message)
-      );
-    });
+    res.status(201).json({ success: true, message: 'Subscribed! Check your inbox for a confirmation.' });
   } catch (error) {
     console.error('Subscribe error:', error);
     res.status(500).json({ success: false, message: error.message || 'Server error' });

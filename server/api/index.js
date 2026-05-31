@@ -1,15 +1,15 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const nodemailer = require('nodemailer');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const nodemailer = require("nodemailer");
 
 // New route modules — share the same models/middleware as server/index.js
-const projectRoutes = require('../routes/projects');
-const blogRoutes = require('../routes/blogs');
-const experienceRoutes = require('../routes/experience');
-const currentWorkRoutes = require('../routes/currentWork');
-const subscriberRoutes = require('../routes/subscribers');
-const authRoutes = require('../routes/auth');
+const projectRoutes = require("../routes/projects");
+const blogRoutes = require("../routes/blogs");
+const experienceRoutes = require("../routes/experience");
+const currentWorkRoutes = require("../routes/currentWork");
+const subscriberRoutes = require("../routes/subscribers");
+const authRoutes = require("../routes/auth");
 
 const app = express();
 
@@ -185,15 +185,19 @@ const getAutoReplyEmailHTML = (name, message) => {
 };
 
 // Middleware - CORS must allow your frontend
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://sahilgupta-sg.vercel.app',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://sahilgupta-sg.vercel.app",
+      "https://sahilgupta.tech",
+      "https://www.sahilgupta.tech",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Ensure Mongo is connected before the resourceful routes run.
@@ -201,7 +205,7 @@ app.use(express.json());
 // resolved at request time, so the order of declarations is fine.
 app.use(async (req, res, next) => {
   // Auth login doesn't touch Mongo; skip the wait to keep login snappy.
-  if (req.path.startsWith('/api/auth')) return next();
+  if (req.path.startsWith("/api/auth")) return next();
   try {
     if (mongoose.connection.readyState !== 1) {
       await connectDB();
@@ -214,41 +218,43 @@ app.use(async (req, res, next) => {
 
 // Mount the resourceful routes. The contact + health endpoints below
 // stay inline to preserve the existing email behavior on Vercel.
-app.use('/api/auth', authRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/blogs', blogRoutes);
-app.use('/api/experience', experienceRoutes);
-app.use('/api/current-work', currentWorkRoutes);
-app.use('/api/subscribers', subscriberRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/experience", experienceRoutes);
+app.use("/api/current-work", currentWorkRoutes);
+app.use("/api/subscribers", subscriberRoutes);
 
 // MongoDB Connection with retry logic
 let isConnected = false;
 
 const connectDB = async () => {
   if (isConnected && mongoose.connection.readyState === 1) return;
-  
+
   if (!process.env.MONGODB_URI) {
-    console.error('MONGODB_URI is not defined in environment variables');
-    throw new Error('MongoDB URI is not configured');
+    console.error("MONGODB_URI is not defined in environment variables");
+    throw new Error("MongoDB URI is not configured");
   }
 
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
-      family: 4
+      family: 4,
     });
     isConnected = true;
-    console.log('✅ MongoDB Connected Successfully');
+    console.log("✅ MongoDB Connected Successfully");
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
+    console.error("❌ MongoDB connection error:", error.message);
     isConnected = false;
     throw error;
   }
 };
 
 // Connect to MongoDB on startup
-connectDB().catch(err => console.error('Initial MongoDB connection failed:', err.message));
+connectDB().catch((err) =>
+  console.error("Initial MongoDB connection failed:", err.message),
+);
 
 // Contact Schema
 const contactSchema = new mongoose.Schema({
@@ -256,43 +262,46 @@ const contactSchema = new mongoose.Schema({
   email: { type: String, required: true },
   subject: { type: String, required: true },
   message: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
+const Contact =
+  mongoose.models.Contact || mongoose.model("Contact", contactSchema);
 
 // Health Check - Enhanced with system status
-app.get('/api/health', async (req, res) => {
+app.get("/api/health", async (req, res) => {
   const healthCheck = {
-    status: 'Server is running!',
+    status: "Server is running!",
     timestamp: new Date(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'production',
+    environment: process.env.NODE_ENV || "production",
     mongodb: {
       connected: mongoose.connection.readyState === 1,
-      state: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState]
-    }
+      state: ["disconnected", "connected", "connecting", "disconnecting"][
+        mongoose.connection.readyState
+      ],
+    },
   };
-  
+
   res.status(200).json(healthCheck);
 });
 
 // Root endpoint
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Portfolio Backend API',
+app.get("/", (req, res) => {
+  res.json({
+    message: "Portfolio Backend API",
     endpoints: {
-      health: '/api/health',
-      contact: '/api/contact'
-    }
+      health: "/api/health",
+      contact: "/api/contact",
+    },
   });
 });
 
 // Contact POST endpoint
-app.post('/api/contact', async (req, res) => {
+app.post("/api/contact", async (req, res) => {
   try {
     await connectDB();
-    
+
     const { name, email, subject, message } = req.body;
 
     // Save to database
@@ -302,19 +311,19 @@ app.post('/api/contact', async (req, res) => {
     // Send email notification
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
           user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
+          pass: process.env.EMAIL_PASS,
+        },
       });
 
       // Email to you (HTML)
       await transporter.sendMail({
         from: `"Sahil Gupta Portfolio" <${process.env.EMAIL_USER}>`,
-        to: 'guptasahil2175@gmail.com',
+        to: "guptasahil2175@gmail.com",
         subject: `Portfolio Contact: ${subject}`,
-        html: getNotificationEmailHTML(name, email, subject, message)
+        html: getNotificationEmailHTML(name, email, subject, message),
       });
 
       // Auto-reply (HTML)
@@ -322,31 +331,31 @@ app.post('/api/contact', async (req, res) => {
         from: `"Sahil Gupta" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: `Thanks for reaching out, ${name}!`,
-        html: getAutoReplyEmailHTML(name, message)
+        html: getAutoReplyEmailHTML(name, message),
       });
     }
 
     res.status(201).json({
       success: true,
-      message: 'Message sent successfully!'
+      message: "Message sent successfully!",
     });
   } catch (error) {
-    console.error('Contact error:', error);
+    console.error("Contact error:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to send message. Please try again.'
+      message: "Failed to send message. Please try again.",
     });
   }
 });
 
 // Contact GET endpoint
-app.get('/api/contact', async (req, res) => {
+app.get("/api/contact", async (req, res) => {
   try {
     await connectDB();
     const contacts = await Contact.find().sort({ createdAt: -1 });
     res.json(contacts);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

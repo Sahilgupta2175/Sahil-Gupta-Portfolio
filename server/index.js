@@ -23,6 +23,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://sahilgupta-sg.vercel.app',
+    'https://sahilgupta.tech'
     process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true

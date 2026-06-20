@@ -14,10 +14,11 @@ const AllBlogs = () => {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="animated-bg" />
       <div className="noise-overlay" />
       <Navbar />
-      <main className="page-shell">
+      <main id="main-content" tabIndex={-1} className="page-shell">
         <div className="container page-shell-back">
           <Link to="/" className="back-link">
             <FiArrowLeft /> Back to home

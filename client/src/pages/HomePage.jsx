@@ -8,6 +8,7 @@ import Skills from '../components/Skills/Skills';
 import Projects from '../components/Projects/Projects';
 import Experience from '../components/Experience/Experience';
 import Blogs from '../components/Blogs/Blogs';
+import FAQ from '../components/FAQ/FAQ';
 import Contact from '../components/Contact/Contact';
 import Footer from '../components/Footer/Footer';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
@@ -31,10 +32,11 @@ const HomePage = () => {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="animated-bg" />
       <div className="noise-overlay" />
       <Navbar />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Hero />
         <CurrentWork />
         <About />
@@ -42,6 +44,7 @@ const HomePage = () => {
         <Projects />
         <Experience />
         <Blogs />
+        <FAQ />
         <Contact />
       </main>
       <Footer />

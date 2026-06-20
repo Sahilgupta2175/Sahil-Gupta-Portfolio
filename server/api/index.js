@@ -10,6 +10,7 @@ const experienceRoutes = require('../routes/experience');
 const currentWorkRoutes = require('../routes/currentWork');
 const subscriberRoutes = require('../routes/subscribers');
 const authRoutes = require('../routes/auth');
+const { protect } = require('../middleware/auth');
 
 const app = express();
 
@@ -184,11 +185,15 @@ const getAutoReplyEmailHTML = (name, message) => {
 </html>`;
 };
 
-// Middleware - CORS must allow your frontend
+// Middleware - CORS must allow your frontend.
+// NOTE: this serverless entry (api/index.js) is what Vercel actually deploys
+// per server/vercel.json, so the production domain MUST be listed here.
 app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://sahilgupta-sg.vercel.app',
+    'https://sahilgupta.tech',
+    'https://www.sahilgupta.tech',
     process.env.FRONTEND_URL
   ].filter(Boolean),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -339,8 +344,9 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Contact GET endpoint
-app.get('/api/contact', async (req, res) => {
+// Contact GET endpoint — admin only. Returns submitters' names, emails and
+// messages, so it must never be public (was previously unauthenticated).
+app.get('/api/contact', protect, async (req, res) => {
   try {
     await connectDB();
     const contacts = await Contact.find().sort({ createdAt: -1 });

@@ -2,15 +2,152 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0a0a0f" />
-    <meta name="description" content="Professional Portfolio - Full Stack Developer | UI/UX Designer" />
+
+    <!-- Primary SEO meta -->
+    <title>Sahil Gupta — Full Stack MERN Developer</title>
+    <meta name="description" content="Sahil Gupta — full-stack MERN developer and B.Tech CS student from Orai, India, building fast, scalable web apps with React, Node.js, Express & MongoDB." />
+    <meta name="author" content="Sahil Gupta" />
+    <meta name="keywords" content="Sahil Gupta, Full Stack Developer, MERN Developer, React Developer, Node.js, Express, MongoDB, Web Developer, Portfolio, India" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://sahilgupta.tech/" />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sahil Gupta" />
+    <meta property="og:url" content="https://sahilgupta.tech/" />
+    <meta property="og:title" content="Sahil Gupta — Full Stack MERN Developer" />
+    <meta property="og:description" content="Full-stack MERN developer and B.Tech CS student building fast, scalable web apps with React, Node.js, Express & MongoDB." />
+    <meta property="og:image" content="https://sahilgupta.tech/Sahil_Photo.jpg" />
+    <meta property="og:image:alt" content="Sahil Gupta" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sahil Gupta — Full Stack MERN Developer" />
+    <meta name="twitter:description" content="Full-stack MERN developer and B.Tech CS student building fast, scalable web apps with React, Node.js, Express & MongoDB." />
+    <meta name="twitter:image" content="https://sahilgupta.tech/Sahil_Photo.jpg" />
+    <meta name="twitter:image:alt" content="Sahil Gupta" />
+
     <meta name="google-site-verification" content="UsCNKG3fo7DcqN0403-gmxMyoIwyO8iil0-zreiUP2E" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Sahil Gupta | Portfolio</title>
+
+    <!-- Structured data: who this site is about (helps search + AI engines) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://sahilgupta.tech/#person",
+          "name": "Sahil Gupta",
+          "url": "https://sahilgupta.tech/",
+          "image": "https://sahilgupta.tech/Sahil_Photo.jpg",
+          "jobTitle": "Full Stack Developer",
+          "description": "Full-stack MERN developer and B.Tech Computer Science student specializing in React, Node.js, Express and MongoDB.",
+          "email": "mailto:guptasahil2175@gmail.com",
+          "telephone": "+91-9956564108",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Orai",
+            "addressRegion": "Uttar Pradesh",
+            "addressCountry": "IN"
+          },
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "GLA University",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mathura",
+              "addressRegion": "Uttar Pradesh",
+              "addressCountry": "IN"
+            }
+          },
+          "knowsAbout": [
+            "React.js", "Node.js", "Express.js", "MongoDB", "JavaScript", "Java",
+            "Full Stack Development", "Web Development", "REST APIs", "Data Structures and Algorithms"
+          ],
+          "sameAs": [
+            "https://github.com/Sahilgupta2175",
+            "https://linkedin.com/in/sahilgupta2175"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://sahilgupta.tech/#website",
+          "url": "https://sahilgupta.tech/",
+          "name": "Sahil Gupta — Portfolio",
+          "description": "Portfolio of Sahil Gupta, a full-stack MERN developer.",
+          "inLanguage": "en",
+          "publisher": { "@id": "https://sahilgupta.tech/#person" }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://sahilgupta.tech/#profilepage",
+          "url": "https://sahilgupta.tech/",
+          "name": "Sahil Gupta — Full Stack MERN Developer",
+          "isPartOf": { "@id": "https://sahilgupta.tech/#website" },
+          "about": { "@id": "https://sahilgupta.tech/#person" }
+        }
+      ]
+    }
+    </script>
+
+    <!-- FAQ structured data (Q&A AI engines can quote directly) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Who is Sahil Gupta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sahil Gupta is a full-stack MERN developer and B.Tech Computer Science (Honors) student at GLA University, Mathura, based in Orai, Uttar Pradesh, India. He builds scalable web applications using React, Node.js, Express and MongoDB."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What technologies does Sahil Gupta work with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sahil works across the MERN stack — React.js, Node.js, Express.js and MongoDB — along with JavaScript, Java, REST APIs, SQL/PostgreSQL, Git and tools like Postman, Vercel and Cloudinary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Sahil Gupta available for hire or freelance work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Sahil is open to new opportunities, freelance projects and collaborations. You can reach him by email at guptasahil2175@gmail.com or through the contact form on this site."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What projects has Sahil Gupta built?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sahil has built full-stack projects including a Vehicle Rental Services platform, a Zerodha stock-trading clone, the Wanderlust property-rental app, the InShare file-sharing app, and a Netflix UI clone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I contact Sahil Gupta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Email guptasahil2175@gmail.com, call +91 9956564108, or use the contact form on sahilgupta.tech. You can also connect on GitHub (Sahilgupta2175) and LinkedIn (sahilgupta2175)."
+          }
+        }
+      ]
+    }
+    </script>
+
     <script>
       !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Mi Ri init Vi Gi Rr Wi Ji Bi capture calculateEventProperties tn register register_once register_for_session unregister unregister_for_session an getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync un identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty nn Xi createPersonProfile setInternalOrTestUser sn Hi cn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Ki debug Lr rn getPageViewId captureTraceFeedback captureTraceMetric Di".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
       posthog.init('phc_wMPn8N7HRNrDi4mGQzK5SmXnejiqHSYWGrvzW32qrj7y', {
@@ -19,28 +156,145 @@
           person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
       })
     </script>
-    
+
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-T4GJL224');</script>
-    
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWFH81T8P0"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-    
+
       gtag('config', 'G-SWFH81T8P0');
     </script>
+
+    <style>
+      /* Pre-render content shown in the raw HTML response and to JS-disabled
+         visitors / crawlers. React replaces #root on mount, so users with JS
+         see this only for a split second before the app boots. */
+      .boot-screen {
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px 24px;
+        box-sizing: border-box;
+        background: #0a0a0f;
+        color: #e6e6ef;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+      }
+      .boot-screen a { color: #818cf8; text-decoration: none; }
+      .boot-screen a:hover { text-decoration: underline; }
+      .boot-inner { max-width: 760px; margin: 0 auto; }
+      .boot-header { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 40px; }
+      .boot-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff; }
+      .boot-nav a { margin-left: 16px; font-size: 0.95rem; }
+      .boot-screen h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; color: #fff; margin: 0 0 12px; }
+      .boot-screen h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; color: #fff; margin: 32px 0 8px; }
+      .boot-screen h3 { font-size: 1.05rem; color: #fff; margin: 18px 0 4px; }
+      .boot-loading { margin-top: 40px; color: #71717a; font-size: 0.9rem; }
+      .boot-skip { position: absolute; left: -9999px; }
+      .boot-skip:focus { left: 16px; top: 16px; background: #6366f1; color: #fff; padding: 8px 14px; border-radius: 6px; }
+    </style>
   </head>
   <body>
     <noscript>
       <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4GJL224"
       height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static fallback for crawlers, AI engines and no-JS visitors.
+           Replaced by the React app as soon as it mounts. -->
+      <div class="boot-screen">
+        <div class="boot-inner">
+          <a class="boot-skip" href="#boot-main">Skip to main content</a>
+          <header class="boot-header">
+            <span class="boot-logo">SG.</span>
+            <nav class="boot-nav" aria-label="Primary">
+              <a href="#boot-about">About</a>
+              <a href="#boot-skills">Skills</a>
+              <a href="#boot-projects">Projects</a>
+              <a href="#boot-faq">FAQ</a>
+              <a href="#boot-contact">Contact</a>
+            </nav>
+          </header>
+
+          <main id="boot-main">
+            <h1>Sahil Gupta — Full Stack MERN Developer</h1>
+            <p>
+              Hi, I'm Sahil Gupta — a full-stack <strong>MERN developer</strong> and
+              B.Tech Computer Science (Honors) student at GLA University, Mathura,
+              based in Orai, Uttar Pradesh, India. I build fast, scalable and
+              accessible web applications with React, Node.js, Express and MongoDB.
+            </p>
+
+            <section id="boot-about">
+              <h2>About</h2>
+              <p>
+                I'm a passionate developer focused on clean code, thoughtful user
+                experience, and solving real-world problems. I've solved 150+ coding
+                challenges on platforms like LeetCode and HackerRank with an 85%
+                success rate, building a strong foundation in data structures and
+                algorithms.
+              </p>
+            </section>
+
+            <section id="boot-skills">
+              <h2>Skills &amp; Technologies</h2>
+              <ul>
+                <li><strong>Frontend:</strong> React.js, JavaScript, HTML5, CSS3, Bootstrap</li>
+                <li><strong>Backend:</strong> Node.js, Express.js, Java, REST APIs, Passport.js</li>
+                <li><strong>Databases:</strong> MongoDB, Mongoose, MySQL, PostgreSQL</li>
+                <li><strong>Tools:</strong> Git, GitHub, Postman, Vercel, VS Code, Cloudinary</li>
+              </ul>
+            </section>
+
+            <section id="boot-projects">
+              <h2>Featured Projects</h2>
+              <ul>
+                <li><strong>Vehicle Rental Services</strong> — full-stack rental platform with multi-role auth, payments and an AI chatbot.</li>
+                <li><strong>Zerodha Clone</strong> — stock-trading platform with portfolio management and order execution.</li>
+                <li><strong>Wanderlust</strong> — Airbnb-style property rental app with interactive maps.</li>
+                <li><strong>InShare</strong> — secure file-sharing app with expiring download links.</li>
+                <li><strong>Netflix UI Clone</strong> — responsive Netflix homepage powered by the TMDB API.</li>
+              </ul>
+              <p><a href="/projects">View all projects</a> · <a href="/blogs">Read the blog</a></p>
+            </section>
+
+            <section id="boot-faq">
+              <h2>Frequently Asked Questions</h2>
+              <h3>Who is Sahil Gupta?</h3>
+              <p>A full-stack MERN developer and B.Tech CS student based in Orai, India, building scalable web apps with React, Node.js, Express and MongoDB.</p>
+              <h3>What technologies does Sahil work with?</h3>
+              <p>The MERN stack (React, Node.js, Express, MongoDB) plus JavaScript, Java, REST APIs and SQL/PostgreSQL.</p>
+              <h3>Is Sahil available for hire?</h3>
+              <p>Yes — he's open to new opportunities, freelance work and collaborations.</p>
+              <h3>How can I contact Sahil?</h3>
+              <p>Email <a href="mailto:guptasahil2175@gmail.com">guptasahil2175@gmail.com</a> or use the contact form on this site.</p>
+            </section>
+
+            <section id="boot-contact">
+              <h2>Contact</h2>
+              <p>
+                Email: <a href="mailto:guptasahil2175@gmail.com">guptasahil2175@gmail.com</a><br />
+                Phone: <a href="tel:+919956564108">+91 9956564108</a><br />
+                Location: Orai, Uttar Pradesh, India<br />
+                <a href="https://github.com/Sahilgupta2175" rel="noopener">GitHub</a> ·
+                <a href="https://linkedin.com/in/sahilgupta2175" rel="noopener">LinkedIn</a>
+              </p>
+            </section>
+          </main>
+
+          <footer>
+            <p>© Sahil Gupta — Full Stack Developer based in Orai, Uttar Pradesh, India.</p>
+          </footer>
+
+          <p class="boot-loading">Loading the full interactive experience…</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

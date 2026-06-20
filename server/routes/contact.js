@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const Contact = require('../models/Contact');
+const { protect } = require('../middleware/auth');
 const getNotificationEmailHTML = require('../templates/notificationEmail');
 const getAutoReplyEmailHTML = require('../templates/autoReplyEmail');
 
@@ -69,8 +70,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all contacts (for admin)
-router.get('/', async (req, res) => {
+// Get all contacts (admin only — exposes submitter PII).
+router.get('/', protect, async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });
     res.json(contacts);

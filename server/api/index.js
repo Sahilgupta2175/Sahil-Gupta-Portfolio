@@ -12,6 +12,7 @@ const currentWorkRoutes = require('../routes/currentWork');
 const subscriberRoutes = require('../routes/subscribers');
 const authRoutes = require('../routes/auth');
 const { protect } = require('../middleware/auth');
+<<<<<<< HEAD
 =======
 const projectRoutes = require("../routes/projects");
 const blogRoutes = require("../routes/blogs");
@@ -20,6 +21,8 @@ const currentWorkRoutes = require("../routes/currentWork");
 const subscriberRoutes = require("../routes/subscribers");
 const authRoutes = require("../routes/auth");
 >>>>>>> f341051d39b502a85a8e5a65ad50fc341afdfdc1
+=======
+>>>>>>> c0772ed (feat: improve SEO/GEO/AEO, add security headers, fix backend CORS & contact auth)
 
 const app = express();
 
@@ -195,6 +198,9 @@ const getAutoReplyEmailHTML = (name, message) => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c0772ed (feat: improve SEO/GEO/AEO, add security headers, fix backend CORS & contact auth)
 // Middleware - CORS must allow your frontend.
 // NOTE: this serverless entry (api/index.js) is what Vercel actually deploys
 // per server/vercel.json, so the production domain MUST be listed here.
@@ -376,6 +382,7 @@ app.post("/api/contact", async (req, res) => {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Contact GET endpoint — admin only. Returns submitters' names, emails and
 // messages, so it must never be public (was previously unauthenticated).
 app.get('/api/contact', protect, async (req, res) => {
@@ -383,6 +390,11 @@ app.get('/api/contact', protect, async (req, res) => {
 // Contact GET endpoint
 app.get("/api/contact", async (req, res) => {
 >>>>>>> f341051d39b502a85a8e5a65ad50fc341afdfdc1
+=======
+// Contact GET endpoint — admin only. Returns submitters' names, emails and
+// messages, so it must never be public (was previously unauthenticated).
+app.get('/api/contact', protect, async (req, res) => {
+>>>>>>> c0772ed (feat: improve SEO/GEO/AEO, add security headers, fix backend CORS & contact auth)
   try {
     await connectDB();
     const contacts = await Contact.find().sort({ createdAt: -1 });

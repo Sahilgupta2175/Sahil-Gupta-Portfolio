@@ -1,5 +1,11 @@
+const escapeHtml = require('../utils/escapeHtml');
+
 // Email template for admin notification when someone contacts you
 const getNotificationEmailHTML = (name, email, subject, message) => {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeSubject = escapeHtml(subject);
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -152,23 +158,23 @@ const getNotificationEmailHTML = (name, email, subject, message) => {
       
       <div class="info-card">
         <div class="info-label">From</div>
-        <div class="info-value"><strong>${name}</strong></div>
+        <div class="info-value"><strong>${safeName}</strong></div>
         
         <div class="info-label">Email</div>
         <div class="info-value">
-          <a href="mailto:${email}" style="color: #667eea; text-decoration: none; font-weight: 500;">${email}</a>
+          <a href="mailto:${safeEmail}" style="color: #667eea; text-decoration: none; font-weight: 500;">${safeEmail}</a>
         </div>
         
         <div class="info-label">Subject</div>
-        <div class="info-value">${subject}</div>
+        <div class="info-value">${safeSubject}</div>
       </div>
       
       <div class="info-label" style="margin-top: 25px;">Message</div>
-      <div class="message-box">${message}</div>
+      <div class="message-box">${safeMessage}</div>
       
       <div style="text-align: center; margin-top: 30px;">
-        <a href="mailto:${email}?subject=Re: ${encodeURIComponent(subject)}" class="action-button">
-          Reply to ${name} →
+        <a href="mailto:${safeEmail}?subject=Re: ${encodeURIComponent(subject)}" class="action-button">
+          Reply to ${safeName} →
         </a>
       </div>
     </div>

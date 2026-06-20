@@ -1,5 +1,9 @@
+const escapeHtml = require('../utils/escapeHtml');
+
 // Auto-reply email template for users who contact you
 const getAutoReplyEmailHTML = (name, message) => {
+  const safeName = escapeHtml(name);
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -190,7 +194,7 @@ const getAutoReplyEmailHTML = (name, message) => {
     </div>
     
     <div class="content">
-      <div class="greeting">Hi ${name}! ✨</div>
+      <div class="greeting">Hi ${safeName}! ✨</div>
       
       <p style="font-size: 16px; color: #4b5563; margin-bottom: 25px;">
         Thank you so much for getting in touch! I really appreciate you taking the time to reach out. 
@@ -198,7 +202,7 @@ const getAutoReplyEmailHTML = (name, message) => {
       </p>
       
       <div class="message-preview">
-        ${message}
+        ${safeMessage}
       </div>
       
       <div class="info-box">

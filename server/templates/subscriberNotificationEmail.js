@@ -14,7 +14,10 @@
 // with timeZone: 'Asia/Kolkata' so the timestamp reflects IST regardless
 // of the server's process timezone.
 
+const escapeHtml = require('../utils/escapeHtml');
+
 const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboardUrl, subscribedAtIST) => {
+  const safeEmail = escapeHtml(subscriber.email);
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -167,7 +170,7 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       <div class="info-card">
         <div class="info-label">Email</div>
         <div class="info-value">
-          <a href="mailto:${subscriber.email}" style="color: #667eea; text-decoration: none; font-weight: 500;">${subscriber.email}</a>
+          <a href="mailto:${safeEmail}" style="color: #667eea; text-decoration: none; font-weight: 500;">${safeEmail}</a>
         </div>
 
         <div class="info-label">Subscribed at (IST)</div>

@@ -14,6 +14,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
 const dotenv = require('dotenv');
 const path = require('path');
 
@@ -31,6 +32,19 @@ const currentWorkRoutes = require('./routes/currentWork');
 const subscriberRoutes = require('./routes/subscribers');
 
 const app = express();
+
+// Behind Vercel's proxy, so req.ip reflects the real client via X-Forwarded-For
+// (needed by the rate limiters). 1 = trust a single hop.
+app.set('trust proxy', 1);
+
+// Baseline security headers on every API response. CSP is disabled because this
+// origin serves JSON plus one self-contained inline-styled HTML page (the
+// unsubscribe page); CORP is set to cross-origin so the separate frontend
+// origin can consume the API.
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // ---------------------------------------------------------------------------
 // CORS — local dev, both deployed frontends, and any FRONTEND_URL override.
@@ -119,6 +133,14 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/experience', experienceRoutes);
 app.use('/api/current-work', currentWorkRoutes);
 app.use('/api/subscribers', subscriberRoutes);
+
+// ---------------------------------------------------------------------------
+// 404 — unmatched routes return JSON, not Express's default HTML, so the API
+// stays JSON-only end to end.
+// ---------------------------------------------------------------------------
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Not found' });
+});
 
 // ---------------------------------------------------------------------------
 // Fallback error handler — always returns JSON (never an HTML stack trace) and

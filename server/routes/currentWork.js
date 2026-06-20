@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     const items = await CurrentWork.find({ active: true }).sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -28,7 +28,7 @@ router.get('/all', protect, async (req, res) => {
     const items = await CurrentWork.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -39,7 +39,7 @@ router.post('/', protect, async (req, res) => {
     res.status(201).json(item);
   } catch (error) {
     console.error('Create current-work error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -52,7 +52,7 @@ router.put('/:id', protect, async (req, res) => {
     res.json(existing);
   } catch (error) {
     console.error('Update current-work error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -63,7 +63,7 @@ router.delete('/:id', protect, async (req, res) => {
     await existing.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

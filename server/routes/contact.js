@@ -3,14 +3,12 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const Contact = require('../models/Contact');
 const { protect } = require('../middleware/auth');
+const { contactLimiter } = require('../middleware/rateLimit');
 const getNotificationEmailHTML = require('../templates/notificationEmail');
 const getAutoReplyEmailHTML = require('../templates/autoReplyEmail');
 
 // Create email transporter
 const createTransporter = () => {
-  console.log('EMAIL_USER:', process.env.EMAIL_USER);
-  console.log('EMAIL_PASS exists:', !!process.env.EMAIL_PASS);
-  
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -21,9 +19,22 @@ const createTransporter = () => {
 };
 
 // Submit contact form
-router.post('/', async (req, res) => {
+router.post('/', contactLimiter, async (req, res) => {
   try {
-    const { name, email, subject, message } = req.body;
+    const { name, email, subject, message } = req.body || {};
+
+    // Validate + cap lengths before any DB/email work. The email templates
+    // additionally HTML-escape these values before rendering.
+    const EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+    if (!EMAIL_RE.test(String(email).trim())) {
+      return res.status(400).json({ success: false, message: 'Please enter a valid email address.' });
+    }
+    if (String(name).length > 200 || String(subject).length > 200 || String(message).length > 5000) {
+      return res.status(400).json({ success: false, message: 'One or more fields exceed the allowed length.' });
+    }
 
     // Save to database
     const newContact = new Contact({

@@ -2,7 +2,7 @@
   "name": "portfolio-backend",
   "version": "1.0.0",
   "description": "Portfolio Backend API",
-  "main": "api/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
     "hash-password": "node scripts/hashPassword.js"

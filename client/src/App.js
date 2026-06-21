@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import HomePage from './pages/HomePage';
 import AllProjects from './pages/AllProjects';
 import AllBlogs from './pages/AllBlogs';
@@ -27,6 +28,7 @@ function App() {
 
   return (
     <Router>
+      <SpeedInsights />
       <AnimatePresence mode="wait">
         {loading ? (
           <Loader key="loader" />

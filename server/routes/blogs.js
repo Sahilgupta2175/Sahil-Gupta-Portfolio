@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
     const blogs = await query.exec();
     res.json(blogs);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -57,7 +57,7 @@ router.get('/:slug', async (req, res) => {
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
     res.json(blog);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -78,7 +78,7 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     }
   } catch (error) {
     console.error('Create blog error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -99,7 +99,7 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
     res.json(existing);
   } catch (error) {
     console.error('Update blog error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -112,7 +112,7 @@ router.delete('/:id', protect, async (req, res) => {
     await existing.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

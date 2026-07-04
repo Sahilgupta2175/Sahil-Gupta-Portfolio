@@ -26,7 +26,10 @@ const storage = new CloudinaryStorage({
 
     return {
       folder,
-      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
+      // SVG intentionally excluded: it can carry <script>/onload payloads and
+      // would be served from Cloudinary with an image content-type to public
+      // visitors (stored-XSS vector).
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
       transformation: [{ width: 1600, height: 1600, crop: 'limit', quality: 'auto' }]
     };
   }

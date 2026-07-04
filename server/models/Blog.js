@@ -54,7 +54,10 @@ const blogSchema = new mongoose.Schema({
 });
 
 blogSchema.pre('validate', function (next) {
-  if (this.title && (!this.slug || this.isModified('title'))) {
+  // Generate the slug ONCE (on create / when missing). We deliberately do NOT
+  // regenerate it when the title later changes, so already-shared /blogs/:slug
+  // links and sitemap entries keep working.
+  if (this.title && !this.slug) {
     this.slug = slugify(this.title) + '-' + Math.random().toString(36).slice(2, 7);
   }
   next();

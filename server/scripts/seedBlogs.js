@@ -14,8 +14,8 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 // an outbound HTTPS call to Hashnode, so on a proxy that intercepts TLS
 // we'd otherwise fail with "unable to get local issuer certificate".
 // Opt-in via INSECURE_TLS=true in server/.env. NEVER set in production.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 if (process.env.INSECURE_TLS === 'true') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   console.warn('⚠️  INSECURE_TLS=true — outbound TLS verification disabled.');
 }
 

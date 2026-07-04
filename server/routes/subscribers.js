@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Subscriber = require('../models/Subscriber');
 const { protect } = require('../middleware/auth');
+const { subscribeLimiter } = require('../middleware/rateLimit');
+const escapeHtml = require('../utils/escapeHtml');
 const { sendWelcomeAndNotify, frontendUrl } = require('../utils/notify');
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Disallow HTML metacharacters (< > " ') in addition to whitespace/@, so a
+// crafted address can't carry markup into the unsubscribe page or admin email.
+const EMAIL_REGEX = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
 
 // POST /api/subscribers — public sign-up from the footer form.
-router.post('/', async (req, res) => {
+router.post('/', subscribeLimiter, async (req, res) => {
   try {
     const email = (req.body.email || '').trim().toLowerCase();
     if (!email || !EMAIL_REGEX.test(email)) {
@@ -88,7 +92,7 @@ router.get('/unsubscribe', async (req, res) => {
 
     if (!subscriber.active) {
       return res.send(renderPage('Already unsubscribed',
-        `<h1>You're already unsubscribed</h1><p>The email <strong>${subscriber.email}</strong> is no longer receiving updates.</p>`));
+        `<h1>You're already unsubscribed</h1><p>The email <strong>${escapeHtml(subscriber.email)}</strong> is no longer receiving updates.</p>`));
     }
 
     subscriber.active = false;
@@ -96,7 +100,7 @@ router.get('/unsubscribe', async (req, res) => {
     await subscriber.save();
 
     res.send(renderPage('Unsubscribed',
-      `<h1>You're unsubscribed</h1><p>Sorry to see you go, <strong>${subscriber.email}</strong>. You won't receive any more updates. You can resubscribe any time from the portfolio.</p>`));
+      `<h1>You're unsubscribed</h1><p>Sorry to see you go, <strong>${escapeHtml(subscriber.email)}</strong>. You won't receive any more updates. You can resubscribe any time from the portfolio.</p>`));
   } catch (error) {
     console.error('Unsubscribe error:', error);
     res.status(500).send(renderPage('Error',

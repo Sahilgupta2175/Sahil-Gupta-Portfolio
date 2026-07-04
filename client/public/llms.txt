@@ -1,0 +1,26 @@
+# Sahil Gupta
+
+> Portfolio of Sahil Gupta — a full-stack MERN developer and B.Tech Computer Science (Honors) student at GLA University, Mathura, based in Orai, Uttar Pradesh, India. He builds fast, scalable web applications with React, Node.js, Express and MongoDB.
+
+## About
+
+- **Name:** Sahil Gupta
+- **Role:** Full Stack Developer (MERN)
+- **Location:** Orai, Uttar Pradesh, India
+- **Education:** B.Tech Computer Science (Honors), GLA University, Mathura
+- **Core stack:** React.js, Node.js, Express.js, MongoDB, JavaScript, Java, REST APIs, SQL/PostgreSQL
+
+## Projects
+
+- Vehicle Rental Services — full-stack rental platform with multi-role auth, payments and an AI chatbot.
+- Zerodha Clone — stock-trading platform with portfolio management and order execution.
+- Wanderlust — Airbnb-style property rental app with interactive maps.
+- InShare — secure file-sharing app with expiring download links.
+- Netflix UI Clone — responsive Netflix homepage powered by the TMDB API.
+
+## Contact
+
+- Email: guptasahil2175@gmail.com
+- GitHub: https://github.com/Sahilgupta2175
+- LinkedIn: https://linkedin.com/in/sahilgupta2175
+- Website: https://sahilgupta.tech

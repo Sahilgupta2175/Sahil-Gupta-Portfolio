@@ -1,0 +1,92 @@
+.faq {
+  position: relative;
+  padding: var(--section-padding);
+}
+
+.faq .container {
+  max-width: 820px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: border-color var(--transition-normal), background var(--transition-normal);
+}
+
+.faq-item:hover {
+  border-color: var(--border-glow);
+}
+
+.faq-item.open {
+  border-color: var(--border-glow);
+  background: rgba(99, 102, 241, 0.06);
+}
+
+/* The <h3> wraps the button so the question is a real heading for SEO/a11y
+   while staying fully clickable. */
+.faq-question-heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.faq-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.faq-answer {
+  overflow: hidden;
+}
+
+.faq-answer p {
+  margin: 0;
+  padding: 0 24px 24px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .faq-question {
+    font-size: 0.98rem;
+    padding: 18px 18px;
+  }
+  .faq-answer p {
+    padding: 0 18px 20px;
+  }
+}

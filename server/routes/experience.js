@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
     const items = await Experience.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
     if (!item) return res.status(404).json({ message: 'Experience not found' });
     res.json(item);
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -62,7 +62,7 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     res.status(201).json(exp);
   } catch (error) {
     console.error('Create experience error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -82,7 +82,7 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
     res.json(existing);
   } catch (error) {
     console.error('Update experience error:', error);
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
@@ -94,7 +94,7 @@ router.delete('/:id', protect, async (req, res) => {
     await existing.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error', type: error.name });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

@@ -7,3 +7,24 @@ main {
   position: relative;
   z-index: 1;
 }
+
+/* Accessibility: keyboard users can jump straight past the navbar.
+   Hidden off-screen until it receives focus. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 3000;
+  padding: 12px 18px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  left: 0;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

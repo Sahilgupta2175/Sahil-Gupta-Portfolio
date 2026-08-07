@@ -1,39 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { FiBriefcase, FiCalendar, FiMapPin } from 'react-icons/fi';
-import { listExperience } from '../../services/experienceService';
-import { fallbackExperience } from '../../data/fallback';
-import './Experience.css';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { FiBriefcase, FiCalendar, FiMapPin } from "react-icons/fi";
+import { listExperience } from "../../services/experienceService";
+import { fallbackExperience } from "../../data/fallback";
+import "./Experience.css";
 
 const educationData = [
   {
-    degree: 'Bachelor of Technology',
-    field: 'Computer Science (Honors)',
-    institution: 'GLA University, Mathura',
-    period: 'Expected Jun 2026',
-    cgpa: 'CGPA: 7.46',
-    icon: '🎓'
+    degree: "Bachelor of Technology",
+    field: "Computer Science (Honors)",
+    institution: "GLA University, Mathura",
+    period: "Expected Jun 2026",
+    cgpa: "Percentage: 77.2%",
+    icon: "🎓",
   },
   {
-    degree: 'Senior Secondary Education',
-    field: 'Science Stream',
-    institution: 'Brij Kunwar Devi Aldrich Public School, Orai',
-    period: 'May 2022',
-    cgpa: 'Percentage: 84.2%',
-    icon: '🏫'
-  }
+    degree: "Senior Secondary Education (12th Grade)",
+    field: "Science Stream",
+    institution: "Brij Kunwar Devi Aldrich Public School, Orai",
+    period: "May 2022",
+    cgpa: "Percentage: 84.2%",
+    icon: "🏫",
+  },
 ];
 
-const EMPLOYMENT_TABS = ['Internship', 'Full-time'];
+const EMPLOYMENT_TABS = ["Internship", "Full-time"];
 
 // Docs created before employmentType existed have no value; treat them as
 // internships so they stay visible instead of vanishing from both tabs.
-const typeOf = (exp) => (exp.employmentType === 'Full-time' ? 'Full-time' : 'Internship');
+const typeOf = (exp) =>
+  exp.employmentType === "Full-time" ? "Full-time" : "Internship";
 
 const Experience = () => {
   const [experiences, setExperiences] = useState([]);
-  const [tab, setTab] = useState('Internship');
+  const [tab, setTab] = useState("Internship");
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
@@ -45,21 +46,23 @@ const Experience = () => {
         setExperiences(items);
         // Land on a tab that actually has entries, so someone with only
         // full-time roles doesn't open the section on an empty Internship tab.
-        if (!items.some((e) => typeOf(e) === 'Internship')) setTab('Full-time');
+        if (!items.some((e) => typeOf(e) === "Internship")) setTab("Full-time");
       })
       .catch(() => !cancelled && setExperiences(fallbackExperience));
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const visible = experiences.filter((e) => typeOf(e) === tab);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
   };
   const itemVariants = {
     hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
   };
 
   return (
@@ -96,14 +99,14 @@ const Experience = () => {
               type="button"
               role="tab"
               aria-selected={tab === t}
-              className={`experience-switch-btn ${tab === t ? 'active' : ''}`}
+              className={`experience-switch-btn ${tab === t ? "active" : ""}`}
               onClick={() => setTab(t)}
             >
               {tab === t && (
                 <motion.span
                   className="experience-switch-pill"
                   layoutId="experience-switch-pill"
-                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
               <span className="experience-switch-label">
@@ -119,7 +122,7 @@ const Experience = () => {
             key={tab}
             variants={containerVariants}
             initial="hidden"
-            animate={inView ? 'visible' : 'hidden'}
+            animate={inView ? "visible" : "hidden"}
           >
             {visible.length === 0 && (
               <p className="experience-empty">
@@ -143,7 +146,11 @@ const Experience = () => {
                   <div className="timeline-header">
                     <div className="timeline-icon">
                       {exp.logo ? (
-                        <img src={exp.logo} alt={exp.company} className="timeline-logo" />
+                        <img
+                          src={exp.logo}
+                          alt={exp.company}
+                          className="timeline-logo"
+                        />
                       ) : (
                         <FiBriefcase />
                       )}
@@ -177,7 +184,9 @@ const Experience = () => {
                   {exp.technologies?.length > 0 && (
                     <div className="timeline-tech">
                       {exp.technologies.map((tech, i) => (
-                        <span key={i} className="tech-tag">{tech}</span>
+                        <span key={i} className="tech-tag">
+                          {tech}
+                        </span>
                       ))}
                     </div>
                   )}
@@ -202,7 +211,9 @@ const Experience = () => {
                     <p className="education-field">{edu.field}</p>
                     <p className="education-institution">{edu.institution}</p>
                     <span className="education-period">{edu.period}</span>
-                    {edu.cgpa && <span className="education-cgpa">{edu.cgpa}</span>}
+                    {edu.cgpa && (
+                      <span className="education-cgpa">{edu.cgpa}</span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -212,9 +223,9 @@ const Experience = () => {
               <h3 className="sidebar-title">Certifications</h3>
               <div className="certifications-list">
                 {[
-                  { name: 'LeetCode 150+ Problems', icon: '🏆' },
-                  { name: 'HackerRank Certified', icon: '⭐' },
-                  { name: 'PostgreSQL Training', icon: '🐘' }
+                  { name: "LeetCode 150+ Problems", icon: "🏆" },
+                  { name: "HackerRank Certified", icon: "⭐" },
+                  { name: "PostgreSQL Training", icon: "🐘" },
                 ].map((cert, i) => (
                   <div key={i} className="certification-item">
                     <span className="cert-icon">{cert.icon}</span>
@@ -228,8 +239,8 @@ const Experience = () => {
               <h3 className="sidebar-title">Languages</h3>
               <div className="languages-list">
                 {[
-                  { name: 'English', level: 'Fluent' },
-                  { name: 'Hindi', level: 'Native' }
+                  { name: "English", level: "Fluent" },
+                  { name: "Hindi", level: "Native" },
                 ].map((lang, i) => (
                   <div key={i} className="language-item">
                     <span className="lang-name">{lang.name}</span>

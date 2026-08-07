@@ -15,6 +15,7 @@ const EMPTY = {
   company: '',
   location: '',
   period: '',
+  employmentType: 'Internship',
   description: '',
   achievements: '',
   technologies: '',
@@ -47,6 +48,7 @@ const ExperiencePanel = () => {
       company: e.company || '',
       location: e.location || '',
       period: e.period || '',
+      employmentType: e.employmentType === 'Full-time' ? 'Full-time' : 'Internship',
       description: e.description || '',
       // Achievements use newline as a separator in the textarea — friendlier than commas
       // for free-form bullet text. We translate to/from an array on save/load.
@@ -68,6 +70,7 @@ const ExperiencePanel = () => {
       company: form.company,
       location: form.location,
       period: form.period,
+      employmentType: form.employmentType,
       description: form.description,
       achievements: (form.achievements || '').split('\n').map((s) => s.trim()).filter(Boolean),
       technologies: toArr(form.technologies)
@@ -126,6 +129,17 @@ const ExperiencePanel = () => {
             />
           </label>
         </div>
+
+        <label className="admin-field">
+          <span>Employment type * (drives the tab it appears under)</span>
+          <select
+            value={form.employmentType}
+            onChange={(e) => setForm({ ...form, employmentType: e.target.value })}
+          >
+            <option value="Internship">Internship</option>
+            <option value="Full-time">Full-time</option>
+          </select>
+        </label>
 
         <label className="admin-field">
           <span>Description</span>
@@ -198,6 +212,7 @@ const ExperiencePanel = () => {
               <h3>{e.role}</h3>
               <p>{e.company} · {e.period}</p>
               <div className="admin-list-meta">
+                <span className="admin-badge">{e.employmentType || 'Internship'}</span>
                 {e.location && <span>{e.location}</span>}
               </div>
             </div>

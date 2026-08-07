@@ -48,6 +48,13 @@ const autoReply = require('../templates/autoReplyEmail')('Ada', 'hi');
 assert.ok(!autoReply.includes('class="social-link"'), 'autoReply must not use button-style social links');
 assert.ok(/>GitHub<\/a>\s*\|/.test(autoReply), 'autoReply needs pipe-separated text links');
 
+// --- Experience employmentType: only the two tabs are ever stored ---
+const Experience = require('../models/Experience');
+const expType = (v) => new Experience({ role: 'r', company: 'c', period: 'p', employmentType: v }).employmentType;
+assert.strictEqual(expType('Full-time'), 'Full-time');
+assert.strictEqual(expType('Internship'), 'Internship');
+assert.strictEqual(expType(undefined), 'Internship', 'legacy docs default into the Internship tab');
+
 // Escaping actually reaches the rendered email.
 assert.ok(
   require('../templates/notificationEmail')('<b>x</b>', 'a@b.co', 'S', 'm').includes('&lt;b&gt;x&lt;/b&gt;'),

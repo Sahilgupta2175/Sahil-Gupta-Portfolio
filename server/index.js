@@ -24,6 +24,7 @@ const path = require('path');
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const authRoutes = require('./routes/auth');
+const aboutRoutes = require('./routes/about');
 const contactRoutes = require('./routes/contact');
 const projectRoutes = require('./routes/projects');
 const blogRoutes = require('./routes/blogs');
@@ -125,6 +126,7 @@ app.use(async (req, res, next) => {
 // Routes
 // ---------------------------------------------------------------------------
 app.use('/api/auth', authRoutes);
+app.use('/api/about', aboutRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/blogs', blogRoutes);

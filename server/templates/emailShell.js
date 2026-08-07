@@ -70,30 +70,6 @@ const CARD_CSS = `
       font-weight: 700;
       margin-bottom: 20px;
     }
-    .social-links {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .social-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .social-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-    }
     .footer {
       background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
       padding: 40px 30px;

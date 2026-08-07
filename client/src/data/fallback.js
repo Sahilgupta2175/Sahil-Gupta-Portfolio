@@ -69,6 +69,22 @@ export const fallbackProjects = [
   }
 ];
 
+// Shown until the admin saves an About document (and if the API is down).
+export const fallbackAbout = {
+  title: 'Crafting Solutions\nThrough Code',
+  paragraphs: [
+    "I'm a passionate full-stack developer currently pursuing my Bachelor of Technology in Computer Science (Honors) at GLA University, Mathura. With a strong foundation in modern web technologies and a keen eye for user experience, I love creating applications that solve real-world problems.",
+    "My journey in tech has been driven by curiosity and a constant desire to learn. I've completed over 150 coding challenges on platforms like LeetCode and HackerRank, maintaining an 85% success rate. This has helped me develop strong problem-solving skills and a deep understanding of data structures and algorithms."
+  ],
+  highlights: [
+    { label: 'Location', value: 'Orai, UP, India' },
+    { label: 'Education', value: 'B.Tech CSE' },
+    { label: 'Problems', value: '150+ Solved' }
+  ],
+  badgeNumber: '150+',
+  badgeText: 'Problems\nSolved'
+};
+
 export const fallbackExperience = [
   {
     _id: 'fallback-exp-1',
@@ -76,6 +92,7 @@ export const fallbackExperience = [
     company: 'GLA University',
     location: 'Remote',
     period: 'Jun 2024 - Jul 2024',
+    employmentType: 'Internship',
     description: 'Intensive training program focused on practical industry skills and database management.',
     achievements: [
       'Gained hands-on experience with PostgreSQL through instructor-led sessions',

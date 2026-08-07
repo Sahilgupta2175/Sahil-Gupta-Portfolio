@@ -25,8 +25,15 @@ const educationData = [
   }
 ];
 
+const EMPLOYMENT_TABS = ['Internship', 'Full-time'];
+
+// Docs created before employmentType existed have no value; treat them as
+// internships so they stay visible instead of vanishing from both tabs.
+const typeOf = (exp) => (exp.employmentType === 'Full-time' ? 'Full-time' : 'Internship');
+
 const Experience = () => {
   const [experiences, setExperiences] = useState([]);
+  const [tab, setTab] = useState('Internship');
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
@@ -34,11 +41,17 @@ const Experience = () => {
     listExperience()
       .then((data) => {
         if (cancelled) return;
-        setExperiences(data && data.length ? data : fallbackExperience);
+        const items = data && data.length ? data : fallbackExperience;
+        setExperiences(items);
+        // Land on a tab that actually has entries, so someone with only
+        // full-time roles doesn't open the section on an empty Internship tab.
+        if (!items.some((e) => typeOf(e) === 'Internship')) setTab('Full-time');
       })
       .catch(() => !cancelled && setExperiences(fallbackExperience));
     return () => { cancelled = true; };
   }, []);
+
+  const visible = experiences.filter((e) => typeOf(e) === tab);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -69,14 +82,51 @@ const Experience = () => {
           </p>
         </motion.div>
 
+        <motion.div
+          className="experience-switch"
+          role="tablist"
+          aria-label="Employment type"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          {EMPLOYMENT_TABS.map((t) => (
+            <button
+              key={t}
+              type="button"
+              role="tab"
+              aria-selected={tab === t}
+              className={`experience-switch-btn ${tab === t ? 'active' : ''}`}
+              onClick={() => setTab(t)}
+            >
+              {tab === t && (
+                <motion.span
+                  className="experience-switch-pill"
+                  layoutId="experience-switch-pill"
+                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                />
+              )}
+              <span className="experience-switch-label">
+                {t} ({experiences.filter((e) => typeOf(e) === t).length})
+              </span>
+            </button>
+          ))}
+        </motion.div>
+
         <div className="experience-content">
           <motion.div
             className="experience-timeline"
+            key={tab}
             variants={containerVariants}
             initial="hidden"
             animate={inView ? 'visible' : 'hidden'}
           >
-            {experiences.map((exp) => (
+            {visible.length === 0 && (
+              <p className="experience-empty">
+                No {tab.toLowerCase()} experience listed yet.
+              </p>
+            )}
+            {visible.map((exp) => (
               <motion.div
                 key={exp._id || exp.id}
                 className="timeline-item"

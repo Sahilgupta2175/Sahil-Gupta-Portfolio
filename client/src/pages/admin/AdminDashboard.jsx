@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiLogOut, FiExternalLink, FiRefreshCw } from 'react-icons/fi';
 import { logout } from '../../services/authService';
+import AboutPanel from './panels/AboutPanel';
 import ProjectsPanel from './panels/ProjectsPanel';
 import BlogsPanel from './panels/BlogsPanel';
 import ExperiencePanel from './panels/ExperiencePanel';
@@ -11,6 +12,7 @@ import './Admin.css';
 
 const TABS = [
   { key: 'current', label: 'Current Work' },
+  { key: 'about', label: 'About' },
   { key: 'projects', label: 'Projects' },
   { key: 'blogs', label: 'Blogs' },
   { key: 'experience', label: 'Experience' },
@@ -89,6 +91,7 @@ const AdminDashboard = () => {
 
           <section className="admin-panel" key={`${tab}-${refreshSignal}`}>
             {tab === 'current' && <CurrentWorkPanel />}
+            {tab === 'about' && <AboutPanel />}
             {tab === 'projects' && <ProjectsPanel />}
             {tab === 'blogs' && <BlogsPanel />}
             {tab === 'experience' && <ExperiencePanel />}

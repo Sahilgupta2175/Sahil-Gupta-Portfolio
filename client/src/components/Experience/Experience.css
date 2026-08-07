@@ -10,6 +10,61 @@
   pointer-events: none;
 }
 
+/* Internship / Full-time switch */
+.experience-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 auto 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.experience-switch-btn {
+  position: relative;
+  padding: 10px 26px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-normal);
+}
+
+.experience-switch-btn:hover {
+  color: var(--text-primary);
+}
+
+.experience-switch-btn.active {
+  color: #fff;
+}
+
+/* The sliding pill — framer-motion animates it between the two buttons. */
+.experience-switch-pill {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  border-radius: var(--radius-xl);
+}
+
+.experience-switch-label {
+  position: relative;
+  z-index: 1;
+}
+
+.experience-empty {
+  color: var(--text-muted);
+  font-size: 15px;
+  padding: 20px 0;
+}
+
 .experience-content {
   display: grid;
   grid-template-columns: 2fr 1fr;

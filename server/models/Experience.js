@@ -19,6 +19,14 @@ const experienceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  // Drives the Internship / Full-time toggle on the public Experience section.
+  // Existing docs predate this field, so the default backfills them as
+  // Internship rather than leaving them out of both tabs.
+  employmentType: {
+    type: String,
+    enum: ['Internship', 'Full-time'],
+    default: 'Internship'
+  },
   description: {
     type: String,
     default: ''

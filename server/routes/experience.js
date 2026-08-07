@@ -11,6 +11,7 @@ const buildExpPayload = (body, file) => {
     company: body.company,
     location: body.location || '',
     period: body.period,
+    employmentType: body.employmentType === 'Full-time' ? 'Full-time' : 'Internship',
     description: body.description || '',
     achievements: parseArrayField(body.achievements),
     technologies: parseArrayField(body.technologies)

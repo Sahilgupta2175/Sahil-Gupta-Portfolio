@@ -119,6 +119,11 @@
   align-items: flex-start;
 }
 
+/* About is a single document, so its panel is one full-width form. */
+.admin-grid-single {
+  grid-template-columns: 1fr;
+}
+
 @media (max-width: 1024px) {
   .admin-grid {
     grid-template-columns: 1fr;
@@ -146,9 +151,21 @@
   gap: 16px;
 }
 
+/* Label / value / remove — used by the About highlights editor. */
+.admin-row-tight {
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 640px) {
   .admin-row {
     grid-template-columns: 1fr;
+  }
+
+  .admin-row-tight {
+    grid-template-columns: 1fr 1fr auto;
   }
 }
 

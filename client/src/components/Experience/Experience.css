@@ -10,18 +10,18 @@
   pointer-events: none;
 }
 
-/* Internship / Full-time switch */
+/* Internship / Full-time switch.
+   Centred with width:fit-content + margin auto, NOT translateX(-50%) — the
+   entry animation writes an inline transform that would override it. */
 .experience-switch {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   gap: 4px;
   padding: 4px;
   margin: 0 auto 40px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .experience-switch-btn {

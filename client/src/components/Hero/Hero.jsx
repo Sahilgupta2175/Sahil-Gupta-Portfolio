@@ -1,15 +1,27 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { TypeAnimation } from 'react-type-animation';
-import { Link } from 'react-scroll';
-import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from 'react-icons/fi';
-import './Hero.css';
+import React from "react";
+import { motion } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
+import { Link } from "react-scroll";
+import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from "react-icons/fi";
+import "./Hero.css";
 
 const Hero = () => {
   const socialLinks = [
-    { icon: <FiGithub />, url: 'https://github.com/Sahilgupta2175', label: 'GitHub' },
-    { icon: <FiLinkedin />, url: 'https://linkedin.com/in/sahilgupta2175', label: 'LinkedIn' },
-    { icon: <FiMail />, url: 'mailto:guptasahil2175@gmail.com', label: 'Email' }
+    {
+      icon: <FiGithub />,
+      url: "https://github.com/Sahilgupta2175",
+      label: "GitHub",
+    },
+    {
+      icon: <FiLinkedin />,
+      url: "https://linkedin.com/in/sahilgupta2175",
+      label: "LinkedIn",
+    },
+    {
+      icon: <FiMail />,
+      url: "mailto:guptasahil2175@gmail.com",
+      label: "Email",
+    },
   ];
 
   const containerVariants = {
@@ -18,9 +30,9 @@ const Hero = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.15,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
@@ -30,9 +42,9 @@ const Hero = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
   };
 
   const floatingVariants = {
@@ -41,40 +53,40 @@ const Hero = () => {
       transition: {
         duration: 4,
         repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   return (
     <section className="hero" id="hero">
       {/* Animated Background Elements */}
       <div className="hero-bg">
-        <motion.div 
+        <motion.div
           className="hero-orb hero-orb-1"
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3]
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 8, repeat: Infinity }}
         />
-        <motion.div 
+        <motion.div
           className="hero-orb hero-orb-2"
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.4, 0.2]
+            opacity: [0.2, 0.4, 0.2],
           }}
           transition={{ duration: 10, repeat: Infinity }}
         />
-        <motion.div 
+        <motion.div
           className="hero-orb hero-orb-3"
           animate={{
             scale: [1, 1.3, 1],
-            opacity: [0.15, 0.3, 0.15]
+            opacity: [0.15, 0.3, 0.15],
           }}
           transition={{ duration: 6, repeat: Infinity }}
         />
-        
+
         {/* Grid Pattern */}
         <div className="hero-grid" />
       </div>
@@ -121,7 +133,7 @@ const Hero = () => {
 
             <motion.h1 className="hero-name" variants={itemVariants}>
               Sahil Gupta
-              <motion.span 
+              <motion.span
                 className="hero-emoji"
                 animate={{ rotate: [0, 20, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
@@ -134,12 +146,12 @@ const Hero = () => {
               <span className="hero-title-prefix">I'm a </span>
               <TypeAnimation
                 sequence={[
-                  'Problem Solver',
+                  "Problem Solver",
                   2000,
-                  'MERN Developer',
+                  "MERN Developer",
                   2000,
-                  'CS Student',
-                  2000
+                  "Build Real Products",
+                  2000,
                 ]}
                 wrapper="span"
                 speed={50}
@@ -149,9 +161,9 @@ const Hero = () => {
             </motion.div>
 
             <motion.p className="hero-description" variants={itemVariants}>
-              I create scalable web applications using modern technologies. 
-              Passionate about clean code, user experience, and solving 
-              complex problems through innovative solutions.
+              I create scalable web applications using modern technologies.
+              Passionate about clean code, user experience, and solving complex
+              problems through innovative solutions.
             </motion.p>
 
             <motion.div className="hero-cta" variants={itemVariants}>
@@ -162,8 +174,15 @@ const Hero = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <span>View My Work</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </motion.button>
               </Link>
@@ -198,7 +217,7 @@ const Hero = () => {
           </div>
 
           {/* Hero Visual - Right Side */}
-          <motion.div 
+          <motion.div
             className="hero-visual"
             variants={floatingVariants}
             animate="animate"
@@ -206,31 +225,31 @@ const Hero = () => {
             <div className="hero-image-wrapper">
               <div className="hero-image-bg" />
               <div className="hero-image">
-                <img 
-                  src="/Sahil_Photo.jpg" 
-                  alt="Sahil Gupta" 
+                <img
+                  src="/Sahil_Photo.jpg"
+                  alt="Sahil Gupta"
                   className="hero-avatar-img"
                 />
               </div>
               <div className="hero-image-ring" />
               <div className="hero-image-ring hero-image-ring-2" />
-              
+
               {/* Floating Tech Icons */}
-              <motion.div 
+              <motion.div
                 className="floating-icon floating-icon-1"
                 animate={{ y: [-5, 5, -5], rotate: [0, 10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
                 ⚛️
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="floating-icon floating-icon-2"
                 animate={{ y: [5, -5, 5], rotate: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
               >
                 🚀
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="floating-icon floating-icon-3"
                 animate={{ y: [-3, 3, -3], rotate: [0, 15, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity }}

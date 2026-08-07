@@ -1,7 +1,29 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import {
+  SiReact, SiNodedotjs, SiMongodb, SiExpress, SiJavascript,
+  SiGit, SiMysql, SiPostman, SiVercel
+} from 'react-icons/si';
+import { FaJava } from 'react-icons/fa';
 import './Skills.css';
+
+// Official brand marks (Simple Icons) in official brand colours. Express and
+// Vercel are black in their brand guidelines, so they get white here to stay
+// visible on the dark theme. Java isn't in Simple Icons (Oracle trademark), so
+// it comes from Font Awesome.
+const techStack = [
+  { name: 'React', Icon: SiReact, color: '#61DAFB' },
+  { name: 'Node.js', Icon: SiNodedotjs, color: '#5FA04E' },
+  { name: 'MongoDB', Icon: SiMongodb, color: '#47A248' },
+  { name: 'Express', Icon: SiExpress, color: '#FFFFFF' },
+  { name: 'JavaScript', Icon: SiJavascript, color: '#F7DF1E' },
+  { name: 'Java', Icon: FaJava, color: '#ED8B00' },
+  { name: 'Git', Icon: SiGit, color: '#F05032' },
+  { name: 'MySQL', Icon: SiMysql, color: '#4479A1' },
+  { name: 'Postman', Icon: SiPostman, color: '#FF6C37' },
+  { name: 'Vercel', Icon: SiVercel, color: '#FFFFFF' }
+];
 
 const skillsData = {
   frontend: {
@@ -163,28 +185,19 @@ const Skills = () => {
         >
           <h3 className="tech-stack-title">Technologies I Work With</h3>
           <div className="tech-stack-grid">
-            {[
-              { name: 'React', icon: '⚛️' },
-              { name: 'Node.js', icon: '🟢' },
-              { name: 'MongoDB', icon: '🍃' },
-              { name: 'Express', icon: '🚂' },
-              { name: 'JavaScript', icon: '💛' },
-              { name: 'Java', icon: '☕' },
-              { name: 'Git', icon: '📦' },
-              { name: 'MySQL', icon: '🐬' },
-              { name: 'Postman', icon: '📮' },
-              { name: 'Vercel', icon: '▲' }
-            ].map((tech, index) => (
+            {techStack.map(({ name, Icon, color }, index) => (
               <motion.div
-                key={tech.name}
+                key={name}
                 className="tech-item"
                 initial={{ opacity: 0, scale: 0 }}
                 animate={inView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.4, delay: 0.8 + index * 0.05 }}
                 whileHover={{ scale: 1.1, y: -5 }}
               >
-                <span className="tech-item-icon">{tech.icon}</span>
-                <span className="tech-item-name">{tech.name}</span>
+                <span className="tech-item-icon" style={{ color }}>
+                  <Icon aria-hidden="true" />
+                </span>
+                <span className="tech-item-name">{name}</span>
               </motion.div>
             ))}
           </div>

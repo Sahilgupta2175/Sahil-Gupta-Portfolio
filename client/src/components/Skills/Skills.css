@@ -185,8 +185,12 @@
   background: rgba(99, 102, 241, 0.1);
 }
 
+/* Brand SVGs render at 1em, so font-size still drives their size. */
 .tech-item-icon {
   font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tech-item-name {

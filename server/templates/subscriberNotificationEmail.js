@@ -58,7 +58,7 @@ const getSubscriberNotificationEmailHTML = (subscriber, totalCount, adminDashboa
       </div>
 
       <div style="text-align: center; margin-top: 30px;">
-        <a href="${adminDashboardUrl}" class="action-button">
+        <a href="${adminDashboardUrl}" class="action-button" style="color: #ffffff;">
           Open subscribers dashboard →
         </a>
       </div>

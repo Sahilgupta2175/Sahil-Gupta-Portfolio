@@ -56,7 +56,7 @@ const getNotificationEmailHTML = (name, email, subject, message) => {
       <div class="message-box">${safeMessage}</div>
       
       <div style="text-align: center; margin-top: 30px;">
-        <a href="mailto:${safeEmail}?subject=Re: ${encodeURIComponent(subject)}" class="action-button">
+        <a href="mailto:${safeEmail}?subject=Re: ${encodeURIComponent(subject)}" class="action-button" style="color: #ffffff;">
           Reply to ${safeName} →
         </a>
       </div>

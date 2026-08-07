@@ -34,6 +34,20 @@ for (const [name, args, shared, ownRule] of cases) {
   assert.ok(/<\/html>/.test(html), `${name}: truncated output`);
 }
 
+// Gmail injects its own `a { color }`, which beats any class rule in <style>.
+// Every anchor sitting on the purple gradient must carry an inline color or it
+// renders as unreadable blue-on-purple.
+for (const [name, args] of cases.map((c) => [c[0], c[1]])) {
+  const html = require(`../templates/${name}`)(...args);
+  for (const tag of html.match(/<a\b[^>]*class="(?:action-button|social-link)"[^>]*>/g) || []) {
+    assert.ok(/style="[^"]*color:\s*#ffffff/i.test(tag), `${name}: gradient anchor needs inline color -> ${tag}`);
+  }
+}
+// The auto-reply's "Connect with me" is plain hyperlinks, not gradient buttons.
+const autoReply = require('../templates/autoReplyEmail')('Ada', 'hi');
+assert.ok(!autoReply.includes('class="social-link"'), 'autoReply must not use button-style social links');
+assert.ok(/>GitHub<\/a>\s*\|/.test(autoReply), 'autoReply needs pipe-separated text links');
+
 // Escaping actually reaches the rendered email.
 assert.ok(
   require('../templates/notificationEmail')('<b>x</b>', 'a@b.co', 'S', 'm').includes('&lt;b&gt;x&lt;/b&gt;'),

@@ -120,13 +120,13 @@ const getSubscriberWelcomeEmailHTML = (subscriber, unsubscribeUrl, portfolioUrl)
           🔗 Connect with me
         </p>
         <div class="social-links">
-          <a href="https://github.com/Sahilgupta2175" class="social-link">
+          <a href="https://github.com/Sahilgupta2175" class="social-link" style="color: #ffffff;">
             <span>⭐</span> GitHub
           </a>
-          <a href="https://linkedin.com/in/sahilgupta2175" class="social-link">
+          <a href="https://linkedin.com/in/sahilgupta2175" class="social-link" style="color: #ffffff;">
             <span>💼</span> LinkedIn
           </a>
-          <a href="${portfolioUrl}" class="social-link">
+          <a href="${portfolioUrl}" class="social-link" style="color: #ffffff;">
             <span>🌐</span> Portfolio
           </a>
         </div>

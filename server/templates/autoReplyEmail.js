@@ -81,13 +81,6 @@ const getAutoReplyEmailHTML = (name, message) => {
       .greeting {
         font-size: 20px;
       }
-      .social-links {
-        flex-direction: column;
-      }
-      .social-link {
-        width: 100%;
-        justify-content: center;
-      }
     }
   </style>
 </head>
@@ -119,20 +112,14 @@ const getAutoReplyEmailHTML = (name, message) => {
       </div>
       
       <div style="text-align: center; margin: 40px 0;">
-        <p style="font-size: 16px; color: #667eea; font-weight: 600; margin-bottom: 20px;">
+        <p style="font-size: 16px; color: #667eea; font-weight: 600; margin-bottom: 12px;">
           🔗 Connect with me
         </p>
-        <div class="social-links">
-          <a href="https://github.com/Sahilgupta2175" class="social-link">
-            <span>⭐</span> GitHub
-          </a>
-          <a href="https://linkedin.com/in/sahilgupta2175" class="social-link">
-            <span>💼</span> LinkedIn
-          </a>
-          <a href="https://sahilgupta-sg.vercel.app" class="social-link">
-            <span>🌐</span> Portfolio
-          </a>
-        </div>
+        <p style="font-size: 15px; color: #9ca3af;">
+          <a href="https://github.com/Sahilgupta2175" style="color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px;">GitHub</a> |
+          <a href="https://linkedin.com/in/sahilgupta2175" style="color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px;">LinkedIn</a> |
+          <a href="https://sahilgupta-sg.vercel.app" style="color: #667eea; text-decoration: none; font-weight: 500; margin: 0 10px;">Portfolio</a>
+        </p>
       </div>
       
       <div style="background: linear-gradient(135deg, #fff5f7 0%, #f8f9ff 100%); padding: 25px; border-radius: 12px; text-align: center; margin-top: 30px;">

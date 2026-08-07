@@ -7,9 +7,7 @@ import {
   deleteBlog
 } from '../../../services/blogsService';
 import ImageUpload from '../widgets/ImageUpload';
-
-const toArr = (str) => (str || '').split(',').map((s) => s.trim()).filter(Boolean);
-const fromArr = (arr) => (arr || []).join(', ');
+import { toArr, fromArr } from './helpers';
 
 const EMPTY = {
   _id: null,
@@ -23,7 +21,7 @@ const EMPTY = {
   currentImage: ''
 };
 
-const BlogsPanel = ({ refreshSignal = 0 }) => {
+const BlogsPanel = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -38,8 +36,8 @@ const BlogsPanel = ({ refreshSignal = 0 }) => {
       .finally(() => setLoading(false));
   };
 
-  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
-  useEffect(() => { refresh(); }, [refreshSignal]);
+  // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
+  useEffect(() => { refresh(); }, []);
 
   const startEdit = (b) => {
     setForm({

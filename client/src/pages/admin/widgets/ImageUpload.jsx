@@ -5,7 +5,7 @@ import { FiUploadCloud, FiX, FiImage } from 'react-icons/fi';
 // button before a file is chosen, then a thumbnail + filename + clear button.
 // `currentImageUrl` is the existing Cloudinary URL when editing an item, so
 // the admin can see what they have before deciding to replace it.
-const ImageUpload = ({ value, onChange, currentImageUrl, accept = 'image/*' }) => {
+const ImageUpload = ({ value, onChange, currentImageUrl }) => {
   const inputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState('');
 
@@ -46,7 +46,7 @@ const ImageUpload = ({ value, onChange, currentImageUrl, accept = 'image/*' }) =
       <input
         ref={inputRef}
         type="file"
-        accept={accept}
+        accept="image/*"
         onChange={onChosen}
         style={{ display: 'none' }}
       />

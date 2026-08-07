@@ -121,7 +121,7 @@ const sendWelcomeAndNotify = async (subscriber) => {
   await Promise.all([welcomeTask, notifyTask]);
 };
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const { setTimeout: sleep } = require('timers/promises');
 
 // Blast helper for new blog / project. Iterates sequentially with a small
 // gap between sends so Gmail doesn't flag bursty behavior. Subscribers
@@ -161,10 +161,8 @@ const blastNewContent = async (kind, item) => {
 };
 
 module.exports = {
+  sendOne,
   sendWelcomeAndNotify,
   blastNewContent,
-  unsubscribeUrl,
-  frontendUrl,
-  backendUrl,
-  formatIST
+  frontendUrl
 };

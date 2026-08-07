@@ -5,7 +5,7 @@ import { listSubscribers, deleteSubscriber } from '../../../services/subscribers
 // Read-only-ish panel: admin can see everyone on the list, sort active vs.
 // unsubscribed, and remove rows. Creation happens via the public footer
 // form — not from the dashboard.
-const SubscribersPanel = ({ refreshSignal = 0 }) => {
+const SubscribersPanel = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('active');
@@ -18,8 +18,8 @@ const SubscribersPanel = ({ refreshSignal = 0 }) => {
       .finally(() => setLoading(false));
   };
 
-  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
-  useEffect(() => { refresh(); }, [refreshSignal]);
+  // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
+  useEffect(() => { refresh(); }, []);
 
   const onDelete = async (id) => {
     if (!window.confirm('Permanently delete this subscriber? They will receive no future emails.')) return;

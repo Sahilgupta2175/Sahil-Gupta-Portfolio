@@ -8,10 +8,7 @@ import {
 } from '../../../services/projectsService';
 import EmojiPicker from '../widgets/EmojiPicker';
 import ImageUpload from '../widgets/ImageUpload';
-
-// Local-only helper: convert a comma-separated string to a clean array of strings.
-const toArr = (str) => (str || '').split(',').map((s) => s.trim()).filter(Boolean);
-const fromArr = (arr) => (arr || []).join(', ');
+import { toArr, fromArr } from './helpers';
 
 const EMPTY = {
   _id: null,
@@ -28,7 +25,7 @@ const EMPTY = {
   currentImage: ''
 };
 
-const ProjectsPanel = ({ refreshSignal = 0 }) => {
+const ProjectsPanel = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -43,8 +40,8 @@ const ProjectsPanel = ({ refreshSignal = 0 }) => {
       .finally(() => setLoading(false));
   };
 
-  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
-  useEffect(() => { refresh(); }, [refreshSignal]);
+  // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
+  useEffect(() => { refresh(); }, []);
 
   const startEdit = (p) => {
     setForm({

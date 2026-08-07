@@ -69,15 +69,13 @@ app.use(express.json());
 // ---------------------------------------------------------------------------
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
 
-let isConnected = false;
 const connectDB = async () => {
-  if (isConnected && mongoose.connection.readyState === 1) return;
+  if (mongoose.connection.readyState === 1) return;
   await mongoose.connect(MONGODB_URI, {
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 45000,
     family: 4
   });
-  isConnected = true;
   console.log('✅ MongoDB Connected Successfully');
 };
 

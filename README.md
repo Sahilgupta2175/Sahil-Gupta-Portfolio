@@ -8,7 +8,6 @@ A stunning, professional portfolio website built with the MERN stack featuring m
 
 - **Modern Design** - Clean, professional UI with glass morphism effects
 - **Smooth Animations** - Framer Motion powered animations throughout
-- **Custom Cursor** - Interactive cursor that responds to hover states
 - **Responsive Layout** - Perfect display on all devices
 - **Dark Theme** - Elegant dark color scheme with gradient accents
 - **Contact Form** - Functional contact form with MongoDB storage
@@ -42,7 +41,6 @@ Portfolio/
 │       ├── components/
 │       │   ├── About/
 │       │   ├── Contact/
-│       │   ├── Cursor/
 │       │   ├── Experience/
 │       │   ├── Footer/
 │       │   ├── Hero/

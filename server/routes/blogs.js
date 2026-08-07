@@ -4,18 +4,7 @@ const Blog = require('../models/Blog');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
 const { blastNewContent } = require('../utils/notify');
-
-const parseArrayField = (value) => {
-  if (Array.isArray(value)) return value;
-  if (typeof value === 'string' && value.trim()) {
-    try {
-      const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
-    } catch (_) {}
-    return value.split(',').map((v) => v.trim()).filter(Boolean);
-  }
-  return [];
-};
+const parseArrayField = require('../utils/parseArrayField');
 
 const buildBlogPayload = (body, file) => {
   const payload = {

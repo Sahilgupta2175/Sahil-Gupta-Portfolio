@@ -51,4 +51,4 @@ const destroyImage = async (publicId) => {
   }
 };
 
-module.exports = { upload, cloudinary, destroyImage };
+module.exports = { upload, destroyImage };

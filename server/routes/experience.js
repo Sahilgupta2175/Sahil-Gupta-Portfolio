@@ -3,18 +3,7 @@ const router = express.Router();
 const Experience = require('../models/Experience');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
-
-const parseArrayField = (value) => {
-  if (Array.isArray(value)) return value;
-  if (typeof value === 'string' && value.trim()) {
-    try {
-      const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
-    } catch (_) {}
-    return value.split(',').map((v) => v.trim()).filter(Boolean);
-  }
-  return [];
-};
+const parseArrayField = require('../utils/parseArrayField');
 
 const buildExpPayload = (body, file) => {
   const payload = {
@@ -24,8 +13,7 @@ const buildExpPayload = (body, file) => {
     period: body.period,
     description: body.description || '',
     achievements: parseArrayField(body.achievements),
-    technologies: parseArrayField(body.technologies),
-    order: Number(body.order) || 0
+    technologies: parseArrayField(body.technologies)
   };
   if (file) {
     payload.logo = file.path;
@@ -34,10 +22,9 @@ const buildExpPayload = (body, file) => {
   return payload;
 };
 
-// GET /api/experience — public, sorted by display order then newest first
+// GET /api/experience — public. Newest first, most recent role at the top.
 router.get('/', async (req, res) => {
   try {
-    // Newest first — most recent role at the top of the timeline.
     const items = await Experience.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {

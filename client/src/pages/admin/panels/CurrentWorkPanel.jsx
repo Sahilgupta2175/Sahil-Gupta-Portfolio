@@ -22,7 +22,7 @@ const EMPTY = {
   active: true
 };
 
-const CurrentWorkPanel = ({ refreshSignal = 0 }) => {
+const CurrentWorkPanel = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
@@ -37,8 +37,8 @@ const CurrentWorkPanel = ({ refreshSignal = 0 }) => {
       .finally(() => setLoading(false));
   };
 
-  // Re-fetch on initial mount AND whenever the dashboard bumps refreshSignal.
-  useEffect(() => { refresh(); }, [refreshSignal]);
+  // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
+  useEffect(() => { refresh(); }, []);
 
   const startEdit = (item) => {
     setForm({

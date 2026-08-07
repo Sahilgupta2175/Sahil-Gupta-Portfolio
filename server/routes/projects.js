@@ -4,22 +4,7 @@ const Project = require('../models/Project');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
 const { blastNewContent } = require('../utils/notify');
-
-// Body fields that arrive as JSON strings inside multipart/form-data
-// need to be parsed back into arrays before we save.
-const parseArrayField = (value) => {
-  if (Array.isArray(value)) return value;
-  if (typeof value === 'string' && value.trim()) {
-    try {
-      const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed;
-    } catch (_) {
-      // fall through to comma split
-    }
-    return value.split(',').map((v) => v.trim()).filter(Boolean);
-  }
-  return [];
-};
+const parseArrayField = require('../utils/parseArrayField');
 
 const buildProjectPayload = (body, file) => {
   const payload = {
@@ -31,8 +16,7 @@ const buildProjectPayload = (body, file) => {
     liveUrl: body.liveUrl,
     githubUrl: body.githubUrl,
     category: body.category || 'web',
-    featured: body.featured === 'true' || body.featured === true,
-    order: Number(body.order) || 0
+    featured: body.featured === 'true' || body.featured === true
   };
   if (file) {
     payload.image = file.path;

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiSend, FiMail, FiMapPin, FiPhone, FiGithub, FiLinkedin } from 'react-icons/fi';
-import axios from 'axios';
-import API_BASE_URL from '../../config/api';
+import { sendContactMessage } from '../../services/contactService';
 import './Contact.css';
 
 const Contact = () => {
@@ -37,7 +36,7 @@ const Contact = () => {
     setStatus({ submitting: true, submitted: false, error: null });
 
     try {
-      await axios.post(`${API_BASE_URL}/api/contact`, formData);
+      await sendContactMessage(formData);
       setStatus({ submitting: false, submitted: true, error: null });
       setFormData({ name: '', email: '', subject: '', message: '' });
       

@@ -21,12 +21,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState('current');
 
-  // Bumping this number tells every mounted panel to re-fetch its data.
-  // Each panel passes refreshSignal into its useEffect dependency array,
-  // so a change here triggers a fresh GET. Only the active panel is
-  // actually mounted at any time, so this effectively refreshes
-  // whichever section the user is looking at. Per-panel refresh icons
-  // do the same thing locally.
+  // Bumping this number changes the active panel's React key, which remounts
+  // it and re-runs its mount-time fetch. Only one panel is mounted at a time,
+  // so this refreshes whichever section the user is looking at. Per-panel
+  // refresh icons do the same thing locally.
   const [refreshSignal, setRefreshSignal] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -89,12 +87,12 @@ const AdminDashboard = () => {
             ))}
           </nav>
 
-          <section className="admin-panel">
-            {tab === 'current' && <CurrentWorkPanel refreshSignal={refreshSignal} />}
-            {tab === 'projects' && <ProjectsPanel refreshSignal={refreshSignal} />}
-            {tab === 'blogs' && <BlogsPanel refreshSignal={refreshSignal} />}
-            {tab === 'experience' && <ExperiencePanel refreshSignal={refreshSignal} />}
-            {tab === 'subscribers' && <SubscribersPanel refreshSignal={refreshSignal} />}
+          <section className="admin-panel" key={`${tab}-${refreshSignal}`}>
+            {tab === 'current' && <CurrentWorkPanel />}
+            {tab === 'projects' && <ProjectsPanel />}
+            {tab === 'blogs' && <BlogsPanel />}
+            {tab === 'experience' && <ExperiencePanel />}
+            {tab === 'subscribers' && <SubscribersPanel />}
           </section>
         </div>
       </main>

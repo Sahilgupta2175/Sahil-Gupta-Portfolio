@@ -1,22 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const nodemailer = require('nodemailer');
 const Contact = require('../models/Contact');
 const { protect } = require('../middleware/auth');
 const { contactLimiter } = require('../middleware/rateLimit');
+const { sendOne } = require('../utils/notify');
 const getNotificationEmailHTML = require('../templates/notificationEmail');
 const getAutoReplyEmailHTML = require('../templates/autoReplyEmail');
-
-// Create email transporter
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
-};
 
 // Submit contact form
 router.post('/', contactLimiter, async (req, res) => {
@@ -46,27 +35,21 @@ router.post('/', contactLimiter, async (req, res) => {
 
     await newContact.save();
 
-    // Send email notification to you
-    const transporter = createTransporter();
-    
-    const mailOptions = {
-      from: `"Sahil Gupta Portfolio" <${process.env.EMAIL_USER}>`,
-      to: 'guptasahil2175@gmail.com', // Your email where you want to receive messages
-      subject: `Portfolio Contact: ${subject}`,
-      html: getNotificationEmailHTML(name, email, subject, message)
-    };
-
-    // Send auto-reply to the person who contacted
-    const autoReplyOptions = {
-      from: `"Sahil Gupta" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: `Thanks for reaching out, ${name}!`,
-      html: getAutoReplyEmailHTML(name, message)
-    };
-
-    // Send both emails
-    await transporter.sendMail(mailOptions);
-    await transporter.sendMail(autoReplyOptions);
+    // Notification to me + auto-reply to the sender, in parallel over the
+    // pooled transporter shared with the subscriber emails (utils/notify).
+    await Promise.all([
+      sendOne({
+        from: `"Sahil Gupta Portfolio" <${process.env.EMAIL_USER}>`,
+        to: 'guptasahil2175@gmail.com', // Your email where you want to receive messages
+        subject: `Portfolio Contact: ${subject}`,
+        html: getNotificationEmailHTML(name, email, subject, message)
+      }),
+      sendOne({
+        to: email,
+        subject: `Thanks for reaching out, ${name}!`,
+        html: getAutoReplyEmailHTML(name, message)
+      })
+    ]);
 
     res.status(201).json({
       success: true,

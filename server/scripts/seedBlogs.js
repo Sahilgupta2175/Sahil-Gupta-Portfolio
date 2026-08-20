@@ -23,7 +23,7 @@ const https = require('https');
 const mongoose = require('mongoose');
 const Blog = require('../models/Blog');
 
-const FEED_URL = process.argv[2] || 'https://sahil-blog.hashnode.dev/rss.xml';
+const FEED_URL = process.argv[2] || 'https://sahilxdev.hashnode.dev/rss.xml';
 
 // ---------- tiny RSS parser ----------
 // Just enough regex to read the fields Hashnode emits. No external deps.

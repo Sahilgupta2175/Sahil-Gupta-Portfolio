@@ -55,6 +55,34 @@ assert.strictEqual(expType('Full-time'), 'Full-time');
 assert.strictEqual(expType('Internship'), 'Internship');
 assert.strictEqual(expType(undefined), 'Internship', 'legacy docs default into the Internship tab');
 
+// --- Hashnode RSS parser: the fields the blog cards actually render ---
+const { parseRss } = require('../utils/hashnodeFeed');
+const feed = `<rss><channel>
+<item>
+  <title><![CDATA[Hello World]]></title>
+  <link>https://blog.example.com/hello</link>
+  <description><![CDATA[Short excerpt.]]></description>
+  <pubDate>Mon, 05 May 2025 10:00:00 GMT</pubDate>
+  <category><![CDATA[react]]></category>
+  <category><![CDATA[node]]></category>
+  <enclosure url="https://cdn.example.com/cover.png" type="image/png"/>
+  <content:encoded><![CDATA[<p>${'word '.repeat(400)}</p>]]></content:encoded>
+</item>
+</channel></rss>`;
+const [post] = parseRss(feed);
+assert.strictEqual(post.title, 'Hello World', 'CDATA title unwrapped');
+assert.strictEqual(post.externalUrl, 'https://blog.example.com/hello');
+assert.deepStrictEqual(post.tags, ['react', 'node'], 'every <category> becomes a tag');
+assert.strictEqual(post.coverImage, 'https://cdn.example.com/cover.png', 'cover from enclosure url');
+assert.strictEqual(post.readTime, '2 min read', '400 words at ~200wpm');
+assert.strictEqual(post.createdAt.getUTCFullYear(), 2025, 'pubDate parsed');
+assert.strictEqual(parseRss('<rss></rss>').length, 0, 'empty feed yields no posts');
+
+// A 300-char description is truncated to fit the card.
+const long = parseRss(`<rss><item><title>t</title><link>u</link><description>${'x'.repeat(300)}</description></item></rss>`)[0];
+assert.strictEqual(long.excerpt.length, 280, 'excerpt capped at 280 chars');
+assert.ok(long.excerpt.endsWith('...'), 'truncated excerpt is elided');
+
 // Escaping actually reaches the rendered email.
 assert.ok(
   require('../templates/notificationEmail')('<b>x</b>', 'a@b.co', 'S', 'm').includes('&lt;b&gt;x&lt;/b&gt;'),

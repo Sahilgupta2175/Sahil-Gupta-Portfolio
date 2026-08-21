@@ -5,6 +5,7 @@ const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
 const { blastNewContent } = require('../utils/notify');
 const parseArrayField = require('../utils/parseArrayField');
+const { syncIfStale } = require('../utils/hashnodeFeed');
 
 const buildBlogPayload = (body, file) => {
   const payload = {
@@ -22,9 +23,14 @@ const buildBlogPayload = (body, file) => {
   return payload;
 };
 
-// GET /api/blogs?limit=3&tag=react — public list, only returns published
+// GET /api/blogs?limit=3&tag=react — public list, only returns published.
+// Pulls new posts from the Hashnode feed first (throttled), so publishing
+// there is all it takes for a post to appear here.
 router.get('/', async (req, res) => {
   try {
+    // Never fail the list because the feed is down — serve what's in the DB.
+    await syncIfStale().catch((e) => console.error('Hashnode sync failed:', e.message));
+
     const { limit, tag } = req.query;
     const filter = { published: true };
     if (tag) filter.tags = tag;

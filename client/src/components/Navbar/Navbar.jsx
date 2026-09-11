@@ -144,7 +144,7 @@ const Navbar = () => {
         </ul>
 
         <motion.a
-          href="/resume/Sahil_Gupta_Resume.pdf"
+          href="/resume/Sahil_Resume_offline_resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="navbar-resume-btn"

@@ -14,6 +14,7 @@ const AdminLogin = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = 'Admin sign in · Sahil Gupta';
   }, []);
 
   const onSubmit = async (e) => {

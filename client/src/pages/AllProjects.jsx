@@ -11,7 +11,7 @@ const AllProjects = () => {
   }, []);
 
   return (
-    <SiteShell mainClassName="page-shell">
+    <SiteShell mainClassName="page-shell" title="Projects">
       <div className="container page-shell-back">
         <Link to="/" className="back-link">
           <FiArrowLeft aria-hidden="true" /> Back to home

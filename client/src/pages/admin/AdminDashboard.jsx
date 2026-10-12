@@ -48,6 +48,10 @@ const AdminDashboard = () => {
   };
 
   const active = TABS.find((t) => t.key === tab);
+
+  useEffect(() => {
+    document.title = `${active.label} · Admin · Sahil Gupta`;
+  }, [active.label]);
   const email = localStorage.getItem('admin_email');
 
   return (

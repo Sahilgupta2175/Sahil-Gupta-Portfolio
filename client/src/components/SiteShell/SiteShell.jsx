@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import './SiteShell.css';
 
+const SITE_TITLE = 'Sahil Gupta · Full-stack Developer';
+
 // Shared page chrome: skip link, reading-progress bar, film grain, nav, footer.
-const SiteShell = ({ children, mainClassName = '' }) => {
+// `title` names the page in the browser tab ("Projects · Sahil Gupta").
+const SiteShell = ({ children, mainClassName = '', title }) => {
+  useEffect(() => {
+    document.title = title ? `${title} · Sahil Gupta` : SITE_TITLE;
+  }, [title]);
+
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
 

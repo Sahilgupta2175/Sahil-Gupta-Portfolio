@@ -11,7 +11,7 @@ const AllBlogs = () => {
   }, []);
 
   return (
-    <SiteShell mainClassName="page-shell">
+    <SiteShell mainClassName="page-shell" title="Writing">
       <div className="container page-shell-back">
         <Link to="/" className="back-link">
           <FiArrowLeft aria-hidden="true" /> Back to home

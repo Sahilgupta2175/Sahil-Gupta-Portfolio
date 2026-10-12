@@ -112,7 +112,7 @@ const AboutPanel = () => {
         </label>
 
         <div className="admin-field">
-          <span>Highlights (the three stat rows under the text)</span>
+          <span>Highlights (the fact row under the About text)</span>
           {form.highlights.map((h, i) => (
             <div key={i} className="admin-row admin-row-tight">
               <input
@@ -142,7 +142,7 @@ const AboutPanel = () => {
 
         <div className="admin-row">
           <label className="admin-field">
-            <span>Badge number</span>
+            <span>Badge number (the count-up stat tile on the homepage)</span>
             <input
               value={form.badgeNumber}
               onChange={(e) => setForm({ ...form, badgeNumber: e.target.value })}

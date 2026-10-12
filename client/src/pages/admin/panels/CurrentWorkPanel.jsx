@@ -94,7 +94,7 @@ const CurrentWorkPanel = () => {
         <h2>{form._id ? 'Edit current work' : 'Add current work'}</h2>
 
         <label className="admin-field">
-          <span>Title * (e.g. "Vehicle Rental v2.0")</span>
+          <span>Title * (e.g. "Vehicle Rental v2.0") · shown in the homepage "Right now" tile</span>
           <input
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -202,8 +202,8 @@ const CurrentWorkPanel = () => {
         </div>
         {!loading && items.length === 0 && (
           <p className="admin-muted">
-            Nothing yet — add what you're working on right now. The section won't
-            appear on the site until you add at least one active entry.
+            Nothing yet. Add what you're working on right now; until then the
+            homepage "Right now" tile shows a short placeholder line.
           </p>
         )}
         {items.map((item) => (

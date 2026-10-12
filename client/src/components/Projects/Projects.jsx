@@ -1,265 +1,208 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { FiGithub, FiExternalLink, FiFolder, FiX, FiArrowRight } from 'react-icons/fi';
+import {
+  AnimatePresence, motion, useMotionValue, useSpring, useTransform, useVelocity
+} from 'framer-motion';
+import { FiArrowRight, FiGithub, FiPlus } from 'react-icons/fi';
 import { listProjects } from '../../services/projectsService';
 import { fallbackProjects } from '../../data/fallback';
 import './Projects.css';
 
-// `preview` mode shows only 3 featured projects + a "View All" CTA.
-// Without preview the component shows everything with the filter bar.
+const HOME_LIMIT = 6;
+const LABELS = { web: 'Web', mobile: 'Mobile', design: 'Design', other: 'Other' };
+const COVERS = ['cover-accent', 'cover-inverse', 'cover-plain'];
+
+const hostOf = (p) => (p.liveUrl || p.githubUrl || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+const initials = (title) =>
+  title.split(/[\s-]+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+
+// Admin-uploaded image if present, otherwise a generated typographic cover.
+const Cover = ({ project, tone, className = '' }) => (
+  <div className={`pcover ${tone} ${className}`}>
+    {project.image ? (
+      <img src={project.image} alt="" loading="lazy" />
+    ) : (
+      <div className="pcover-gen" aria-hidden="true">
+        <span className="pcover-top">
+          <span>{hostOf(project)}</span>
+          {project.emoji && <span>{project.emoji}</span>}
+        </span>
+        <span className="pcover-mono">{initials(project.title)}</span>
+      </div>
+    )}
+  </div>
+);
+
 const Projects = ({ preview = true }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [category, setCategory] = useState('all');
+  const [open, setOpen] = useState(null);
+  const [hovered, setHovered] = useState(null);
+
+  // Cursor-following preview, driven by motion values (no re-render per move).
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 260, damping: 28, mass: 0.6 });
+  const y = useSpring(my, { stiffness: 260, damping: 28, mass: 0.6 });
+  const rotate = useTransform(useVelocity(x), [-1500, 0, 1500], [-10, 0, 10], { clamp: true });
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
     listProjects()
-      .then((data) => {
-        if (cancelled) return;
-        // If the API returns nothing, fall back to the bundled defaults so
-        // the section never looks empty on first deploy.
-        setProjects(data && data.length ? data : fallbackProjects);
-      })
-      .catch(() => {
-        if (!cancelled) setProjects(fallbackProjects);
-      })
+      .then((data) => !cancelled && setProjects(data?.length ? data : fallbackProjects))
+      .catch(() => !cancelled && setProjects(fallbackProjects))
       .finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
   }, []);
 
-  const categoriesFromData = Array.from(
-    new Set(projects.map((p) => p.category).filter(Boolean))
-  );
-  const categories = [
-    { key: 'all', label: 'All Projects' },
-    ...categoriesFromData.map((c) => ({ key: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))
-  ];
+  const sorted = [...projects].sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+  const cats = Array.from(new Set(sorted.map((p) => p.category).filter(Boolean)));
+  const filtered = category === 'all' ? sorted : sorted.filter((p) => p.category === category);
+  const shown = preview ? filtered.slice(0, HOME_LIMIT) : filtered;
+  const hoveredProject = shown.find((p) => p._id === hovered && p._id !== open);
+  const hoveredIndex = shown.indexOf(hoveredProject);
 
-  let visibleProjects = activeCategory === 'all'
-    ? projects
-    : projects.filter((p) => p.category === activeCategory);
-
-  // Homepage shows top 3 featured (falls back to first 3 if not enough featured).
-  if (preview) {
-    const featured = visibleProjects.filter((p) => p.featured);
-    visibleProjects = (featured.length >= 3 ? featured : visibleProjects).slice(0, 3);
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
-  const renderImage = (project) => {
-    if (project.image) {
-      return <img src={project.image} alt={project.title} className="project-img" />;
-    }
-    return <span className="project-emoji">{project.emoji || '💼'}</span>;
+  const onMove = (e) => {
+    mx.set(e.clientX);
+    my.set(e.clientY);
   };
 
   return (
-    <section className="projects" id="projects" ref={ref}>
+    <section className="projects" id="projects" aria-labelledby="projects-title">
       <div className="container">
         <motion.div
-          className="section-header"
+          className="section-head"
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <span className="section-subtitle">Portfolio</span>
-          <h2 className="section-title">
-            {preview ? 'Featured Projects' : 'All Projects'}
+          <h2 id="projects-title" className="display-title">
+            {preview ? 'Selected work' : 'All projects'}<sup>({projects.length})</sup>
           </h2>
-          <p className="section-description">
-            A selection of projects I've worked on, showcasing my skills in design and development
-          </p>
-        </motion.div>
-
-        {!preview && (
-          <motion.div
-            className="projects-filter"
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                className={`filter-btn ${activeCategory === cat.key ? 'active' : ''}`}
-                onClick={() => setActiveCategory(cat.key)}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </motion.div>
-        )}
-
-        {loading ? (
-          <div className="projects-loading">
-            <div className="loading-spinner" />
-          </div>
-        ) : visibleProjects.length === 0 ? (
-          <div className="projects-empty">
-            <p>No projects yet — check back soon.</p>
-          </div>
-        ) : (
-          <motion.div
-            className="projects-grid"
-            variants={containerVariants}
-            initial="hidden"
-            animate={inView ? 'visible' : 'hidden'}
-          >
-            <AnimatePresence mode="wait">
-              {visibleProjects.map((project) => (
-                <motion.div
-                  key={project._id || project.id}
-                  className={`project-card ${project.featured ? 'featured' : ''}`}
-                  variants={itemVariants}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  whileHover={{ y: -10 }}
-                  onClick={() => setSelectedProject(project)}
+          {cats.length > 1 && (
+            <div className="seg" role="tablist" aria-label="Filter projects by category">
+              {['all', ...cats].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  role="tab"
+                  aria-selected={category === c}
+                  className={`seg-btn ${category === c ? 'active' : ''}`}
+                  onClick={() => { setCategory(c); setOpen(null); }}
                 >
-                  <div className="project-image">
-                    {renderImage(project)}
-                    <div className="project-overlay">
-                      <motion.button
-                        className="overlay-btn"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        View Details
-                      </motion.button>
-                    </div>
-                  </div>
-
-                  <div className="project-content">
-                    <div className="project-header">
-                      <FiFolder className="project-icon" />
-                      <div className="project-links">
-                        {project.githubUrl && (
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                            <FiGithub />
-                          </a>
-                        )}
-                        {project.liveUrl && (
-                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                            <FiExternalLink />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-
-                    <h3 className="project-title">{project.title}</h3>
-                    <p className="project-description">{project.description}</p>
-
-                    <div className="project-tech">
-                      {(project.technologies || []).slice(0, 4).map((tech, i) => (
-                        <span key={i} className="tech-tag">{tech}</span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
+                  {c === 'all' ? 'All' : LABELS[c] || c}
+                  <span className="count">
+                    {c === 'all' ? projects.length : projects.filter((p) => p.category === c).length}
+                  </span>
+                </button>
               ))}
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-        <motion.div
-          className="projects-more"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6 }}
-        >
-          {preview ? (
-            <Link to="/projects" className="btn btn-primary">
-              View All Projects <FiArrowRight />
-            </Link>
-          ) : (
-            <a
-              href="https://github.com/Sahilgupta2175"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-            >
-              <FiGithub />
-              View All Projects on GitHub
-            </a>
+            </div>
           )}
         </motion.div>
+
+        {loading ? (
+          <div className="loading-spinner" role="status" aria-label="Loading projects" />
+        ) : shown.length === 0 ? (
+          <p className="projects-empty">Nothing in this category yet.</p>
+        ) : (
+          <div className="plist" onPointerMove={onMove} onPointerLeave={() => setHovered(null)}>
+            {shown.map((p, i) => {
+              const isOpen = open === p._id;
+              const panelId = `project-panel-${p._id}`;
+              return (
+                <motion.article
+                  key={p._id}
+                  className={`prow ${isOpen ? 'is-open' : ''}`}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: Math.min(i, 5) * 0.06, ease: [0.2, 0.8, 0.2, 1] }}
+                >
+                  <button
+                    type="button"
+                    className="phead"
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    onClick={() => setOpen(isOpen ? null : p._id)}
+                    onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(p._id)}
+                  >
+                    <span className="pnum">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="pmain">
+                      <span className="ptitle">{p.title}</span>
+                      <span className="psub">{(p.technologies || []).slice(0, 4).join(' · ')}</span>
+                    </span>
+                    <span className="pcat">
+                      {LABELS[p.category] || p.category}
+                      {p.featured && <span className="pstar"> · Featured</span>}
+                    </span>
+                    <span className="pplus" aria-hidden="true"><FiPlus /></span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        id={panelId}
+                        className="ppanel"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+                      >
+                        <div className="ppanel-inner">
+                          <Cover project={p} tone={COVERS[i % COVERS.length]} className="ppanel-cover" />
+                          <div className="ppanel-body">
+                            <p>{p.longDescription || p.description}</p>
+                            <div className="ptech">
+                              {(p.technologies || []).map((t) => <span key={t} className="chip">{t}</span>)}
+                            </div>
+                            <div className="plinks">
+                              {p.liveUrl && (
+                                <a className="btn btn-solid" href={p.liveUrl} target="_blank" rel="noopener noreferrer">
+                                  Open live site ↗
+                                </a>
+                              )}
+                              {p.githubUrl && (
+                                <a className="btn btn-secondary" href={p.githubUrl} target="_blank" rel="noopener noreferrer">
+                                  <FiGithub aria-hidden="true" /> Read the code
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.article>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="projects-more">
+          {preview && projects.length > shown.length ? (
+            <Link to="/projects" className="btn btn-secondary">
+              View all {projects.length} projects <FiArrowRight aria-hidden="true" />
+            </Link>
+          ) : (
+            <a className="btn btn-secondary" href="https://github.com/Sahilgupta2175" target="_blank" rel="noopener noreferrer">
+              <FiGithub aria-hidden="true" /> More on GitHub
+            </a>
+          )}
+        </div>
       </div>
 
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            className="project-modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedProject(null)}
-          >
-            <motion.div
-              className="project-modal"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close" onClick={() => setSelectedProject(null)}>
-                <FiX />
-              </button>
-
-              <div className="modal-image">
-                {selectedProject.image ? (
-                  <img src={selectedProject.image} alt={selectedProject.title} className="modal-img" />
-                ) : (
-                  <span className="modal-emoji">{selectedProject.emoji || '💼'}</span>
-                )}
-              </div>
-
-              <div className="modal-content">
-                <h2 className="modal-title">{selectedProject.title}</h2>
-                <p className="modal-description">
-                  {selectedProject.longDescription || selectedProject.description}
-                </p>
-
-                <div className="modal-tech">
-                  {(selectedProject.technologies || []).map((tech, i) => (
-                    <span key={i} className="tech-tag">{tech}</span>
-                  ))}
-                </div>
-
-                <div className="modal-actions">
-                  {selectedProject.liveUrl && (
-                    <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                      <FiExternalLink />
-                      Live Demo
-                    </a>
-                  )}
-                  {selectedProject.githubUrl && (
-                    <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                      <FiGithub />
-                      Source Code
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <motion.div
+        className="pfloat"
+        aria-hidden="true"
+        style={{ x, y, rotate }}
+        initial={false}
+        animate={{ opacity: hoveredProject ? 1 : 0, scale: hoveredProject ? 1 : 0.85 }}
+        transition={{ duration: 0.25 }}
+      >
+        {hoveredProject && <Cover project={hoveredProject} tone={COVERS[hoveredIndex % COVERS.length]} />}
+      </motion.div>
     </section>
   );
 };

@@ -16,15 +16,14 @@ main {
   top: 0;
   z-index: 3000;
   padding: 12px 18px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 600;
-  text-decoration: none;
-  border-radius: 0 0 8px 0;
+  border-radius: 0 0 12px 0;
 }
 
 .skip-link:focus {
   left: 0;
-  outline: 2px solid #fff;
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }

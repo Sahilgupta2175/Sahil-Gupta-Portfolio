@@ -7,7 +7,7 @@ const Loader = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
@@ -15,78 +15,44 @@ const Loader = () => {
         return prev + Math.random() * 15;
       });
     }, 200);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       className="loader"
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+      role="status"
+      aria-label="Loading"
     >
       <div className="loader-content">
-        <motion.div 
-          className="loader-logo"
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 260, 
-            damping: 20,
-            delay: 0.2 
-          }}
-        >
-          <span className="logo-text">SG</span>
-          <div className="logo-ring"></div>
-          <div className="logo-ring logo-ring-2"></div>
-        </motion.div>
-        
-        <motion.div 
-          className="loader-progress"
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: '200px', opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div 
-            className="loader-progress-bar" 
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </motion.div>
-        
-        <motion.p 
-          className="loader-text"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          Loading Experience...
-        </motion.p>
-      </div>
-
-      {/* Animated Background Elements */}
-      <div className="loader-bg-elements">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="bg-element"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: [0, 1.2, 1],
-              opacity: [0, 0.3, 0.1]
-            }}
-            transition={{
-              duration: 2,
-              delay: i * 0.2,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + (i % 3) * 20}%`
-            }}
-          />
-        ))}
+        <div className="loader-logo" aria-hidden="true">
+          {'SG'.split('').map((ch, i) => (
+            <motion.span
+              key={ch}
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.15 + i * 0.1, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+            >
+              {ch}
+            </motion.span>
+          ))}
+          <motion.span
+            className="loader-dot"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, type: 'spring', stiffness: 400, damping: 16 }}
+          >
+            .
+          </motion.span>
+        </div>
+        <div className="loader-progress">
+          <div className="loader-progress-bar" style={{ transform: `scaleX(${Math.min(progress, 100) / 100})` }} />
+        </div>
+        <p className="loader-text">
+          <span>Loading</span>
+          <span>{String(Math.min(Math.round(progress), 100)).padStart(3, '0')}%</span>
+        </p>
       </div>
     </motion.div>
   );

@@ -1,255 +1,169 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { FiBriefcase, FiCalendar, FiMapPin } from "react-icons/fi";
-import { listExperience } from "../../services/experienceService";
-import { fallbackExperience } from "../../data/fallback";
-import "./Experience.css";
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Link as ScrollLink } from 'react-scroll';
+import { listExperience } from '../../services/experienceService';
+import { fallbackExperience } from '../../data/fallback';
+import { education, extras } from '../../data/profile';
+import './Experience.css';
 
-const educationData = [
-  {
-    degree: "Bachelor of Technology",
-    field: "Computer Science (Honors)",
-    institution: "GLA University, Mathura",
-    period: "Expected Jun 2026",
-    cgpa: "Percentage: 77.2%",
-    icon: "🎓",
-  },
-  {
-    degree: "Senior Secondary Education (12th Grade)",
-    field: "Science Stream",
-    institution: "Brij Kunwar Devi Aldrich Public School, Orai",
-    period: "May 2022",
-    cgpa: "Percentage: 84.2%",
-    icon: "🏫",
-  },
+const TABS = [
+  { key: 'Full-time', label: 'Full-time' },
+  { key: 'Internship', label: 'Internships' },
+  { key: 'Education', label: 'Education' }
 ];
-
-const EMPLOYMENT_TABS = ["Internship", "Full-time"];
 
 // Docs created before employmentType existed have no value; treat them as
 // internships so they stay visible instead of vanishing from both tabs.
-const typeOf = (exp) =>
-  exp.employmentType === "Full-time" ? "Full-time" : "Internship";
+const typeOf = (exp) => (exp.employmentType === 'Full-time' ? 'Full-time' : 'Internship');
+
+const ticketMotion = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i) => ({ opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] } }),
+  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } }
+};
+
+const Ticket = ({ i, stub, children }) => (
+  <motion.article className="ticket" variants={ticketMotion} custom={i} initial="hidden" animate="show" exit="exit">
+    <div className="ticket-stub">{stub}</div>
+    <div className="ticket-main">{children}</div>
+  </motion.article>
+);
 
 const Experience = () => {
-  const [experiences, setExperiences] = useState([]);
-  const [tab, setTab] = useState("Internship");
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [items, setItems] = useState(fallbackExperience);
+  const [tab, setTab] = useState(() =>
+    fallbackExperience.some((e) => typeOf(e) === 'Full-time') ? 'Full-time' : 'Internship'
+  );
 
   useEffect(() => {
     let cancelled = false;
     listExperience()
       .then((data) => {
-        if (cancelled) return;
-        const items = data && data.length ? data : fallbackExperience;
-        setExperiences(items);
-        // Land on a tab that actually has entries, so someone with only
-        // full-time roles doesn't open the section on an empty Internship tab.
-        if (!items.some((e) => typeOf(e) === "Internship")) setTab("Full-time");
+        if (cancelled || !data?.length) return;
+        setItems(data);
+        setTab(data.some((e) => typeOf(e) === 'Full-time') ? 'Full-time' : 'Internship');
       })
-      .catch(() => !cancelled && setExperiences(fallbackExperience));
-    return () => {
-      cancelled = true;
-    };
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
-  const visible = experiences.filter((e) => typeOf(e) === tab);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-  };
+  const count = (key) => (key === 'Education' ? education.length : items.filter((e) => typeOf(e) === key).length);
+  const visible = items.filter((e) => typeOf(e) === tab);
 
   return (
-    <section className="experience" id="experience" ref={ref}>
-      <div className="experience-bg">
-        <div className="experience-line" />
-      </div>
-
+    <section className="journey" id="experience" aria-labelledby="journey-title">
       <div className="container">
         <motion.div
-          className="section-header"
+          className="section-head"
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <span className="section-subtitle">Career Journey</span>
-          <h2 className="section-title">Work Experience</h2>
-          <p className="section-description">
-            My professional journey and the companies I've worked with
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="experience-switch"
-          role="tablist"
-          aria-label="Employment type"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          {EMPLOYMENT_TABS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              role="tab"
-              aria-selected={tab === t}
-              className={`experience-switch-btn ${tab === t ? "active" : ""}`}
-              onClick={() => setTab(t)}
-            >
-              {tab === t && (
-                <motion.span
-                  className="experience-switch-pill"
-                  layoutId="experience-switch-pill"
-                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                />
-              )}
-              <span className="experience-switch-label">
-                {t} ({experiences.filter((e) => typeOf(e) === t).length})
-              </span>
-            </button>
-          ))}
-        </motion.div>
-
-        <div className="experience-content">
-          <motion.div
-            className="experience-timeline"
-            key={tab}
-            variants={containerVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-          >
-            {visible.length === 0 && (
-              <p className="experience-empty">
-                No {tab.toLowerCase()} experience listed yet.
-              </p>
-            )}
-            {visible.map((exp) => (
-              <motion.div
-                key={exp._id || exp.id}
-                className="timeline-item"
-                variants={itemVariants}
+          <h2 id="journey-title" className="display-title">Journey</h2>
+          <div className="seg" role="tablist" aria-label="Experience type">
+            {TABS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.key}
+                className={`seg-btn journey-tab ${tab === t.key ? 'active' : ''}`}
+                onClick={() => setTab(t.key)}
               >
-                <div className="timeline-marker">
-                  <div className="marker-line" />
-                </div>
-
-                <motion.div
-                  className="timeline-card"
-                  whileHover={{ y: -5, scale: 1.01 }}
-                >
-                  <div className="timeline-header">
-                    <div className="timeline-icon">
-                      {exp.logo ? (
-                        <img
-                          src={exp.logo}
-                          alt={exp.company}
-                          className="timeline-logo"
-                        />
-                      ) : (
-                        <FiBriefcase />
-                      )}
-                    </div>
-                    <div className="timeline-meta">
-                      <span className="timeline-period">
-                        <FiCalendar /> {exp.period}
-                      </span>
-                      {exp.location && (
-                        <span className="timeline-location">
-                          <FiMapPin /> {exp.location}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <h3 className="timeline-role">{exp.role}</h3>
-                  <h4 className="timeline-company">{exp.company}</h4>
-                  {exp.description && (
-                    <p className="timeline-description">{exp.description}</p>
-                  )}
-
-                  {exp.achievements?.length > 0 && (
-                    <ul className="timeline-achievements">
-                      {exp.achievements.map((achievement, i) => (
-                        <li key={i}>{achievement}</li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {exp.technologies?.length > 0 && (
-                    <div className="timeline-tech">
-                      {exp.technologies.map((tech, i) => (
-                        <span key={i} className="tech-tag">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              </motion.div>
+                {tab === t.key && (
+                  <motion.span
+                    className="journey-pill"
+                    layoutId="journey-pill"
+                    transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <span className="journey-tab-label">
+                  {t.label}<span className="count">{count(t.key)}</span>
+                </span>
+              </button>
             ))}
-          </motion.div>
+          </div>
+        </motion.div>
 
-          <motion.div
-            className="experience-sidebar"
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Education</h3>
-              {educationData.map((edu, index) => (
-                <div key={index} className="education-card">
-                  <div className="education-icon">{edu.icon}</div>
-                  <div className="education-content">
-                    <h4 className="education-degree">{edu.degree}</h4>
-                    <p className="education-field">{edu.field}</p>
-                    <p className="education-institution">{edu.institution}</p>
-                    <span className="education-period">{edu.period}</span>
-                    {edu.cgpa && (
-                      <span className="education-cgpa">{edu.cgpa}</span>
+        <div className="tickets" role="tabpanel" aria-label={tab}>
+          <AnimatePresence mode="wait">
+            <motion.div key={tab} className="tickets-list">
+              {tab === 'Education' ? (
+                <>
+                  {education.map((ed, i) => (
+                    <Ticket
+                      key={ed.title}
+                      i={i}
+                      stub={
+                        <>
+                          <span className="eyebrow">Education · {ed.score}</span>
+                          <span className="ticket-period">{ed.period}</span>
+                        </>
+                      }
+                    >
+                      <h3>{ed.title}</h3>
+                      <p className="ticket-org">{ed.field}</p>
+                      <p>{ed.institution}</p>
+                    </Ticket>
+                  ))}
+                  <div className="ticket-extras">
+                    {[...extras.certifications, ...extras.languages].map((x) => (
+                      <span key={x} className="chip">{x}</span>
+                    ))}
+                  </div>
+                </>
+              ) : visible.length === 0 ? (
+                <motion.div className="ticket ticket-empty" variants={ticketMotion} custom={0} initial="hidden" animate="show" exit="exit">
+                  <div className="ticket-stub">
+                    <span className="eyebrow">Admit one · {tab}</span>
+                    <span className="ticket-period">Open →</span>
+                  </div>
+                  <div className="ticket-main">
+                    <h3>This seat is still open.</h3>
+                    <p>No {tab.toLowerCase()} roles listed yet. Looking for a team that ships often.</p>
+                    <ScrollLink to="contact" href="#contact" smooth offset={-70} duration={700} className="btn btn-primary">
+                      Start a conversation
+                    </ScrollLink>
+                  </div>
+                </motion.div>
+              ) : (
+                visible.map((exp, i) => (
+                  <Ticket
+                    key={exp._id || i}
+                    i={i}
+                    stub={
+                      <>
+                        <span className="ticket-stub-top">
+                          {exp.logo ? (
+                            <img className="ticket-logo" src={exp.logo} alt={`${exp.company} logo`} />
+                          ) : (
+                            <span className="ticket-logo ticket-logo-gen" aria-hidden="true">{exp.company?.[0]}</span>
+                          )}
+                          <span className="eyebrow">{typeOf(exp)}{exp.location ? ` · ${exp.location}` : ''}</span>
+                        </span>
+                        <span className="ticket-period">{exp.period}</span>
+                      </>
+                    }
+                  >
+                    <h3>{exp.role}</h3>
+                    <p className="ticket-org">{exp.company}</p>
+                    {exp.description && <p className="ticket-desc">{exp.description}</p>}
+                    {exp.achievements?.length > 0 && (
+                      <ul>
+                        {exp.achievements.map((a, j) => <li key={j}>{a}</li>)}
+                      </ul>
                     )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Certifications</h3>
-              <div className="certifications-list">
-                {[
-                  { name: "LeetCode 150+ Problems", icon: "🏆" },
-                  { name: "HackerRank Certified", icon: "⭐" },
-                  { name: "PostgreSQL Training", icon: "🐘" },
-                ].map((cert, i) => (
-                  <div key={i} className="certification-item">
-                    <span className="cert-icon">{cert.icon}</span>
-                    <span className="cert-name">{cert.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="sidebar-section">
-              <h3 className="sidebar-title">Languages</h3>
-              <div className="languages-list">
-                {[
-                  { name: "English", level: "Fluent" },
-                  { name: "Hindi", level: "Native" },
-                ].map((lang, i) => (
-                  <div key={i} className="language-item">
-                    <span className="lang-name">{lang.name}</span>
-                    <span className="lang-level">{lang.level}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+                    {exp.technologies?.length > 0 && (
+                      <div className="ticket-tech">
+                        {exp.technologies.map((t) => <span key={t}>{t}</span>)}
+                      </div>
+                    )}
+                  </Ticket>
+                ))
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>

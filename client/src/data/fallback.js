@@ -11,7 +11,7 @@ export const fallbackProjects = [
     image: '',
     technologies: ['React 19.2.0', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'TailwindCSS', 'Vite', 'Socket.IO', 'JWT', 'Razorpay', 'Google Gemini AI', 'Cloudinary', 'Twilio', 'SendGrid', 'Nodemailer', 'React Router DOM', 'Zustand', 'React Hook Form', 'Axios', 'React Datepicker', 'React Toastify', 'Bcrypt.js', 'Helmet', 'Express Validator', 'Multer', 'PDFKit', 'CSV Writer', 'Node Cron', 'Morgan', 'Pino'],
     category: 'web',
-    liveUrl: 'https://vrs-frontend-sg.vercel.app',
+    liveUrl: 'https://vrs-sg.vercel.app',
     githubUrl: 'https://github.com/Sahilgupta2175/vehicle-rental-services',
     featured: true
   },
@@ -70,16 +70,15 @@ export const fallbackProjects = [
 ];
 
 // Shown until the admin saves an About document (and if the API is down).
+// Snapshot of the live DB, Oct 2026.
 export const fallbackAbout = {
   title: 'Crafting Solutions\nThrough Code',
   paragraphs: [
-    "I'm a passionate full-stack developer currently pursuing my Bachelor of Technology in Computer Science (Honors) at GLA University, Mathura. With a strong foundation in modern web technologies and a keen eye for user experience, I love creating applications that solve real-world problems.",
-    "My journey in tech has been driven by curiosity and a constant desire to learn. I've completed over 150 coding challenges on platforms like LeetCode and HackerRank, maintaining an 85% success rate. This has helped me develop strong problem-solving skills and a deep understanding of data structures and algorithms."
+    "I'm a passionate software engineer and full-stack MERN developer who loves to turn ideas into scalable, user-centric applications. I have hands-on experience in building modern web solutions using React, Node.js, Express.js, MongoDB, following clean architecture and best development practices. My experience in the Cognizant Healthcare Product Consulting (HPC) program has given me hands-on exposure to SQL, PL/SQL, U.S. healthcare payer systems and TriZetto Facets, and has helped me to further develop my skills in working with enterprise software in domain-driven environments. I enjoy tackling complex technical problems, constantly learning, and building reliable applications that deliver business value."
   ],
   highlights: [
     { label: 'Location', value: 'Orai, UP, India' },
-    { label: 'Education', value: 'B.Tech CSE' },
-    { label: 'Problems', value: '150+ Solved' }
+    { label: 'Education', value: 'B.Tech CSE' }
   ],
   badgeNumber: '150+',
   badgeText: 'Problems\nSolved'
@@ -88,18 +87,42 @@ export const fallbackAbout = {
 export const fallbackExperience = [
   {
     _id: 'fallback-exp-1',
+    role: 'Programmer Analyst Trainee',
+    company: 'Cognizant',
+    location: 'Bangalore',
+    period: 'July 2026 - Present',
+    employmentType: 'Full-time',
+    description: "Transitioned from Cognizant's Healthcare Product Consulting (HPC) training to a full-time role, applying SQL, healthcare domain and Facets knowledge on real-world U.S. healthcare payer projects.",
+    achievements: [
+      'Moved from structured HPC training to a live U.S. healthcare project after completing advanced Facets learning.'
+    ],
+    technologies: ['Facets (TriZetto)'],
+    logo: ''
+  },
+  {
+    _id: 'fallback-exp-2',
+    role: 'Program Analyst Trainee',
+    company: 'Cognizant',
+    location: 'Chennai',
+    period: 'Mar 2026 - Jun 2026',
+    employmentType: 'Internship',
+    description: 'Multi-phase training under the Healthcare Product Consulting (HPC) track: MySQL and PL/SQL, U.S. healthcare payer operations, and TriZetto Facets.',
+    achievements: [
+      "Completed Cognizant's HPC training in SQL/PL-SQL, U.S. healthcare payer operations and TriZetto Facets."
+    ],
+    technologies: ['SQL', 'MySQL', 'PL/SQL', 'Facets (TriZetto)'],
+    logo: ''
+  },
+  {
+    _id: 'fallback-exp-3',
     role: 'Trainee - Job Oriented Value Added Course',
     company: 'GLA University',
     location: 'Remote',
     period: 'Jun 2024 - Jul 2024',
     employmentType: 'Internship',
-    description: 'Intensive training program focused on practical industry skills and database management.',
-    achievements: [
-      'Gained hands-on experience with PostgreSQL through instructor-led sessions',
-      'Achieved Top 3 Performer status among 50 interns in the summer cohort',
-      'Developed practical skills in database design and SQL queries'
-    ],
-    technologies: ['PostgreSQL', 'SQL', 'Database Design'],
+    description: 'Intensive training program focused on practical industry skills: PostgreSQL, database design and SQL queries.',
+    achievements: [],
+    technologies: ['PostgreSQL', 'SQL'],
     logo: ''
   }
 ];

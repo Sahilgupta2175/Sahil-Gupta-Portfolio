@@ -1,25 +1,23 @@
-/* Shared chrome for /projects, /blogs and admin pages */
-
-.page-shell {
-  padding-top: 100px; /* leave room under the fixed navbar */
-}
+/* Shared chrome for /projects and /blogs */
 
 .page-shell-back {
-  padding-top: 30px;
-  padding-bottom: 10px;
+  padding-top: 32px;
+  padding-bottom: 32px;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  transition: all var(--transition-normal);
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.2s ease;
 }
 
-.back-link:hover {
-  color: var(--primary);
-  transform: translateX(-3px);
-}
+.back-link svg { transition: transform 0.3s var(--ease); }
+.back-link:hover { color: var(--text); }
+.back-link:hover svg { transform: translateX(-4px); }

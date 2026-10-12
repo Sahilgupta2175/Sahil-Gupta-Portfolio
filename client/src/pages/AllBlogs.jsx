@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
+import SiteShell from '../components/SiteShell/SiteShell';
 import Blogs from '../components/Blogs/Blogs';
-import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import './PageShell.css';
 
 const AllBlogs = () => {
@@ -13,22 +11,14 @@ const AllBlogs = () => {
   }, []);
 
   return (
-    <div className="app">
-      <a className="skip-link" href="#main-content">Skip to main content</a>
-      <div className="animated-bg" />
-      <div className="noise-overlay" />
-      <Navbar />
-      <main id="main-content" tabIndex={-1} className="page-shell">
-        <div className="container page-shell-back">
-          <Link to="/" className="back-link">
-            <FiArrowLeft /> Back to home
-          </Link>
-        </div>
-        <Blogs preview={false} />
-      </main>
-      <Footer />
-      <ScrollToTop />
-    </div>
+    <SiteShell mainClassName="page-shell">
+      <div className="container page-shell-back">
+        <Link to="/" className="back-link">
+          <FiArrowLeft aria-hidden="true" /> Back to home
+        </Link>
+      </div>
+      <Blogs preview={false} />
+    </SiteShell>
   );
 };
 

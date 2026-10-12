@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
 import HomePage from './pages/HomePage';
 import AllProjects from './pages/AllProjects';
 import AllBlogs from './pages/AllBlogs';
@@ -27,26 +27,29 @@ function App() {
 
   return (
     <Router>
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <Loader key="loader" />
-        ) : (
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/projects" element={<AllProjects />} />
-            <Route path="/blogs" element={<AllBlogs />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route
-              path="/admin"
-              element={
-                <RequireAdmin>
-                  <AdminDashboard />
-                </RequireAdmin>
-              }
-            />
-          </Routes>
-        )}
-      </AnimatePresence>
+      {/* Honor the OS "reduce motion" setting for every framer-motion animation. */}
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <Loader key="loader" />
+          ) : (
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/projects" element={<AllProjects />} />
+              <Route path="/blogs" element={<AllBlogs />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <RequireAdmin>
+                    <AdminDashboard />
+                  </RequireAdmin>
+                }
+              />
+            </Routes>
+          )}
+        </AnimatePresence>
+      </MotionConfig>
     </Router>
   );
 }

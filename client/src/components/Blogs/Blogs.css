@@ -1,186 +1,153 @@
-/* Blog cards mirror the Project card styles 1:1 so the homepage stays
-   visually consistent. The only structural difference is there's no
-   .blog-overlay / "View Details" button — clicking the card opens the
-   external blog post directly. */
+.writing { padding: 0 0 120px; }
 
-.blogs {
-  background: var(--bg-primary);
-  position: relative;
-}
+.writing-note { font-size: 14px; color: var(--muted); }
 
-/* Filter — identical to .projects-filter */
-.blogs-filter {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 50px;
-  flex-wrap: wrap;
-}
-
-/* Grid — same min-card width and gap as projects */
-.blogs-grid {
+.wgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-  margin-bottom: 60px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
-/* Card — same chrome as .project-card */
-.blog-card {
+.wgrid.is-preview .wbig { grid-column: span 2; grid-row: span 2; }
+
+@media (max-width: 900px) {
+  .wgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wgrid.is-preview .wbig { grid-row: auto; }
+  .wgrid .wsub { grid-column: auto; }
+}
+
+@media (max-width: 600px) {
+  .wgrid { grid-template-columns: minmax(0, 1fr); }
+  .wgrid.is-preview .wbig { grid-column: auto; }
+}
+
+.wcard {
   display: flex;
   flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: all var(--transition-normal);
-  cursor: pointer;
-  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.3s ease;
 }
 
-.blog-card:hover {
-  border-color: var(--primary);
-  box-shadow: var(--shadow-glow);
-}
+.wcard:hover { border-color: var(--line-2); }
 
-/* Image area — same 200px height and gradient background as .project-image */
-.blog-image {
-  position: relative;
-  height: 200px;
-  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.wcover {
+  aspect-ratio: 1200 / 630;
   overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
 }
 
-.blog-emoji {
-  font-size: 64px;
-  transition: all var(--transition-normal);
-}
-
-.blog-card:hover .blog-emoji {
-  transform: scale(1.1);
-}
-
-.blog-img {
+.wcover img,
+.wcover-gen {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all var(--transition-normal);
+  transition: transform 0.8s var(--ease);
 }
 
-.blog-card:hover .blog-img {
-  transform: scale(1.05);
+.wcard:hover .wcover img,
+.wcard:hover .wcover-gen { transform: scale(1.04); }
+
+.wcover-gen {
+  display: flex;
+  align-items: flex-end;
+  padding: 18px 20px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  color: var(--muted);
 }
 
-/* Content — same padding as .project-content */
-.blog-content {
-  padding: 24px;
+.wbody {
+  flex: 1;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 10px;
 }
 
-/* Header — mirrors .project-header: leading icon, trailing meta */
-.blog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+.wtags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.wtags span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-ink);
 }
 
-.blog-icon {
-  font-size: 28px;
-  color: var(--primary);
-}
+.wbody h3 { font-size: 21px; line-height: 1.15; }
+.wbig .wbody h3 { font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
 
-.blog-links {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-.blog-readtime {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.blog-readtime svg {
-  font-size: 13px;
-}
-
-.blog-external {
-  font-size: 18px;
-  color: var(--text-muted);
-  transition: all var(--transition-normal);
-}
-
-.blog-card:hover .blog-external {
-  color: var(--primary);
-  transform: translateY(-2px);
-}
-
-/* Title — same font, weight, color transition as .project-title */
-.blog-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-  transition: all var(--transition-normal);
-  line-height: 1.3;
-}
-
-.blog-card:hover .blog-title {
-  color: var(--primary);
-}
-
-/* Excerpt — same 3-line clamp as .project-description */
-.blog-description {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
+.wbody p {
+  font-size: 15px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex: 1;
 }
 
-/* Tags reuse the global .tech-tag class — identical look to projects */
-.blog-tech {
+.wmeta {
+  margin-top: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* View More button — same alignment as .projects-more */
-.blogs-more {
-  text-align: center;
-}
-
-/* Loading / empty states */
-.blogs-loading,
-.blogs-empty {
-  display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  min-height: 200px;
-  color: var(--text-secondary);
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
 }
 
-@media (max-width: 768px) {
-  .blogs-grid {
-    grid-template-columns: 1fr;
-  }
+.warrow { font-size: 18px; transition: transform 0.4s var(--ease); }
+.wcard:hover .warrow { transform: rotate(45deg); color: var(--text); }
 
-  .blog-image {
-    height: 180px;
-  }
+/* ---------- Subscribe tile ---------- */
+.wsub {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 28px;
+  border-radius: var(--radius);
+  background: var(--inv-bg);
+  color: var(--inv-fg);
 }
+
+@media (max-width: 600px) { .wsub { grid-column: auto; } }
+
+.wsub-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.wsub-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.wsub input {
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: 50px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--inv-fg) 30%, transparent);
+  background: transparent;
+  color: var(--inv-fg);
+  font: inherit;
+  font-size: 15px;
+}
+
+.wsub input::placeholder { color: color-mix(in srgb, var(--inv-fg) 55%, transparent); }
+.wsub input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.wsub-msg { min-height: 1.4em; font-size: 14px; color: inherit; }
+.wsub-msg.error { color: #ff8a7a; }
+:root[data-theme='dark'] .wsub-msg.error { color: #b3261e; }
+
+.writing-empty { color: var(--muted); }
+
+.writing-more { margin-top: 32px; }

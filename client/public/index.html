@@ -5,7 +5,7 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Professional Portfolio - Full Stack Developer | UI/UX Designer"
@@ -17,10 +17,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <title>Sahil Gupta | Portfolio</title>
+    <script>
+      // Apply the saved (or system) theme before first paint so there's no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
     <script>
       !(function (t, e) {
         var o, n, p, r;
@@ -118,23 +132,23 @@
         margin: 0;
         padding: 40px 24px;
         box-sizing: border-box;
-        background: #0a0a0f;
-        color: #e6e6ef;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #000000;
+        color: #EEEDE6;
+        font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
         line-height: 1.6;
       }
-      .boot-screen a { color: #818cf8; text-decoration: none; }
+      .boot-screen a { color: #C8F169; text-decoration: none; }
       .boot-screen a:hover { text-decoration: underline; }
       .boot-inner { max-width: 760px; margin: 0 auto; }
       .boot-header { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 40px; }
-      .boot-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff; }
+      .boot-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff; }
       .boot-nav a { margin-left: 16px; font-size: 0.95rem; }
-      .boot-screen h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; color: #fff; margin: 0 0 12px; }
-      .boot-screen h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; color: #fff; margin: 32px 0 8px; }
+      .boot-screen h1 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.2rem; color: #fff; margin: 0 0 12px; }
+      .boot-screen h2 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.4rem; color: #fff; margin: 32px 0 8px; }
       .boot-screen h3 { font-size: 1.05rem; color: #fff; margin: 18px 0 4px; }
-      .boot-loading { margin-top: 40px; color: #71717a; font-size: 0.9rem; }
+      .boot-loading { margin-top: 40px; color: #8A887F; font-size: 0.9rem; }
       .boot-skip { position: absolute; left: -9999px; }
-      .boot-skip:focus { left: 16px; top: 16px; background: #6366f1; color: #fff; padding: 8px 14px; border-radius: 6px; }
+      .boot-skip:focus { left: 16px; top: 16px; background: #C8F169; color: #000; padding: 8px 14px; border-radius: 6px; }
     </style>
   </head>
   <body>

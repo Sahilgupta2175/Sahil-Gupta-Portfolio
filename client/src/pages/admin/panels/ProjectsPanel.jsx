@@ -120,7 +120,7 @@ const ProjectsPanel = () => {
         </label>
 
         <label className="admin-field">
-          <span>Long description (modal)</span>
+          <span>Long description (shown when the project row is opened)</span>
           <textarea
             rows={5}
             value={form.longDescription}
@@ -160,11 +160,11 @@ const ProjectsPanel = () => {
             checked={form.featured}
             onChange={(e) => setForm({ ...form, featured: e.target.checked })}
           />
-          <span>Featured (shown on homepage)</span>
+          <span>Featured (listed first and marked on the homepage)</span>
         </label>
 
         <div className="admin-field">
-          <span>Fallback icon (shown when there's no cover image)</span>
+          <span>Icon (shown on the generated cover when there's no image)</span>
           <EmojiPicker
             value={form.emoji}
             onChange={(emoji) => setForm({ ...form, emoji })}
@@ -172,7 +172,7 @@ const ProjectsPanel = () => {
         </div>
 
         <div className="admin-field">
-          <span>Cover image (replaces the icon)</span>
+          <span>Cover image (replaces the generated cover)</span>
           <ImageUpload
             value={form.image}
             currentImageUrl={form.currentImage}

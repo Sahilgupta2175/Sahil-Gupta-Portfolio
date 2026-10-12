@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiLogIn } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
+import { FiArrowLeft, FiLogIn } from 'react-icons/fi';
 import { login } from '../../services/authService';
+import ThemeToggle from '../../components/ThemeToggle/ThemeToggle';
 import './Admin.css';
 
 const AdminLogin = () => {
@@ -32,13 +33,21 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="app">
-      <div className="animated-bg" />
-      <div className="noise-overlay" />
-      <main className="admin-login">
-        <form className="admin-login-card glass" onSubmit={onSubmit}>
-          <h1 className="admin-login-title gradient-text">Admin Login</h1>
-          <p className="admin-login-sub">Sign in to manage projects, experience and blogs</p>
+    <main className="admin-login">
+      <div className="admin-login-top">
+        <Link to="/" className="admin-side-link"><FiArrowLeft aria-hidden="true" /> Back to site</Link>
+        <ThemeToggle />
+      </div>
+
+      <div className="admin-login-grid">
+        <div className="admin-login-hero">
+          <span className="eyebrow">sahil.gupta / admin</span>
+          <p className="admin-login-display" aria-hidden="true">Admin<span>.</span></p>
+          <p>Manage projects, experience, blogs, current work and subscribers.</p>
+        </div>
+
+        <form className="admin-login-card" onSubmit={onSubmit}>
+          <h1 className="admin-login-title">Sign in</h1>
 
           <label className="admin-field">
             <span>Email</span>
@@ -62,14 +71,14 @@ const AdminLogin = () => {
             />
           </label>
 
-          {error && <p className="admin-error">{error}</p>}
+          {error && <p className="admin-error" role="alert">{error}</p>}
 
           <button type="submit" className="btn btn-primary" disabled={submitting}>
-            <FiLogIn /> {submitting ? 'Signing in…' : 'Sign in'}
+            <FiLogIn aria-hidden="true" /> {submitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 

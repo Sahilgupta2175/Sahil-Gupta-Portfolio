@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiLogOut, FiExternalLink, FiRefreshCw } from 'react-icons/fi';
+import {
+  FiActivity, FiBriefcase, FiEdit3, FiExternalLink, FiGrid, FiLogOut, FiMail, FiRefreshCw, FiUser
+} from 'react-icons/fi';
 import { logout } from '../../services/authService';
+import ThemeToggle from '../../components/ThemeToggle/ThemeToggle';
 import AboutPanel from './panels/AboutPanel';
 import ProjectsPanel from './panels/ProjectsPanel';
 import BlogsPanel from './panels/BlogsPanel';
@@ -10,13 +13,14 @@ import CurrentWorkPanel from './panels/CurrentWorkPanel';
 import SubscribersPanel from './panels/SubscribersPanel';
 import './Admin.css';
 
+// `where` tells the editor which part of the public site each panel feeds.
 const TABS = [
-  { key: 'current', label: 'Current Work' },
-  { key: 'about', label: 'About' },
-  { key: 'projects', label: 'Projects' },
-  { key: 'blogs', label: 'Blogs' },
-  { key: 'experience', label: 'Experience' },
-  { key: 'subscribers', label: 'Subscribers' }
+  { key: 'current', label: 'Current work', Icon: FiActivity, Panel: CurrentWorkPanel, where: 'Homepage · "Right now" tile' },
+  { key: 'about', label: 'About', Icon: FiUser, Panel: AboutPanel, where: 'Homepage · About section and stat tile' },
+  { key: 'projects', label: 'Projects', Icon: FiGrid, Panel: ProjectsPanel, where: 'Homepage · Selected work, and /projects' },
+  { key: 'blogs', label: 'Blogs', Icon: FiEdit3, Panel: BlogsPanel, where: 'Homepage · Writing, and /blogs' },
+  { key: 'experience', label: 'Experience', Icon: FiBriefcase, Panel: ExperiencePanel, where: 'Homepage · Journey tickets' },
+  { key: 'subscribers', label: 'Subscribers', Icon: FiMail, Panel: SubscribersPanel, where: 'People on the new-post email list' }
 ];
 
 const AdminDashboard = () => {
@@ -24,9 +28,7 @@ const AdminDashboard = () => {
   const [tab, setTab] = useState('current');
 
   // Bumping this number changes the active panel's React key, which remounts
-  // it and re-runs its mount-time fetch. Only one panel is mounted at a time,
-  // so this refreshes whichever section the user is looking at. Per-panel
-  // refresh icons do the same thing locally.
+  // it and re-runs its mount-time fetch.
   const [refreshSignal, setRefreshSignal] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -42,62 +44,71 @@ const AdminDashboard = () => {
   const onRefreshAll = () => {
     setRefreshing(true);
     setRefreshSignal((s) => s + 1);
-    // Spin the icon briefly to give visual feedback. The panel does its
-    // own loading-state spinner on top of this so the user sees both.
     setTimeout(() => setRefreshing(false), 600);
   };
 
+  const active = TABS.find((t) => t.key === tab);
+  const email = localStorage.getItem('admin_email');
+
   return (
-    <div className="app">
-      <div className="animated-bg" />
-      <div className="noise-overlay" />
-      <main className="admin">
-        <div className="container">
-          <header className="admin-header">
-            <div>
-              <h1 className="admin-title gradient-text">Admin Dashboard</h1>
-              <p className="admin-sub">
-                Add or edit content — changes appear on the site immediately.{' '}
-                <Link to="/" className="admin-inline-link">
-                  View site <FiExternalLink />
-                </Link>
-              </p>
-            </div>
-            <div className="admin-header-actions">
-              <button
-                className="btn btn-secondary"
-                onClick={onRefreshAll}
-                title="Reload the data for the active section"
-              >
-                <FiRefreshCw className={refreshing ? 'spin' : ''} /> Refresh
-              </button>
-              <button className="btn btn-secondary" onClick={onLogout}>
-                <FiLogOut /> Sign out
-              </button>
-            </div>
-          </header>
+    <div className="admin-shell">
+      <aside className="admin-side">
+        <Link to="/" className="admin-brand">
+          <span className="admin-brand-mark" aria-hidden="true">S</span>
+          <span>
+            <strong>Portfolio admin</strong>
+            {email && <small>{email}</small>}
+          </span>
+        </Link>
 
-          <nav className="admin-tabs">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
-                className={`admin-tab ${tab === t.key ? 'active' : ''}`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </nav>
+        <nav className="admin-nav" aria-label="Content sections">
+          {TABS.map(({ key, label, Icon }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setTab(key)}
+              className={`admin-nav-item ${tab === key ? 'active' : ''}`}
+              aria-current={tab === key ? 'page' : undefined}
+            >
+              <Icon aria-hidden="true" />
+              {label}
+            </button>
+          ))}
+        </nav>
 
-          <section className="admin-panel" key={`${tab}-${refreshSignal}`}>
-            {tab === 'current' && <CurrentWorkPanel />}
-            {tab === 'about' && <AboutPanel />}
-            {tab === 'projects' && <ProjectsPanel />}
-            {tab === 'blogs' && <BlogsPanel />}
-            {tab === 'experience' && <ExperiencePanel />}
-            {tab === 'subscribers' && <SubscribersPanel />}
-          </section>
+        <div className="admin-side-foot">
+          <Link to="/" className="admin-side-link">
+            <FiExternalLink aria-hidden="true" /> View site
+          </Link>
+          <div className="admin-side-row">
+            <ThemeToggle />
+            <button type="button" className="btn btn-secondary admin-logout" onClick={onLogout}>
+              <FiLogOut aria-hidden="true" /> Sign out
+            </button>
+          </div>
         </div>
+      </aside>
+
+      <main className="admin-main">
+        <header className="admin-header">
+          <div>
+            <span className="eyebrow">{active.where}</span>
+            <h1 className="admin-title">{active.label}</h1>
+            <p className="admin-sub">Changes go live on the site as soon as you save.</p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onRefreshAll}
+            title="Reload the data for this section"
+          >
+            <FiRefreshCw className={refreshing ? 'spin' : ''} aria-hidden="true" /> Refresh
+          </button>
+        </header>
+
+        <section className="admin-panel" key={`${tab}-${refreshSignal}`}>
+          <active.Panel />
+        </section>
       </main>
     </div>
   );

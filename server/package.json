@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "hash-password": "node scripts/hashPassword.js",
     "selfcheck": "node scripts/selfcheck.js",
-    "sync-blogs": "node scripts/seedBlogs.js"
+    "sync-blogs": "node scripts/seedBlogs.js",
+    "test-email": "node scripts/testEmail.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

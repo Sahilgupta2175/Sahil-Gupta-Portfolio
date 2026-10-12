@@ -2,7 +2,6 @@
 // Run: npm run selfcheck   (no DB, no network, no framework)
 const assert = require('assert');
 const parseArrayField = require('../utils/parseArrayField');
-const { CARD_CSS, PANEL_CSS } = require('../templates/emailShell');
 const escapeHtml = require('../utils/escapeHtml');
 
 // --- parseArrayField: every branch the admin forms actually hit ---
@@ -18,35 +17,30 @@ assert.deepStrictEqual(parseArrayField(undefined), [], 'missing field');
 assert.strictEqual(escapeHtml('<script>&"\'') , '&lt;script&gt;&amp;&quot;&#39;');
 assert.strictEqual(escapeHtml(null), '', 'null renders empty, not "null"');
 
-// --- templates: each still emits its shared CSS plus its own rules ---
+// --- templates: every email renders a complete, inbox-safe document ---
 const cases = [
-  ['autoReplyEmail', ['Ada', 'hi'], CARD_CSS, '.message-preview'],
-  ['subscriberWelcomeEmail', [{ email: 'a@b.co' }, 'https://u', 'https://p'], CARD_CSS, '.info-box'],
-  ['contentBlastEmail', ['blog', { title: 'T', excerpt: 'E', tags: ['x'] }, 'https://u', 'https://p'], CARD_CSS, '.feature-card'],
-  ['notificationEmail', ['Ada', 'a@b.co', 'S', 'm'], PANEL_CSS, '.message-box'],
-  ['subscriberNotificationEmail', [{ email: 'a@b.co' }, 3, 'https://d', 'now'], PANEL_CSS, '.count-pill']
+  ['autoReplyEmail', ['Ada', 'hi']],
+  ['subscriberWelcomeEmail', [{ email: 'a@b.co' }, 'https://u', 'https://p']],
+  ['contentBlastEmail', ['blog', { title: 'T', excerpt: 'E', tags: ['x'], externalUrl: 'https://post' }, 'https://u', 'https://p']],
+  ['contentBlastEmail', ['project', { title: 'T', description: 'D', technologies: ['React'] }, 'https://u', 'https://p']],
+  ['notificationEmail', ['Ada', 'a@b.co', 'S', 'm']],
+  ['subscriberNotificationEmail', [{ email: 'a@b.co' }, 3, 'https://d', 'now']]
 ];
-for (const [name, args, shared, ownRule] of cases) {
+for (const [name, args] of cases) {
   const html = require(`../templates/${name}`)(...args);
-  assert.ok(html.includes(shared.trim().split('\n')[0].trim()), `${name}: shared CSS missing`);
-  assert.ok(html.includes('.email-container'), `${name}: shared container rule missing`);
-  assert.ok(html.includes(ownRule), `${name}: own rule ${ownRule} missing`);
-  assert.ok(/<\/html>/.test(html), `${name}: truncated output`);
-}
-
-// Gmail injects its own `a { color }`, which beats any class rule in <style>.
-// Every anchor sitting on the purple gradient must carry an inline color or it
-// renders as unreadable blue-on-purple.
-for (const [name, args] of cases.map((c) => [c[0], c[1]])) {
-  const html = require(`../templates/${name}`)(...args);
-  for (const tag of html.match(/<a\b[^>]*class="(?:action-button|social-link)"[^>]*>/g) || []) {
-    assert.ok(/style="[^"]*color:\s*#ffffff/i.test(tag), `${name}: gradient anchor needs inline color -> ${tag}`);
+  assert.ok(/^<!DOCTYPE html>/.test(html) && /<\/html>$/.test(html), `${name}: incomplete document`);
+  assert.ok(html.includes('sahil.gupta'), `${name}: shared header missing`);
+  // Gmail injects its own `a { color }`, which beats class rules: every link
+  // needs an inline colour or it renders as default blue.
+  for (const tag of html.match(/<a[^>]*>/g) || []) {
+    assert.ok(/style="[^"]*color:/.test(tag), `${name}: link needs an inline color -> ${tag}`);
   }
 }
-// The auto-reply's "Connect with me" is plain hyperlinks, not gradient buttons.
-const autoReply = require('../templates/autoReplyEmail')('Ada', 'hi');
-assert.ok(!autoReply.includes('class="social-link"'), 'autoReply must not use button-style social links');
-assert.ok(/>GitHub<\/a>\s*\|/.test(autoReply), 'autoReply needs pipe-separated text links');
+// The unsubscribe link must reach every subscriber-facing email.
+assert.ok(require('../templates/contentBlastEmail')('blog', { title: 'T' }, 'https://unsub/x', 'https://p').includes('https://unsub/x'));
+assert.ok(require('../templates/subscriberWelcomeEmail')({}, 'https://unsub/y', 'https://p').includes('https://unsub/y'));
+// The blast CTA points at the post itself.
+assert.ok(require('../templates/contentBlastEmail')('blog', { title: 'T', externalUrl: 'https://post' }, 'u', 'p').includes('href="https://post"'));
 
 // --- Experience employmentType: only the two tabs are ever stored ---
 const Experience = require('../models/Experience');
@@ -88,5 +82,14 @@ assert.ok(
   require('../templates/notificationEmail')('<b>x</b>', 'a@b.co', 'S', 'm').includes('&lt;b&gt;x&lt;/b&gt;'),
   'notificationEmail must escape the submitted name'
 );
+const blastHtml = require('../templates/contentBlastEmail')('blog', { title: '<img onerror=x>', excerpt: '"><script>' }, 'u', 'p');
+assert.ok(!blastHtml.includes('<img onerror') && !blastHtml.includes('<script>'), 'blast email must escape RSS/admin text');
+
+// --- Subscriber email queue: only recent Hashnode posts are flagged ---
+const { NOTIFY_WINDOW_MS } = require('../utils/hashnodeFeed');
+assert.strictEqual(NOTIFY_WINDOW_MS, 7 * 24 * 60 * 60 * 1000, 'notify window is one week');
+const Blog = require('../models/Blog');
+assert.strictEqual(new Blog({ title: 't', excerpt: 'e', externalUrl: 'u' }).notifyPending, false,
+  'existing/legacy posts are never queued by default');
 
 console.log('selfcheck OK');

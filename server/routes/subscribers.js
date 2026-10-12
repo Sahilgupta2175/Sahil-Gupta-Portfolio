@@ -66,17 +66,20 @@ router.get('/unsubscribe', async (req, res) => {
   const token = (req.query.token || '').toString();
   const renderPage = (title, body) => `
 <!DOCTYPE html>
-<html><head>
+<html lang="en"><head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Hanken+Grotesk:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#e4e4e7;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
-    .card{background:#12121a;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;text-align:center;max-width:480px;}
-    h1{font-size:24px;margin:0 0 12px 0;background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    p{color:#a1a1aa;line-height:1.6;margin:0 0 20px 0;}
-    a{display:inline-block;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:12px 28px;text-decoration:none;border-radius:24px;font-weight:600;font-size:14px;}
+    body{margin:0;font-family:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;background:#F3F2EC;color:#0B0C09;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 16px;box-sizing:border-box;}
+    .card{background:#FBFAF6;border:1px solid #D9D7CD;border-radius:22px;padding:40px 32px;max-width:480px;width:100%;box-sizing:border-box;}
+    .mark{display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;border-radius:8px;background:#C8F169;font-weight:800;margin-bottom:24px;}
+    h1{font-family:'Bricolage Grotesque','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:32px;line-height:1.05;letter-spacing:-1px;font-weight:800;margin:0 0 14px;}
+    p{color:#3A3C33;line-height:1.6;margin:0 0 20px;}
+    a{display:inline-block;background:#0B0C09;color:#F3F2EC;padding:14px 26px;text-decoration:none;border-radius:999px;font-weight:700;font-size:14px;}
   </style>
-</head><body><div class="card">${body}<p style="margin-top:24px;"><a href="${frontendUrl()}">Back to portfolio</a></p></div></body></html>`;
+</head><body><div class="card"><div class="mark">S</div>${body}<p style="margin:28px 0 0;"><a href="${frontendUrl()}">Back to the portfolio &rarr;</a></p></div></body></html>`;
 
   if (!token) {
     return res.status(400).send(renderPage('Invalid link',

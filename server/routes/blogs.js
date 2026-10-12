@@ -3,7 +3,7 @@ const router = express.Router();
 const Blog = require('../models/Blog');
 const { protect } = require('../middleware/auth');
 const { upload, destroyImage } = require('../middleware/upload');
-const { blastNewContent } = require('../utils/notify');
+const { sendPendingBlogBlasts } = require('../utils/notify');
 const parseArrayField = require('../utils/parseArrayField');
 const { syncIfStale } = require('../utils/hashnodeFeed');
 
@@ -29,7 +29,14 @@ const buildBlogPayload = (body, file) => {
 router.get('/', async (req, res) => {
   try {
     // Never fail the list because the feed is down — serve what's in the DB.
-    await syncIfStale().catch((e) => console.error('Hashnode sync failed:', e.message));
+    const synced = await syncIfStale().catch((e) => console.error('Hashnode sync failed:', e.message));
+
+    // A sync that found a new Hashnode post flags it; email subscribers before
+    // responding (Vercel freezes anything left running after the response).
+    // Only runs on the throttled sync, not on every request.
+    if (synced) {
+      await sendPendingBlogBlasts().catch((e) => console.error('Blog blast failed:', e.message));
+    }
 
     const { limit, tag } = req.query;
     const filter = { published: true };
@@ -60,17 +67,15 @@ router.get('/:slug', async (req, res) => {
 router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
     const blog = new Blog(buildBlogPayload(req.body, req.file));
+    // Published posts are emailed now; drafts get emailed once published
+    // (the flag waits for the next sync after you publish).
+    blog.notifyPending = true;
     await blog.save();
-    res.status(201).json(blog);
 
-    // Fire-and-forget blast — only for newly-created PUBLISHED blogs.
-    // We don't await: the admin's "Add blog" save returns immediately while
-    // the emails go out in the background.
-    if (blog.published) {
-      blastNewContent('blog', blog).catch((e) =>
-        console.error('Blog blast failed:', e.message)
-      );
-    }
+    // Awaited, not fire-and-forget: Vercel freezes the function after the
+    // response, which used to drop these emails.
+    await sendPendingBlogBlasts().catch((e) => console.error('Blog blast failed:', e.message));
+    res.status(201).json(await Blog.findById(blog._id));
   } catch (error) {
     console.error('Create blog error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -91,9 +96,39 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
 
     Object.assign(existing, payload);
     await existing.save();
+
+    // A draft created earlier is still flagged; publishing it sends it now.
+    if (existing.published && existing.notifyPending) {
+      await sendPendingBlogBlasts().catch((e) => console.error('Blog blast failed:', e.message));
+      return res.json(await Blog.findById(existing._id));
+    }
     res.json(existing);
   } catch (error) {
     console.error('Update blog error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// POST /api/blogs/:id/notify — admin only. Emails this post to every active
+// subscriber now, e.g. for a post that was added before emailing worked.
+router.post('/:id/notify', protect, async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: 'Blog not found' });
+    if (!blog.published) {
+      return res.status(400).json({ message: 'Publish the post before emailing it.' });
+    }
+    blog.notifyPending = true;
+    await blog.save();
+
+    const sent = await sendPendingBlogBlasts();
+    const mine = sent.find((s) => s.id === String(blog._id));
+    if (!mine) {
+      return res.status(503).json({ message: 'Email is not configured on the server (EMAIL_USER / EMAIL_PASS).' });
+    }
+    res.json({ success: true, ...mine, notifiedAt: (await Blog.findById(blog._id)).notifiedAt });
+  } catch (error) {
+    console.error('Notify blog error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });

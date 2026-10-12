@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw, FiSend } from 'react-icons/fi';
 import {
   listBlogs,
   createBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
+  notifyBlogSubscribers
 } from '../../../services/blogsService';
 import ImageUpload from '../widgets/ImageUpload';
 import { toArr, fromArr } from './helpers';
@@ -27,6 +28,8 @@ const BlogsPanel = () => {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [sendingId, setSendingId] = useState(null);
+  const [notice, setNotice] = useState('');
 
   const refresh = () => {
     setLoading(true);
@@ -81,6 +84,24 @@ const BlogsPanel = () => {
       setError(err.response?.data?.message || 'Save failed');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const onNotify = async (b) => {
+    const again = b.notifiedAt
+      ? `Subscribers were already emailed about this on ${new Date(b.notifiedAt).toLocaleDateString()}. Send again?`
+      : `Email "${b.title}" to every active subscriber now?`;
+    if (!window.confirm(again)) return;
+    setSendingId(b._id);
+    setNotice('');
+    try {
+      const r = await notifyBlogSubscribers(b._id);
+      setNotice(`Sent "${r.title}" to ${r.ok} of ${r.total} subscriber(s)${r.failed ? `, ${r.failed} failed` : ''}.`);
+      refresh();
+    } catch (err) {
+      setNotice(err.response?.data?.message || 'Sending failed.');
+    } finally {
+      setSendingId(null);
     }
   };
 
@@ -179,6 +200,7 @@ const BlogsPanel = () => {
             <FiRefreshCw className={loading ? 'spin' : ''} />
           </button>
         </div>
+        {notice && <p className="admin-muted" role="status">{notice}</p>}
         {!loading && items.length === 0 && <p className="admin-muted">No blogs yet.</p>}
         {items.map((b) => (
           <article key={b._id} className="admin-list-item">
@@ -191,9 +213,19 @@ const BlogsPanel = () => {
               <div className="admin-list-meta">
                 <span>{b.readTime}</span>
                 {!b.published && <span className="admin-badge">Draft</span>}
+                <span>{b.notifiedAt ? `Emailed ${new Date(b.notifiedAt).toLocaleDateString()}` : 'Not emailed'}</span>
               </div>
             </div>
             <div className="admin-list-actions">
+              <button
+                className="icon-btn"
+                onClick={() => onNotify(b)}
+                disabled={sendingId !== null || !b.published}
+                aria-label="Email subscribers"
+                title="Email this post to subscribers"
+              >
+                <FiSend className={sendingId === b._id ? 'spin' : ''} />
+              </button>
               <button className="icon-btn" onClick={() => startEdit(b)} aria-label="Edit"><FiEdit2 /></button>
               <button className="icon-btn danger" onClick={() => onDelete(b._id)} aria-label="Delete"><FiTrash2 /></button>
             </div>

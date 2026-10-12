@@ -19,6 +19,7 @@
 
 const nodemailer = require('nodemailer');
 const Subscriber = require('../models/Subscriber');
+const Blog = require('../models/Blog');
 const getSubscriberWelcomeEmailHTML = require('../templates/subscriberWelcomeEmail');
 const getSubscriberNotificationEmailHTML = require('../templates/subscriberNotificationEmail');
 const getContentBlastEmailHTML = require('../templates/contentBlastEmail');
@@ -99,7 +100,7 @@ const sendWelcomeAndNotify = async (subscriber) => {
 
   const welcomeTask = sendOne({
     to: subscriber.email,
-    subject: "Welcome — you're subscribed! ✨",
+    subject: "You're subscribed",
     html: getSubscriberWelcomeEmailHTML(subscriber, unsubUrl, portfolio)
   }).catch((e) => console.error('Welcome email failed:', e.message));
 
@@ -107,7 +108,7 @@ const sendWelcomeAndNotify = async (subscriber) => {
     .then((totalCount) =>
       sendOne({
         to: process.env.EMAIL_USER,
-        subject: `🎉 New subscriber: ${subscriber.email}`,
+        subject: `New subscriber: ${subscriber.email}`,
         html: getSubscriberNotificationEmailHTML(
           subscriber,
           totalCount,
@@ -123,46 +124,72 @@ const sendWelcomeAndNotify = async (subscriber) => {
 
 const { setTimeout: sleep } = require('timers/promises');
 
-// Blast helper for new blog / project. Iterates sequentially with a small
-// gap between sends so Gmail doesn't flag bursty behavior. Subscribers
-// each get their own unsubscribe token.
+// Mails per batch: matches the pool's maxConnections so a batch goes out in
+// parallel; a short pause between batches keeps Gmail from flagging a burst.
+const BLAST_BATCH = 3;
+
+// Emails one new blog / project to every active subscriber (each with their
+// own unsubscribe link). Callers MUST await it: on Vercel, work left running
+// after the response is frozen and never finishes (see top-of-file note).
+// Returns { total, ok, failed }.
 const blastNewContent = async (kind, item) => {
-  if (!kind || !item) return;
+  const result = { total: 0, ok: 0, failed: 0 };
+  if (!kind || !item) return result;
   if (!getTransporter()) {
     console.warn('📭 Blast skipped — no email transporter');
-    return;
+    return result;
   }
 
   const portfolio = frontendUrl();
   const subscribers = await Subscriber.find({ active: true });
+  result.total = subscribers.length;
   console.log(`📣 Blasting ${kind} "${item.title}" to ${subscribers.length} subscriber(s)`);
 
-  const labelEmoji = kind === 'blog' ? '📝' : '🚀';
-  const labelText = kind === 'blog' ? 'New blog post' : 'New project';
-
-  let ok = 0;
-  let failed = 0;
-  for (const sub of subscribers) {
-    const unsubUrl = unsubscribeUrl(sub.unsubscribeToken);
-    try {
-      await sendOne({
+  const subject = `${kind === 'blog' ? 'New post' : 'New project'}: ${item.title}`;
+  for (let i = 0; i < subscribers.length; i += BLAST_BATCH) {
+    if (i) await sleep(250);
+    await Promise.all(subscribers.slice(i, i + BLAST_BATCH).map((sub) =>
+      sendOne({
         to: sub.email,
-        subject: `${labelEmoji} ${labelText}: ${item.title}`,
-        html: getContentBlastEmailHTML(kind, item, unsubUrl, portfolio)
-      });
-      ok++;
-    } catch (e) {
-      failed++;
-      console.error(`Blast to ${sub.email} failed:`, e.message);
-    }
-    await sleep(250);
+        subject,
+        html: getContentBlastEmailHTML(kind, item, unsubscribeUrl(sub.unsubscribeToken), portfolio)
+      })
+        .then(() => { result.ok++; })
+        .catch((e) => {
+          result.failed++;
+          console.error(`Blast to ${sub.email} failed:`, e.message);
+        })
+    ));
   }
-  console.log(`📣 Blast done. ok=${ok} failed=${failed}`);
+  console.log(`📣 Blast done. ok=${result.ok} failed=${result.failed}`);
+  return result;
+};
+
+// Sends every blog flagged notifyPending (new Hashnode posts, admin-created
+// posts, or a manual "Email subscribers" click). Each post is claimed with an
+// atomic findOneAndUpdate before sending, so two serverless instances running
+// this at once can never email the same post twice. Without a transporter the
+// flags stay set and the posts go out once email is configured.
+// Returns [{ id, title, total, ok, failed }].
+const sendPendingBlogBlasts = async () => {
+  const sent = [];
+  if (!getTransporter()) return sent;
+  for (;;) {
+    const blog = await Blog.findOneAndUpdate(
+      { notifyPending: true, published: true },
+      { $set: { notifyPending: false, notifiedAt: new Date() } },
+      { new: true, sort: { createdAt: 1 } }
+    );
+    if (!blog) return sent;
+    const stats = await blastNewContent('blog', blog);
+    sent.push({ id: String(blog._id), title: blog.title, ...stats });
+  }
 };
 
 module.exports = {
   sendOne,
   sendWelcomeAndNotify,
   blastNewContent,
+  sendPendingBlogBlasts,
   frontendUrl
 };

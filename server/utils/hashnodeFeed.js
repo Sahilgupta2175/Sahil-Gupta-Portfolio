@@ -19,6 +19,10 @@ const FEED_URL = process.env.HASHNODE_FEED_URL || 'https://sahilxdev.hashnode.de
 // you ever need a single global refresh cadence.
 const SYNC_TTL_MS = 5 * 60 * 1000;
 
+// Only posts published this recently get emailed to subscribers when first
+// synced. Keeps a fresh/empty DB import from blasting the whole back catalogue.
+const NOTIFY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
 // Outbound fetch with one redirect hop and a hard timeout, so a slow or hanging
 // Hashnode can never wedge an API request.
 const fetchFeed = (url, redirectsLeft = 1) => new Promise((resolve, reject) => {
@@ -110,7 +114,8 @@ const syncBlogs = async (feedUrl = FEED_URL) => {
       await existing.save();
       updated++;
     } else {
-      await Blog.create({ ...p, published: true });
+      const fresh = Date.now() - p.createdAt.getTime() < NOTIFY_WINDOW_MS;
+      await Blog.create({ ...p, published: true, notifyPending: fresh });
       created++;
     }
   }
@@ -128,4 +133,4 @@ const syncIfStale = async () => {
   return syncBlogs();
 };
 
-module.exports = { syncBlogs, syncIfStale, parseRss, FEED_URL, SYNC_TTL_MS };
+module.exports = { syncBlogs, syncIfStale, parseRss, FEED_URL, SYNC_TTL_MS, NOTIFY_WINDOW_MS };

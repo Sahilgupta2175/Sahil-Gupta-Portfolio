@@ -57,13 +57,13 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
     const project = new Project(buildProjectPayload(req.body, req.file));
     await project.save();
-    res.status(201).json(project);
 
-    // Fire-and-forget — email subscribers about the new project. Not awaited
-    // so the admin's save returns immediately.
-    blastNewContent('project', project).catch((e) =>
+    // Awaited, not fire-and-forget: Vercel freezes the function after the
+    // response, which used to drop these emails.
+    await blastNewContent('project', project).catch((e) =>
       console.error('Project blast failed:', e.message)
     );
+    res.status(201).json(project);
   } catch (error) {
     console.error('Create project error:', error);
     res.status(500).json({ success: false, message: 'Server error' });

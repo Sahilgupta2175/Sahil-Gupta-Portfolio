@@ -20,6 +20,7 @@ if (process.env.INSECURE_TLS === 'true') {
 const mongoose = require('mongoose');
 const Blog = require('../models/Blog');
 const { syncBlogs, FEED_URL } = require('../utils/hashnodeFeed');
+const { sendPendingBlogBlasts } = require('../utils/notify');
 
 const feedUrl = process.argv[2] || FEED_URL;
 
@@ -38,10 +39,16 @@ const run = async () => {
   console.log(`\n✨ Done. ${created} created, ${updated} updated. Total in DB:`,
     await Blog.countDocuments());
 
+  // Same as the live site: new posts from the last week go to subscribers.
+  for (const r of await sendPendingBlogBlasts()) {
+    console.log(`📣 Emailed "${r.title}" to ${r.ok}/${r.total} subscriber(s)${r.failed ? ` (${r.failed} failed)` : ''}`);
+  }
+
   await mongoose.disconnect();
 };
 
-run().catch((err) => {
+// Exit explicitly: the pooled SMTP transporter would otherwise keep the process alive.
+run().then(() => process.exit(0)).catch((err) => {
   console.error('❌ Sync failed:', err.message || err);
   process.exit(1);
 });

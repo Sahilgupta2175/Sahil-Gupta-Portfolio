@@ -47,6 +47,16 @@ const blogSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  // Subscriber email queue. A post is flagged when it's created (admin form or
+  // Hashnode sync); utils/notify.sendPendingBlogBlasts() claims the flag and
+  // stamps notifiedAt, so each post is emailed at most once per request to send.
+  notifyPending: {
+    type: Boolean,
+    default: false
+  },
+  notifiedAt: {
+    type: Date
+  },
   createdAt: {
     type: Date,
     default: Date.now

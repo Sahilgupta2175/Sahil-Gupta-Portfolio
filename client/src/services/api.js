@@ -20,15 +20,34 @@ api.interceptors.request.use((config) => {
 
 // On 401 from a protected endpoint, drop the stale token so the admin UI
 // can redirect back to /admin/login.
+// A GET that got no response at all (timeout / dropped mobile connection,
+// usually a cold serverless start) is retried once before giving up.
 api.interceptors.response.use(
   (r) => r,
   (err) => {
+    const cfg = err.config;
+    if (cfg && cfg.method === 'get' && !err.response && !cfg.retried) {
+      cfg.retried = true;
+      return api(cfg);
+    }
     if (err.response?.status === 401) {
       localStorage.removeItem('admin_token');
     }
     return Promise.reject(err);
   }
 );
+
+// GET that shares one request between callers asking for the same URL at the
+// same time (e.g. two homepage sections both loading /api/about). Nothing is
+// cached once it settles, so admin panels still see fresh data.
+const inflight = new Map();
+export const getShared = (url, config = {}) => {
+  const key = `${url}?${new URLSearchParams(config.params || {})}`;
+  if (!inflight.has(key)) {
+    inflight.set(key, api.get(url, config).finally(() => inflight.delete(key)));
+  }
+  return inflight.get(key);
+};
 
 // Admin writes go up as multipart so an optional image file rides along.
 // Arrays are JSON-stringified; the server parses them back (parseArrayField).

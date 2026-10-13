@@ -1,8 +1,8 @@
-import api from './api';
+import api, { getShared } from './api';
 
 // Public: the single About document, or null if the admin never saved one.
 export const getAbout = () =>
-  api.get('/api/about').then((r) => r.data);
+  getShared('/api/about').then((r) => r.data);
 
 // Admin-only: upserts that same document.
 export const updateAbout = (data) =>

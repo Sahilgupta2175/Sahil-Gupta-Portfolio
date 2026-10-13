@@ -1,8 +1,8 @@
-import api from './api';
+import api, { getShared } from './api';
 
 // Public list — only active items, newest first
 export const listCurrentWork = () =>
-  api.get('/api/current-work').then((r) => r.data);
+  getShared('/api/current-work').then((r) => r.data);
 
 // Admin list — includes hidden items
 export const listAllCurrentWork = () =>

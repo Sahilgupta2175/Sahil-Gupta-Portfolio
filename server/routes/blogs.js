@@ -6,6 +6,9 @@ const { upload, destroyImage } = require('../middleware/upload');
 const { sendPendingBlogBlasts } = require('../utils/notify');
 const parseArrayField = require('../utils/parseArrayField');
 const { syncIfStale } = require('../utils/hashnodeFeed');
+const { setTimeout: sleep } = require('timers/promises');
+
+const SYNC_WAIT_MS = 2500;
 
 const buildBlogPayload = (body, file) => {
   const payload = {
@@ -28,15 +31,16 @@ const buildBlogPayload = (body, file) => {
 // there is all it takes for a post to appear here.
 router.get('/', async (req, res) => {
   try {
-    // Never fail the list because the feed is down — serve what's in the DB.
-    const synced = await syncIfStale().catch((e) => console.error('Hashnode sync failed:', e.message));
-
-    // A sync that found a new Hashnode post flags it; email subscribers before
-    // responding (Vercel freezes anything left running after the response).
-    // Only runs on the throttled sync, not on every request.
-    if (synced) {
-      await sendPendingBlogBlasts().catch((e) => console.error('Blog blast failed:', e.message));
-    }
+    // Throttled Hashnode refresh; a sync that finds a new post flags it and
+    // emails subscribers. Readers wait for it at most SYNC_WAIT_MS: on a cold
+    // start (Mongo connect + feed fetch + saves) it used to blow past the
+    // site's 20s request timeout and the Writing section came back empty.
+    // Whatever is unfinished carries on in the background (or resumes when
+    // the serverless instance next wakes) and is never started twice.
+    const refresh = syncIfStale()
+      .then((synced) => synced && sendPendingBlogBlasts())
+      .catch((e) => console.error('Hashnode sync / blog blast failed:', e.message));
+    await Promise.race([refresh, sleep(SYNC_WAIT_MS)]);
 
     const { limit, tag } = req.query;
     const filter = { published: true };

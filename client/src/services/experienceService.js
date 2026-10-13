@@ -1,7 +1,7 @@
-import api, { buildFormData } from './api';
+import api, { buildFormData, getShared } from './api';
 
 export const listExperience = () =>
-  api.get('/api/experience').then((r) => r.data);
+  getShared('/api/experience').then((r) => r.data);
 
 export const createExperience = (data) =>
   api.post('/api/experience', buildFormData(data)).then((r) => r.data);

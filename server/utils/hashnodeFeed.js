@@ -105,6 +105,11 @@ const syncBlogs = async (feedUrl = FEED_URL) => {
     if (!p.title || !p.externalUrl) continue;
     const existing = await Blog.findOne({ externalUrl: p.externalUrl });
     if (existing) {
+      // Skip the write when nothing changed: most syncs touch no posts at all.
+      const same = existing.title === p.title && existing.excerpt === p.excerpt &&
+        existing.coverImage === p.coverImage && existing.readTime === p.readTime &&
+        existing.tags.join('\n') === p.tags.join('\n');
+      if (same) continue;
       existing.title = p.title;
       existing.excerpt = p.excerpt;
       existing.tags = p.tags;

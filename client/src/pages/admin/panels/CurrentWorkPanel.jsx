@@ -7,6 +7,7 @@ import {
   deleteCurrentWork
 } from '../../../services/currentWorkService';
 import EmojiPicker from '../widgets/EmojiPicker';
+import FormSheet from '../widgets/FormSheet';
 
 // Pre-defined status options so the badge label stays consistent across cards.
 // Free-form input is still allowed via the "Custom" field below.
@@ -28,6 +29,7 @@ const CurrentWorkPanel = () => {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
 
   const refresh = () => {
     setLoading(true);
@@ -50,7 +52,20 @@ const CurrentWorkPanel = () => {
       link: item.link || '',
       active: item.active !== false
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setError('');
+    setOpen(true);
+  };
+
+  const openNew = () => {
+    setForm(EMPTY);
+    setError('');
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    setForm(EMPTY);
+    setError('');
   };
 
   const onSubmit = async (e) => {
@@ -73,7 +88,7 @@ const CurrentWorkPanel = () => {
       } else {
         await createCurrentWork(payload);
       }
-      setForm(EMPTY);
+      close();
       refresh();
     } catch (err) {
       setError(err.response?.data?.message || 'Save failed');
@@ -89,116 +104,119 @@ const CurrentWorkPanel = () => {
   };
 
   return (
-    <div className="admin-grid">
-      <form className="admin-form glass" onSubmit={onSubmit}>
-        <h2>{form._id ? 'Edit current work' : 'Add current work'}</h2>
-
-        <label className="admin-field">
-          <span>Title * (e.g. "Vehicle Rental v2.0") · shown in the homepage "Right now" tile</span>
-          <input
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            required
-          />
-        </label>
-
-        <label className="admin-field">
-          <span>Description * (one or two sentences about what you're doing)</span>
-          <textarea
-            rows={3}
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-          />
-        </label>
-
-        <div className="admin-row">
+    <div className="admin-stack">
+      <FormSheet open={open} onClose={close} title={form._id ? 'Edit current work' : 'Add current work'}>
+        <form className="admin-form" onSubmit={onSubmit}>
           <label className="admin-field">
-            <span>Status badge</span>
-            <select
-              value={STATUS_PRESETS.includes(form.status) ? form.status : '__custom'}
-              onChange={(e) => {
-                if (e.target.value === '__custom') {
-                  setForm({ ...form, status: '' });
-                } else {
-                  setForm({ ...form, status: e.target.value });
-                }
-              }}
-            >
-              {STATUS_PRESETS.map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-              <option value="__custom">Custom…</option>
-            </select>
+            <span>Title * (e.g. "Vehicle Rental v2.0") · shown in the homepage "Right now" tile</span>
+            <input
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              required
+            />
           </label>
 
-          {!STATUS_PRESETS.includes(form.status) && (
+          <label className="admin-field">
+            <span>Description * (one or two sentences about what you're doing)</span>
+            <textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              required
+            />
+          </label>
+
+          <div className="admin-row">
             <label className="admin-field">
-              <span>Custom status label</span>
-              <input
-                value={form.status}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-                placeholder="e.g. Refactoring"
-              />
+              <span>Status badge</span>
+              <select
+                value={STATUS_PRESETS.includes(form.status) ? form.status : '__custom'}
+                onChange={(e) => {
+                  if (e.target.value === '__custom') {
+                    setForm({ ...form, status: '' });
+                  } else {
+                    setForm({ ...form, status: e.target.value });
+                  }
+                }}
+              >
+                {STATUS_PRESETS.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+                <option value="__custom">Custom…</option>
+              </select>
             </label>
-          )}
-        </div>
 
-        <label className="admin-field">
-          <span>Link (optional — GitHub repo, live URL, etc.)</span>
-          <input
-            type="url"
-            value={form.link}
-            onChange={(e) => setForm({ ...form, link: e.target.value })}
-            placeholder="https://github.com/..."
-          />
-        </label>
+            {!STATUS_PRESETS.includes(form.status) && (
+              <label className="admin-field">
+                <span>Custom status label</span>
+                <input
+                  value={form.status}
+                  onChange={(e) => setForm({ ...form, status: e.target.value })}
+                  placeholder="e.g. Refactoring"
+                />
+              </label>
+            )}
+          </div>
 
-        <label className="admin-field admin-checkbox">
-          <input
-            type="checkbox"
-            checked={form.active}
-            onChange={(e) => setForm({ ...form, active: e.target.checked })}
-          />
-          <span>Active (visible on the site)</span>
-        </label>
+          <label className="admin-field">
+            <span>Link (optional — GitHub repo, live URL, etc.)</span>
+            <input
+              type="url"
+              value={form.link}
+              onChange={(e) => setForm({ ...form, link: e.target.value })}
+              placeholder="https://github.com/..."
+            />
+          </label>
 
-        <div className="admin-field">
-          <span>Icon</span>
-          <EmojiPicker
-            value={form.emoji}
-            onChange={(emoji) => setForm({ ...form, emoji })}
-          />
-        </div>
+          <label className="admin-field admin-checkbox">
+            <input
+              type="checkbox"
+              checked={form.active}
+              onChange={(e) => setForm({ ...form, active: e.target.checked })}
+            />
+            <span>Active (visible on the site)</span>
+          </label>
 
-        {error && <p className="admin-error">{error}</p>}
+          <div className="admin-field">
+            <span>Icon</span>
+            <EmojiPicker
+              value={form.emoji}
+              onChange={(emoji) => setForm({ ...form, emoji })}
+            />
+          </div>
 
-        <div className="admin-form-actions">
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {form._id ? <FiSave /> : <FiPlus />}
-            {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add entry'}
-          </button>
-          {form._id && (
-            <button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
+          {error && <p className="admin-error">{error}</p>}
+
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {form._id ? <FiSave /> : <FiPlus />}
+              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add entry'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </FormSheet>
 
       <div className="admin-list">
         <div className="admin-list-header">
           <h2>Current Work {loading ? '…' : `(${items.length})`}</h2>
-          <button
-            type="button"
-            className="icon-btn refresh-btn"
-            onClick={refresh}
-            disabled={loading}
-            title="Refresh current work"
-            aria-label="Refresh current work"
-          >
-            <FiRefreshCw className={loading ? 'spin' : ''} />
-          </button>
+          <div className="admin-list-tools">
+            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+              <FiPlus aria-hidden="true" /> Add current work
+            </button>
+            <button
+              type="button"
+              className="icon-btn refresh-btn"
+              onClick={refresh}
+              disabled={loading}
+              title="Refresh current work"
+              aria-label="Refresh current work"
+            >
+              <FiRefreshCw className={loading ? 'spin' : ''} />
+            </button>
+          </div>
         </div>
         {!loading && items.length === 0 && (
           <p className="admin-muted">

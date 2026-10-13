@@ -9,6 +9,7 @@ import {
 } from '../../../services/blogsService';
 import ImageUpload from '../widgets/ImageUpload';
 import { toArr, fromArr } from './helpers';
+import FormSheet from '../widgets/FormSheet';
 
 const EMPTY = {
   _id: null,
@@ -28,6 +29,7 @@ const BlogsPanel = () => {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
   const [sendingId, setSendingId] = useState(null);
   const [notice, setNotice] = useState('');
 
@@ -54,7 +56,20 @@ const BlogsPanel = () => {
       image: null,
       currentImage: b.coverImage || ''
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setError('');
+    setOpen(true);
+  };
+
+  const openNew = () => {
+    setForm(EMPTY);
+    setError('');
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    setForm(EMPTY);
+    setError('');
   };
 
   const onSubmit = async (e) => {
@@ -78,7 +93,7 @@ const BlogsPanel = () => {
       } else {
         await createBlog(payload);
       }
-      setForm(EMPTY);
+      close();
       refresh();
     } catch (err) {
       setError(err.response?.data?.message || 'Save failed');
@@ -112,93 +127,96 @@ const BlogsPanel = () => {
   };
 
   return (
-    <div className="admin-grid">
-      <form className="admin-form glass" onSubmit={onSubmit}>
-        <h2>{form._id ? 'Edit blog' : 'Add new blog'}</h2>
-
-        <label className="admin-field">
-          <span>Title *</span>
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-        </label>
-
-        <label className="admin-field">
-          <span>Excerpt *</span>
-          <textarea
-            rows={3}
-            value={form.excerpt}
-            onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-            required
-          />
-        </label>
-
-        <label className="admin-field">
-          <span>External URL * (where readers actually read the post)</span>
-          <input
-            type="url"
-            value={form.externalUrl}
-            onChange={(e) => setForm({ ...form, externalUrl: e.target.value })}
-            placeholder="https://medium.com/..."
-            required
-          />
-        </label>
-
-        <div className="admin-row">
+    <div className="admin-stack">
+      <FormSheet open={open} onClose={close} title={form._id ? 'Edit blog' : 'Add new blog'}>
+        <form className="admin-form" onSubmit={onSubmit}>
           <label className="admin-field">
-            <span>Tags (comma separated)</span>
-            <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+            <span>Title *</span>
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
           </label>
+
           <label className="admin-field">
-            <span>Read time</span>
-            <input value={form.readTime} onChange={(e) => setForm({ ...form, readTime: e.target.value })} />
+            <span>Excerpt *</span>
+            <textarea
+              rows={3}
+              value={form.excerpt}
+              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+              required
+            />
           </label>
-        </div>
 
-        <label className="admin-field admin-checkbox">
-          <input
-            type="checkbox"
-            checked={form.published}
-            onChange={(e) => setForm({ ...form, published: e.target.checked })}
-          />
-          <span>Published (visible on the site)</span>
-        </label>
+          <label className="admin-field">
+            <span>External URL * (where readers actually read the post)</span>
+            <input
+              type="url"
+              value={form.externalUrl}
+              onChange={(e) => setForm({ ...form, externalUrl: e.target.value })}
+              placeholder="https://medium.com/..."
+              required
+            />
+          </label>
 
-        <div className="admin-field">
-          <span>Cover image</span>
-          <ImageUpload
-            value={form.image}
-            currentImageUrl={form.currentImage}
-            onChange={(file) => setForm({ ...form, image: file })}
-          />
-        </div>
+          <div className="admin-row">
+            <label className="admin-field">
+              <span>Tags (comma separated)</span>
+              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+            </label>
+            <label className="admin-field">
+              <span>Read time</span>
+              <input value={form.readTime} onChange={(e) => setForm({ ...form, readTime: e.target.value })} />
+            </label>
+          </div>
 
-        {error && <p className="admin-error">{error}</p>}
+          <label className="admin-field admin-checkbox">
+            <input
+              type="checkbox"
+              checked={form.published}
+              onChange={(e) => setForm({ ...form, published: e.target.checked })}
+            />
+            <span>Published (visible on the site)</span>
+          </label>
 
-        <div className="admin-form-actions">
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {form._id ? <FiSave /> : <FiPlus />}
-            {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add blog'}
-          </button>
-          {form._id && (
-            <button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
+          <div className="admin-field">
+            <span>Cover image</span>
+            <ImageUpload
+              value={form.image}
+              currentImageUrl={form.currentImage}
+              onChange={(file) => setForm({ ...form, image: file })}
+            />
+          </div>
+
+          {error && <p className="admin-error">{error}</p>}
+
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {form._id ? <FiSave /> : <FiPlus />}
+              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add blog'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </FormSheet>
 
       <div className="admin-list">
         <div className="admin-list-header">
           <h2>Existing Blogs {loading ? '…' : `(${items.length})`}</h2>
-          <button
-            type="button"
-            className="icon-btn refresh-btn"
-            onClick={refresh}
-            disabled={loading}
-            title="Refresh blogs"
-            aria-label="Refresh blogs"
-          >
-            <FiRefreshCw className={loading ? 'spin' : ''} />
-          </button>
+          <div className="admin-list-tools">
+            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+              <FiPlus aria-hidden="true" /> Add blog
+            </button>
+            <button
+              type="button"
+              className="icon-btn refresh-btn"
+              onClick={refresh}
+              disabled={loading}
+              title="Refresh blogs"
+              aria-label="Refresh blogs"
+            >
+              <FiRefreshCw className={loading ? 'spin' : ''} />
+            </button>
+          </div>
         </div>
         {notice && <p className="admin-muted" role="status">{notice}</p>}
         {!loading && items.length === 0 && <p className="admin-muted">No blogs yet.</p>}

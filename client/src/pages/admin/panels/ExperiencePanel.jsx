@@ -8,6 +8,7 @@ import {
 } from '../../../services/experienceService';
 import ImageUpload from '../widgets/ImageUpload';
 import { toArr, fromArr } from './helpers';
+import FormSheet from '../widgets/FormSheet';
 
 const EMPTY = {
   _id: null,
@@ -29,6 +30,7 @@ const ExperiencePanel = () => {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
 
   const refresh = () => {
     setLoading(true);
@@ -57,7 +59,20 @@ const ExperiencePanel = () => {
       image: null,
       currentImage: e.logo || ''
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setError('');
+    setOpen(true);
+  };
+
+  const openNew = () => {
+    setForm(EMPTY);
+    setError('');
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    setForm(EMPTY);
+    setError('');
   };
 
   const onSubmit = async (ev) => {
@@ -83,7 +98,7 @@ const ExperiencePanel = () => {
       } else {
         await createExperience(payload);
       }
-      setForm(EMPTY);
+      close();
       refresh();
     } catch (err) {
       setError(err.response?.data?.message || 'Save failed');
@@ -99,108 +114,111 @@ const ExperiencePanel = () => {
   };
 
   return (
-    <div className="admin-grid">
-      <form className="admin-form glass" onSubmit={onSubmit}>
-        <h2>{form._id ? 'Edit experience' : 'Add new experience'}</h2>
+    <div className="admin-stack">
+      <FormSheet open={open} onClose={close} title={form._id ? 'Edit experience' : 'Add new experience'}>
+        <form className="admin-form" onSubmit={onSubmit}>
+          <div className="admin-row">
+            <label className="admin-field">
+              <span>Role *</span>
+              <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} required />
+            </label>
+            <label className="admin-field">
+              <span>Company *</span>
+              <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required />
+            </label>
+          </div>
 
-        <div className="admin-row">
-          <label className="admin-field">
-            <span>Role *</span>
-            <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} required />
-          </label>
-          <label className="admin-field">
-            <span>Company *</span>
-            <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required />
-          </label>
-        </div>
+          <div className="admin-row">
+            <label className="admin-field">
+              <span>Location</span>
+              <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+            </label>
+            <label className="admin-field">
+              <span>Period *</span>
+              <input
+                value={form.period}
+                onChange={(e) => setForm({ ...form, period: e.target.value })}
+                placeholder="Jun 2024 - Jul 2024"
+                required
+              />
+            </label>
+          </div>
 
-        <div className="admin-row">
           <label className="admin-field">
-            <span>Location</span>
-            <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+            <span>Employment type * (drives the tab it appears under)</span>
+            <select
+              value={form.employmentType}
+              onChange={(e) => setForm({ ...form, employmentType: e.target.value })}
+            >
+              <option value="Internship">Internship</option>
+              <option value="Full-time">Full-time</option>
+            </select>
           </label>
+
           <label className="admin-field">
-            <span>Period *</span>
-            <input
-              value={form.period}
-              onChange={(e) => setForm({ ...form, period: e.target.value })}
-              placeholder="Jun 2024 - Jul 2024"
-              required
+            <span>Description</span>
+            <textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </label>
-        </div>
 
-        <label className="admin-field">
-          <span>Employment type * (drives the tab it appears under)</span>
-          <select
-            value={form.employmentType}
-            onChange={(e) => setForm({ ...form, employmentType: e.target.value })}
-          >
-            <option value="Internship">Internship</option>
-            <option value="Full-time">Full-time</option>
-          </select>
-        </label>
+          <label className="admin-field">
+            <span>Achievements (one per line)</span>
+            <textarea
+              rows={4}
+              value={form.achievements}
+              onChange={(e) => setForm({ ...form, achievements: e.target.value })}
+            />
+          </label>
 
-        <label className="admin-field">
-          <span>Description</span>
-          <textarea
-            rows={3}
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
-        </label>
+          <label className="admin-field">
+            <span>Technologies (comma separated)</span>
+            <input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
+          </label>
 
-        <label className="admin-field">
-          <span>Achievements (one per line)</span>
-          <textarea
-            rows={4}
-            value={form.achievements}
-            onChange={(e) => setForm({ ...form, achievements: e.target.value })}
-          />
-        </label>
+          <div className="admin-field">
+            <span>Company logo</span>
+            <ImageUpload
+              value={form.image}
+              currentImageUrl={form.currentImage}
+              onChange={(file) => setForm({ ...form, image: file })}
+            />
+          </div>
 
-        <label className="admin-field">
-          <span>Technologies (comma separated)</span>
-          <input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
-        </label>
+          {error && <p className="admin-error">{error}</p>}
 
-        <div className="admin-field">
-          <span>Company logo</span>
-          <ImageUpload
-            value={form.image}
-            currentImageUrl={form.currentImage}
-            onChange={(file) => setForm({ ...form, image: file })}
-          />
-        </div>
-
-        {error && <p className="admin-error">{error}</p>}
-
-        <div className="admin-form-actions">
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {form._id ? <FiSave /> : <FiPlus />}
-            {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add experience'}
-          </button>
-          {form._id && (
-            <button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {form._id ? <FiSave /> : <FiPlus />}
+              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add experience'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </FormSheet>
 
       <div className="admin-list">
         <div className="admin-list-header">
           <h2>Existing Experiences {loading ? '…' : `(${items.length})`}</h2>
-          <button
-            type="button"
-            className="icon-btn refresh-btn"
-            onClick={refresh}
-            disabled={loading}
-            title="Refresh experience"
-            aria-label="Refresh experience"
-          >
-            <FiRefreshCw className={loading ? 'spin' : ''} />
-          </button>
+          <div className="admin-list-tools">
+            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+              <FiPlus aria-hidden="true" /> Add experience
+            </button>
+            <button
+              type="button"
+              className="icon-btn refresh-btn"
+              onClick={refresh}
+              disabled={loading}
+              title="Refresh experience"
+              aria-label="Refresh experience"
+            >
+              <FiRefreshCw className={loading ? 'spin' : ''} />
+            </button>
+          </div>
         </div>
         {!loading && items.length === 0 && <p className="admin-muted">No experience entries yet.</p>}
         {items.map((e) => (

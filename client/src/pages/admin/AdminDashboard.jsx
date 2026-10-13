@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  FiActivity, FiBriefcase, FiEdit3, FiExternalLink, FiGrid, FiLogOut, FiMail, FiRefreshCw, FiUser
+  FiActivity, FiBriefcase, FiEdit3, FiExternalLink, FiGrid, FiLogOut, FiMail, FiMenu, FiRefreshCw, FiUser, FiX
 } from 'react-icons/fi';
 import { logout } from '../../services/authService';
 import ThemeToggle from '../../components/ThemeToggle/ThemeToggle';
@@ -26,6 +26,9 @@ const TABS = [
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState('current');
+  // Phones/tablets: the section list lives behind a hamburger instead of a
+  // sideways-scrolling tab strip.
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Bumping this number changes the active panel's React key, which remounts
   // it and re-runs its mount-time fetch.
@@ -35,6 +38,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  const pick = (key) => {
+    setTab(key);
+    setMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
 
   const onLogout = () => {
     logout();
@@ -56,42 +72,58 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-shell">
-      <aside className="admin-side">
-        <Link to="/" className="admin-brand">
-          <span className="admin-brand-mark" aria-hidden="true">S</span>
-          <span>
-            <strong>Portfolio admin</strong>
-            {email && <small>{email}</small>}
-          </span>
-        </Link>
-
-        <nav className="admin-nav" aria-label="Content sections">
-          {TABS.map(({ key, label, Icon }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setTab(key)}
-              className={`admin-nav-item ${tab === key ? 'active' : ''}`}
-              aria-current={tab === key ? 'page' : undefined}
-            >
-              <Icon aria-hidden="true" />
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="admin-side-foot">
-          <Link to="/" className="admin-side-link">
-            <FiExternalLink aria-hidden="true" /> View site
+      <aside className={`admin-side ${menuOpen ? 'is-open' : ''}`}>
+        <div className="admin-side-top">
+          <Link to="/" className="admin-brand">
+            <span className="admin-brand-mark" aria-hidden="true">S</span>
+            <span>
+              <strong>Portfolio admin</strong>
+              {email && <small>{email}</small>}
+            </span>
           </Link>
-          <div className="admin-side-row">
-            <ThemeToggle />
-            <button type="button" className="btn btn-secondary admin-logout" onClick={onLogout}>
-              <FiLogOut aria-hidden="true" /> Sign out
-            </button>
+          <button
+            type="button"
+            className="admin-burger"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-expanded={menuOpen}
+            aria-controls="admin-menu"
+            aria-label={menuOpen ? 'Close sections menu' : 'Open sections menu'}
+          >
+            <span className="admin-burger-label">{active.label}</span>
+            {menuOpen ? <FiX aria-hidden="true" /> : <FiMenu aria-hidden="true" />}
+          </button>
+        </div>
+
+        <div className="admin-menu" id="admin-menu">
+          <nav className="admin-nav" aria-label="Content sections">
+            {TABS.map(({ key, label, Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => pick(key)}
+                className={`admin-nav-item ${tab === key ? 'active' : ''}`}
+                aria-current={tab === key ? 'page' : undefined}
+              >
+                <Icon aria-hidden="true" />
+                {label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="admin-side-foot">
+            <Link to="/" className="admin-side-link">
+              <FiExternalLink aria-hidden="true" /> View site
+            </Link>
+            <div className="admin-side-row">
+              <ThemeToggle />
+              <button type="button" className="btn btn-secondary admin-logout" onClick={onLogout}>
+                <FiLogOut aria-hidden="true" /> Sign out
+              </button>
+            </div>
           </div>
         </div>
       </aside>
+      {menuOpen && <button type="button" className="admin-menu-backdrop" aria-label="Close sections menu" onClick={() => setMenuOpen(false)} />}
 
       <main className="admin-main">
         <header className="admin-header">

@@ -9,6 +9,7 @@ import {
 import EmojiPicker from '../widgets/EmojiPicker';
 import ImageUpload from '../widgets/ImageUpload';
 import { toArr, fromArr } from './helpers';
+import FormSheet from '../widgets/FormSheet';
 
 const EMPTY = {
   _id: null,
@@ -31,6 +32,7 @@ const ProjectsPanel = () => {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
 
   const refresh = () => {
     setLoading(true);
@@ -58,7 +60,20 @@ const ProjectsPanel = () => {
       image: null,
       currentImage: p.image || ''
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setError('');
+    setOpen(true);
+  };
+
+  const openNew = () => {
+    setForm(EMPTY);
+    setError('');
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    setForm(EMPTY);
+    setError('');
   };
 
   const onSubmit = async (e) => {
@@ -84,7 +99,7 @@ const ProjectsPanel = () => {
       } else {
         await createProject(payload);
       }
-      setForm(EMPTY);
+      close();
       refresh();
     } catch (err) {
       setError(err.response?.data?.message || 'Save failed');
@@ -100,114 +115,117 @@ const ProjectsPanel = () => {
   };
 
   return (
-    <div className="admin-grid">
-      <form className="admin-form glass" onSubmit={onSubmit}>
-        <h2>{form._id ? 'Edit project' : 'Add new project'}</h2>
-
-        <label className="admin-field">
-          <span>Title *</span>
-          <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-        </label>
-
-        <label className="admin-field">
-          <span>Short description *</span>
-          <textarea
-            rows={3}
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            required
-          />
-        </label>
-
-        <label className="admin-field">
-          <span>Long description (shown when the project row is opened)</span>
-          <textarea
-            rows={5}
-            value={form.longDescription}
-            onChange={(e) => setForm({ ...form, longDescription: e.target.value })}
-          />
-        </label>
-
-        <label className="admin-field">
-          <span>Technologies (comma separated)</span>
-          <input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
-        </label>
-
-        <label className="admin-field">
-          <span>Category</span>
-          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-            <option value="web">Web</option>
-            <option value="mobile">Mobile</option>
-            <option value="design">Design</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-
-        <div className="admin-row">
+    <div className="admin-stack">
+      <FormSheet open={open} onClose={close} title={form._id ? 'Edit project' : 'Add new project'}>
+        <form className="admin-form" onSubmit={onSubmit}>
           <label className="admin-field">
-            <span>Live URL</span>
-            <input value={form.liveUrl} onChange={(e) => setForm({ ...form, liveUrl: e.target.value })} />
+            <span>Title *</span>
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
           </label>
+
           <label className="admin-field">
-            <span>GitHub URL</span>
-            <input value={form.githubUrl} onChange={(e) => setForm({ ...form, githubUrl: e.target.value })} />
+            <span>Short description *</span>
+            <textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              required
+            />
           </label>
-        </div>
 
-        <label className="admin-field admin-checkbox">
-          <input
-            type="checkbox"
-            checked={form.featured}
-            onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-          />
-          <span>Featured (listed first and marked on the homepage)</span>
-        </label>
+          <label className="admin-field">
+            <span>Long description (shown when the project row is opened)</span>
+            <textarea
+              rows={5}
+              value={form.longDescription}
+              onChange={(e) => setForm({ ...form, longDescription: e.target.value })}
+            />
+          </label>
 
-        <div className="admin-field">
-          <span>Icon (shown on the generated cover when there's no image)</span>
-          <EmojiPicker
-            value={form.emoji}
-            onChange={(emoji) => setForm({ ...form, emoji })}
-          />
-        </div>
+          <label className="admin-field">
+            <span>Technologies (comma separated)</span>
+            <input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
+          </label>
 
-        <div className="admin-field">
-          <span>Cover image (replaces the generated cover)</span>
-          <ImageUpload
-            value={form.image}
-            currentImageUrl={form.currentImage}
-            onChange={(file) => setForm({ ...form, image: file })}
-          />
-        </div>
+          <label className="admin-field">
+            <span>Category</span>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <option value="web">Web</option>
+              <option value="mobile">Mobile</option>
+              <option value="design">Design</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
 
-        {error && <p className="admin-error">{error}</p>}
+          <div className="admin-row">
+            <label className="admin-field">
+              <span>Live URL</span>
+              <input value={form.liveUrl} onChange={(e) => setForm({ ...form, liveUrl: e.target.value })} />
+            </label>
+            <label className="admin-field">
+              <span>GitHub URL</span>
+              <input value={form.githubUrl} onChange={(e) => setForm({ ...form, githubUrl: e.target.value })} />
+            </label>
+          </div>
 
-        <div className="admin-form-actions">
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {form._id ? <FiSave /> : <FiPlus />}
-            {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add project'}
-          </button>
-          {form._id && (
-            <button type="button" className="btn btn-secondary" onClick={() => setForm(EMPTY)}>
+          <label className="admin-field admin-checkbox">
+            <input
+              type="checkbox"
+              checked={form.featured}
+              onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+            />
+            <span>Featured (listed first and marked on the homepage)</span>
+          </label>
+
+          <div className="admin-field">
+            <span>Icon (shown on the generated cover when there's no image)</span>
+            <EmojiPicker
+              value={form.emoji}
+              onChange={(emoji) => setForm({ ...form, emoji })}
+            />
+          </div>
+
+          <div className="admin-field">
+            <span>Cover image (replaces the generated cover)</span>
+            <ImageUpload
+              value={form.image}
+              currentImageUrl={form.currentImage}
+              onChange={(file) => setForm({ ...form, image: file })}
+            />
+          </div>
+
+          {error && <p className="admin-error">{error}</p>}
+
+          <div className="admin-form-actions">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {form._id ? <FiSave /> : <FiPlus />}
+              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add project'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </FormSheet>
 
       <div className="admin-list">
         <div className="admin-list-header">
           <h2>Existing Projects {loading ? '…' : `(${items.length})`}</h2>
-          <button
-            type="button"
-            className="icon-btn refresh-btn"
-            onClick={refresh}
-            disabled={loading}
-            title="Refresh projects"
-            aria-label="Refresh projects"
-          >
-            <FiRefreshCw className={loading ? 'spin' : ''} />
-          </button>
+          <div className="admin-list-tools">
+            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+              <FiPlus aria-hidden="true" /> Add project
+            </button>
+            <button
+              type="button"
+              className="icon-btn refresh-btn"
+              onClick={refresh}
+              disabled={loading}
+              title="Refresh projects"
+              aria-label="Refresh projects"
+            >
+              <FiRefreshCw className={loading ? 'spin' : ''} />
+            </button>
+          </div>
         </div>
         {!loading && items.length === 0 && <p className="admin-muted">No projects yet.</p>}
         {items.map((p) => (

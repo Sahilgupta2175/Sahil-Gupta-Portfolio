@@ -200,77 +200,99 @@
 
 .admin-sub { font-size: 15px; }
 
+/* Brand row + section menu wrappers (desktop: plain column in the sidebar). */
+.admin-side-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-menu { flex: 1; display: flex; flex-direction: column; gap: 28px; min-height: 0; }
+.admin-burger, .admin-menu-backdrop { display: none; }
+
+/* Phones/tablets: a top bar with a hamburger. The section list drops down
+   under it instead of scrolling sideways. */
 @media (max-width: 900px) {
   .admin-shell { grid-template-columns: minmax(0, 1fr); }
 
   .admin-side {
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 60;
     height: auto;
-    gap: 12px;
+    gap: 0;
     padding: 12px 16px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--surface) 92%, transparent);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    background: var(--surface);
   }
 
-  .admin-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    gap: 4px;
-    margin: 0 -16px;
-    padding: 0 16px;
-    scrollbar-width: none;
-  }
-
-  .admin-nav::-webkit-scrollbar { display: none; }
-  .admin-nav-item { flex: 0 0 auto; }
-
-  .admin-side-foot {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-    flex-direction: row;
+  .admin-burger {
+    display: inline-flex;
     align-items: center;
-    margin: 0;
-    padding: 0;
-    border: 0;
+    gap: 10px;
+    min-height: 44px;
+    max-width: 60%;
+    padding: 0 14px 0 16px;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  .admin-side-foot .admin-side-link { display: none; }
-  .admin-logout { flex: 0 0 auto; }
+  .admin-burger svg { flex: 0 0 auto; font-size: 18px; }
+  .admin-burger-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .admin-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    gap: 16px;
+    max-height: calc(100vh - 69px);
+    overflow-y: auto;
+    padding: 12px 16px 20px;
+    border-bottom: 1px solid var(--line-2);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .admin-side.is-open .admin-menu { display: flex; }
+
+  .admin-nav-item { min-height: 48px; font-size: 16px; }
+
+  .admin-side-foot { margin-top: 0; }
+
+  .admin-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    border: 0;
+    background: rgba(0, 0, 0, 0.4);
+    cursor: default;
+  }
 }
 
 @media (max-width: 480px) {
   .admin-brand small { display: none; }
-  .admin-logout { width: 44px; padding: 0; font-size: 0; gap: 0; }
-  .admin-logout svg { font-size: 17px; }
+  .admin-brand strong { font-size: 14px; }
 }
 
 /* ============ Panels ============ */
 .admin-panel { min-height: 400px; }
 
-.admin-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+/* List (or About preview) first; Add/Edit opens the form in a FormSheet. */
+.admin-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 980px;
 }
 
-/* About is a single document, so its panel is one full-width form. */
-.admin-grid-single { grid-template-columns: minmax(0, 1fr); max-width: 860px; }
-
-@media (max-width: 1180px) {
-  .admin-grid { grid-template-columns: minmax(0, 1fr); }
-}
+.admin-list-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 
 /* ============ Form ============ */
 .admin-form {
-  position: sticky;
-  top: 24px;
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -280,7 +302,6 @@
   background: var(--surface);
 }
 
-@media (max-width: 1180px) { .admin-form { position: static; } }
 
 .admin-form h2,
 .admin-list h2 {
@@ -402,6 +423,7 @@
 
 .admin-list-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -792,3 +814,92 @@
 
 .emoji-picker-custom input:focus-visible { outline: none; border-color: var(--text); }
 .emoji-picker-custom .btn { min-height: 44px; padding: 0 18px; font-size: 13px; }
+
+/* ============ Form slide-over (widgets/FormSheet) ============ */
+.sheet-root { position: fixed; inset: 0; z-index: 300; }
+
+.sheet-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }
+
+.sheet-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(620px, 100%);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line-2);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.sheet-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sheet-head h2 { font-size: 22px; }
+
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px;
+}
+
+/* The form sits flat inside the panel. */
+.sheet-body .admin-form { padding: 0; border: 0; border-radius: 0; background: none; }
+
+@media (max-width: 600px) {
+  .sheet-panel { border-left: 0; }
+  .sheet-head { padding: 12px 16px; }
+  .sheet-head h2 { font-size: 19px; }
+  .sheet-body { padding: 18px 16px 32px; }
+  .sheet-body .admin-form-actions .btn { flex: 1 1 auto; }
+}
+
+/* ============ About preview ============ */
+.about-preview { gap: 12px; }
+
+.about-preview-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.1;
+  white-space: pre-line;
+}
+
+.about-preview p { max-width: 70ch; font-size: 15px; }
+
+.about-preview-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 16px;
+  margin-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.about-preview-facts > div { padding-top: 12px; }
+
+.about-preview-facts dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.about-preview-facts dd { font-weight: 600; }
+
+@media (max-width: 600px) {
+  .admin-form { padding: 20px; }
+  .admin-list-header h2 { flex-basis: 100%; }
+  .admin-list-tools { width: 100%; }
+  .admin-list-tools .btn { flex: 1 1 auto; }
+  .admin-header { margin-bottom: 20px; padding-bottom: 18px; }
+}

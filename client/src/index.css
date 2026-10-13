@@ -247,11 +247,13 @@ img { max-width: 100%; }
   color: var(--bg);
 }
 
-/* Many options (blog tags): separate wrapping pills instead of one
-   container pill, which turns into a lopsided blob once it wraps. */
-.seg.seg-chips { border: 0; padding: 0; gap: 8px; }
-.seg.seg-chips .seg-btn { border: 1px solid var(--line-2); }
-.seg.seg-chips .seg-btn.active { border-color: var(--text); }
+/* Many options (blog tags): where the bar has to wrap, use separate pills
+   instead of one container pill, which turns into a lopsided blob. */
+@media (max-width: 1100px) {
+  .seg.seg-chips { border: 0; padding: 0; gap: 8px; }
+  .seg.seg-chips .seg-btn { border: 1px solid var(--line-2); }
+  .seg.seg-chips .seg-btn.active { border-color: var(--text); }
+}
 
 .seg-btn .count {
   margin-left: 6px;

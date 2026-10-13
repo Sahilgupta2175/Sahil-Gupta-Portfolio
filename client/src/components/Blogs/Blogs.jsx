@@ -6,7 +6,21 @@ import { listBlogs } from '../../services/blogsService';
 import { subscribe } from '../../services/subscribersService';
 import './Blogs.css';
 
-const HOME_LIMIT = 3; // big card + two small fills the desktop grid exactly
+const HOME_LIMIT = 4;
+const PHONE = '(max-width: 600px)';
+
+// Phones show the subscribe card under "Read all blogs"; wider screens keep
+// it inside the post grid.
+const useIsPhone = () => {
+  const [isPhone, setIsPhone] = useState(() => window.matchMedia(PHONE).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(PHONE);
+    const onChange = (e) => setIsPhone(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return isPhone;
+};
 
 const fmtDate = (d) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
@@ -59,6 +73,7 @@ const Blogs = ({ preview = true }) => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tag, setTag] = useState('all');
+  const isPhone = useIsPhone();
 
   useEffect(() => {
     let cancelled = false;
@@ -144,6 +159,7 @@ const Blogs = ({ preview = true }) => {
                 </div>
               </motion.a>
             ))}
+            {preview && !isPhone && <SubscribeTile />}
           </div>
         )}
 
@@ -155,7 +171,7 @@ const Blogs = ({ preview = true }) => {
           </div>
         )}
 
-        {preview && <SubscribeTile />}
+        {preview && isPhone && <SubscribeTile />}
       </div>
     </section>
   );

@@ -9,6 +9,7 @@ import { fallbackProjects } from '../../data/fallback';
 import './Projects.css';
 
 const HOME_LIMIT = 6;
+const TECH_LIMIT = 12;
 const LABELS = { web: 'Web', mobile: 'Mobile', design: 'Design', other: 'Other' };
 const COVERS = ['cover-accent', 'cover-inverse', 'cover-plain'];
 
@@ -39,6 +40,7 @@ const Projects = ({ preview = true }) => {
   const [category, setCategory] = useState('all');
   const [open, setOpen] = useState(null);
   const [hovered, setHovered] = useState(null);
+  const [allTech, setAllTech] = useState(false);
 
   // Cursor-following preview, driven by motion values (no re-render per move).
   const mx = useMotionValue(0);
@@ -125,7 +127,7 @@ const Projects = ({ preview = true }) => {
                     className="phead"
                     aria-expanded={isOpen}
                     aria-controls={panelId}
-                    onClick={() => setOpen(isOpen ? null : p._id)}
+                    onClick={() => { setOpen(isOpen ? null : p._id); setAllTech(false); }}
                     onPointerEnter={(e) => e.pointerType === 'mouse' && setHovered(p._id)}
                   >
                     <span className="pnum">{String(i + 1).padStart(2, '0')}</span>
@@ -155,7 +157,14 @@ const Projects = ({ preview = true }) => {
                           <div className="ppanel-body">
                             <p>{p.longDescription || p.description}</p>
                             <div className="ptech">
-                              {(p.technologies || []).map((t) => <span key={t} className="chip">{t}</span>)}
+                              {(p.technologies || []).slice(0, allTech ? undefined : TECH_LIMIT).map((t) => (
+                                <span key={t} className="chip">{t}</span>
+                              ))}
+                              {!allTech && (p.technologies || []).length > TECH_LIMIT && (
+                                <button type="button" className="chip chip-more" onClick={() => setAllTech(true)}>
+                                  +{p.technologies.length - TECH_LIMIT} more
+                                </button>
+                              )}
                             </div>
                             <div className="plinks">
                               {p.liveUrl && (

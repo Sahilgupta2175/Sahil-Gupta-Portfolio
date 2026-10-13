@@ -124,6 +124,12 @@
 .ticket-extras { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px; }
 
 @media (max-width: 720px) {
+  .journey { padding: 80px 0; }
+  .journey .seg { width: 100%; }
+  .journey-tab { flex: 1 1 0; padding: 0 8px; font-size: 13px; }
+  .ticket-stub, .ticket-main { padding: 22px; }
+  .ticket-main h3 { font-size: 23px; }
+  .ticket-period { font-size: 26px; }
   .ticket-stub {
     flex: 1 1 100%;
     border-right: 0;

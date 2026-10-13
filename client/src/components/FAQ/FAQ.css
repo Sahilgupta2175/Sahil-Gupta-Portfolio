@@ -71,3 +71,9 @@
   font-size: 17px;
   max-width: 760px;
 }
+
+@media (max-width: 600px) {
+  .faq { padding-bottom: 80px; }
+  .faq-question { min-height: 64px; padding: 14px 0; }
+  .faq-answer p { padding: 0 0 20px; font-size: 16px; }
+}

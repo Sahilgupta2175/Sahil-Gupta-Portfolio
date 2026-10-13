@@ -65,6 +65,9 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -301,6 +304,9 @@ img { max-width: 100%; }
 
 @media (max-width: 768px) {
   .container { padding: 0 16px; }
+  .section-head { margin-bottom: 28px; gap: 16px; }
+  /* iOS zooms the page into any field under 16px; keep them at 16. */
+  input, textarea, select { font-size: 16px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

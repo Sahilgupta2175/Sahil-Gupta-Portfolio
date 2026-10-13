@@ -27,3 +27,9 @@
 @media (max-width: 768px) {
   .scroll-to-top { right: 16px; bottom: 16px; width: 44px; height: 44px; }
 }
+
+/* Phones: it sat on top of row buttons and form fields; the footer's
+   "Back to top" link and the reading-progress bar cover the same need. */
+@media (max-width: 600px) {
+  .scroll-to-top { display: none; }
+}

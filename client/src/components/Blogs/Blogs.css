@@ -16,11 +16,6 @@
   .wgrid .wsub { grid-column: auto; }
 }
 
-@media (max-width: 600px) {
-  .wgrid { grid-template-columns: minmax(0, 1fr); }
-  .wgrid.is-preview .wbig { grid-column: auto; }
-}
-
 .wcard {
   display: flex;
   flex-direction: column;
@@ -151,3 +146,19 @@
 .writing-empty { color: var(--muted); }
 
 .writing-more { margin-top: 32px; }
+
+@media (max-width: 600px) {
+  .writing { padding-bottom: 80px; }
+  .wgrid { grid-template-columns: minmax(0, 1fr); }
+  .wgrid.is-preview .wbig { grid-column: auto; }
+  .wbody { padding: 18px; }
+  .wbig .wbody h3 { font-size: 24px; }
+  .wsub { padding: 22px; }
+  .wsub-title { font-size: 23px; }
+  .wsub-row .btn { flex: 1 1 auto; }
+  /* Only the lead post keeps its cover on the homepage; the rest become
+     compact text cards so four posts don't stack four big images. */
+  .wgrid.is-preview .wcard:not(.wbig) .wcover { display: none; }
+  .wgrid.is-preview .wcard:not(.wbig) .wbody p { -webkit-line-clamp: 2; line-clamp: 2; }
+}
+

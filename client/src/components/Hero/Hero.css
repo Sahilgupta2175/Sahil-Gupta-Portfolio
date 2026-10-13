@@ -34,11 +34,6 @@
 .hero-word { white-space: nowrap; }
 .hero-word:last-child { margin-left: auto; }
 
-/* Phones: stack the two words, much bigger. */
-@media (max-width: 600px) {
-  .hero-name { font-size: 23vw; line-height: 0.86; }
-}
-
 .hero-letter {
   display: inline-block;
   transition: font-weight 0.55s var(--ease), font-stretch 0.55s var(--ease);
@@ -96,3 +91,14 @@
   55% { transform: scaleY(1); transform-origin: bottom; }
   100% { transform: scaleY(0); transform-origin: bottom; }
 }
+
+/* Phones: stack the two words, much bigger. */
+@media (max-width: 600px) {
+  .hero { padding-top: 20px; }
+  .hero-name { font-size: 23vw; line-height: 0.86; }
+  .hero-meta { font-size: 11px; }
+  .hero-meta span:nth-child(2) { display: none; }
+  .hero-foot { padding-bottom: 32px; }
+  .hero-cue { display: none; }
+}
+

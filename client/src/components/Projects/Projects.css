@@ -99,6 +99,7 @@
 .ppanel-body p { font-size: 17px; max-width: 680px; }
 
 .ptech { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-more { background: transparent; font: inherit; font-size: 13px; cursor: pointer; border-style: dashed; }
 
 .plinks { display: flex; flex-wrap: wrap; gap: 10px; }
 
@@ -165,6 +166,11 @@
 .projects-more { margin-top: 32px; display: flex; justify-content: flex-start; }
 
 @media (max-width: 720px) {
-  .phead { grid-template-columns: 32px minmax(0, 1fr) 44px; min-height: 92px; }
+  .projects { padding-bottom: 80px; }
+  .phead { grid-template-columns: 28px minmax(0, 1fr) 44px; gap: 12px; min-height: 92px; padding: 16px 0; }
   .pcat { display: none; }
+  .ppanel-inner { gap: 18px; padding: 0 0 28px; }
+  .ppanel-cover { flex-basis: 100%; }
+  .ppanel-body p { font-size: 16px; }
+  .plinks .btn { flex: 1 1 auto; }
 }

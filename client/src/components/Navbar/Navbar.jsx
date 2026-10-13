@@ -63,38 +63,43 @@ const Navbar = () => {
     </>
   );
 
+  // The sheet is a sibling of <header>, not a child: the header's
+  // backdrop-filter makes it the containing block for position:fixed
+  // children, which squeezed the sheet into the 69px bar (invisible menu).
   return (
-    <header className="nav">
-      <nav className="nav-inner" aria-label="Primary">
-        {onHome ? (
-          <ScrollLink to="hero" href="#hero" smooth duration={500} className="nav-logo">{logo}</ScrollLink>
-        ) : (
-          <RouterLink to="/" className="nav-logo">{logo}</RouterLink>
-        )}
-
-        <div className="nav-links">
-          {navItems.map((item) => (
-            <React.Fragment key={item.to}>{renderLink(item, 'nav-link')}</React.Fragment>
-          ))}
-        </div>
-
-        <div className="nav-actions">
-          <ThemeToggle />
-          <a className="btn btn-solid nav-resume" href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
-            Résumé <FiArrowDown aria-hidden="true" />
-          </a>
-          <button
-            type="button"
-            className="nav-burger"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-            aria-controls="nav-sheet"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-          >
-            {open ? <FiX /> : <FiMenu />}
-          </button>
-        </div>
-      </nav>
+    <>
+      <header className="nav">
+        <nav className="nav-inner" aria-label="Primary">
+          {onHome ? (
+            <ScrollLink to="hero" href="#hero" smooth duration={500} className="nav-logo">{logo}</ScrollLink>
+          ) : (
+            <RouterLink to="/" className="nav-logo">{logo}</RouterLink>
+          )}
+  
+          <div className="nav-links">
+            {navItems.map((item) => (
+              <React.Fragment key={item.to}>{renderLink(item, 'nav-link')}</React.Fragment>
+            ))}
+          </div>
+  
+          <div className="nav-actions">
+            <ThemeToggle />
+            <a className="btn btn-solid nav-resume" href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
+              Résumé <FiArrowDown aria-hidden="true" />
+            </a>
+            <button
+              type="button"
+              className="nav-burger"
+              onClick={() => setOpen((o) => !o)}
+              aria-expanded={open}
+              aria-controls="nav-sheet"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+            >
+              {open ? <FiX /> : <FiMenu />}
+            </button>
+          </div>
+        </nav>
+      </header>
 
       <AnimatePresence>
         {open && (
@@ -122,7 +127,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 };
 

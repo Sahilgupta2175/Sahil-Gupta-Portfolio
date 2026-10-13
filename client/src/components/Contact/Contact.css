@@ -122,6 +122,7 @@
   .contact-form { grid-template-columns: minmax(0, 1fr); }
   .talk { font-size: clamp(2.6rem, 17vw, 6rem); }
   .contact-body { margin-top: 32px; gap: 28px; }
+  .contact-form { order: -1; } /* form first, CTA + details under it */
   .contact-side { flex-basis: 100%; gap: 16px; }
   /* No cursor to chase on a phone: the round magnet becomes a plain pill. */
   .magnet-zone { width: 100%; height: auto; }

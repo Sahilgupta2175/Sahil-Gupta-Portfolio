@@ -24,6 +24,7 @@
   .bento .r2 { grid-row: auto; }
   .bento .tile-photo,
   .bento .tile-resume { grid-column: span 2; }
+  .bento .tile-photo { order: -1; } /* photo first, intro card under it */
 }
 
 @media (max-width: 360px) {

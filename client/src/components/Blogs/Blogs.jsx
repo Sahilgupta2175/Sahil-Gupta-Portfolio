@@ -6,7 +6,7 @@ import { listBlogs } from '../../services/blogsService';
 import { subscribe } from '../../services/subscribersService';
 import './Blogs.css';
 
-const HOME_LIMIT = 4;
+const HOME_LIMIT = 3; // big card + two small fills the desktop grid exactly
 
 const fmtDate = (d) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
@@ -89,7 +89,7 @@ const Blogs = ({ preview = true }) => {
             <span className="writing-note">Notes on building, synced from Hashnode</span>
           ) : (
             topTags.length > 1 && (
-              <div className="seg" role="tablist" aria-label="Filter posts by tag">
+              <div className="seg seg-chips" role="tablist" aria-label="Filter posts by tag">
                 {['all', ...topTags].map((t) => (
                   <button
                     key={t}
@@ -144,17 +144,18 @@ const Blogs = ({ preview = true }) => {
                 </div>
               </motion.a>
             ))}
-            {preview && <SubscribeTile />}
           </div>
         )}
 
         {preview && blogs.length > 0 && (
           <div className="writing-more">
             <Link to="/blogs" className="btn btn-secondary">
-              Read all posts <FiArrowRight aria-hidden="true" />
+              Read all blogs <FiArrowRight aria-hidden="true" />
             </Link>
           </div>
         )}
+
+        {preview && <SubscribeTile />}
       </div>
     </section>
   );

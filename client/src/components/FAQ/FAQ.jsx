@@ -9,15 +9,15 @@ import './FAQ.css';
 const faqs = [
   {
     q: 'Who is Sahil Gupta?',
-    a: "I'm a full-stack MERN developer and B.Tech Computer Science (Honors) student at GLA University, Mathura, based in Orai, Uttar Pradesh, India. I build scalable web applications using React, Node.js, Express and MongoDB."
+    a: "I'm a full-stack MERN developer from Orai, Uttar Pradesh, India. I build scalable web applications with React, Node.js, Express and MongoDB. Professionally, I'm a Programmer Analyst Trainee at Cognizant in the Americas Healthcare Product Consulting (HPC) team, working on U.S. healthcare payer systems."
   },
   {
     q: 'What technologies do you work with?',
     a: 'I work across the MERN stack — React.js, Node.js, Express.js and MongoDB — along with JavaScript, Java, REST APIs, SQL/PostgreSQL, Git, and tools like Postman, Vercel and Cloudinary.'
   },
   {
-    q: 'Are you available for hire or freelance work?',
-    a: "Yes! I'm open to new opportunities, freelance projects and collaborations. The fastest way to reach me is by email or through the contact form on this page."
+    q: 'Are you open to freelance work or collaborations?',
+    a: "I work full-time at Cognizant, and I'm still open to freelance projects, side collaborations and interesting conversations. The fastest way to reach me is by email or through the contact form on this page."
   },
   {
     q: 'What kind of projects have you built?',

@@ -101,15 +101,16 @@ const Bento = () => {
           <Tile i={0} className="s2 r2 tile-intro">
             <span className="pill">
               <span className="dot" />
-              {role ? `Now at ${role.company}` : 'Available for new opportunities'}
+              Full-stack developer{role ? ` · ${role.company}` : ''}
             </span>
             <div className="tile-intro-body">
               <h2>
                 MERN developer who ships <em>real products</em>, not just repos.
               </h2>
+              {/* Developer work first, then the day job. College lives only in Journey › Education. */}
               <p>
-                {role && `${role.role} at ${role.company}${role.location ? `, ${role.location}` : ''}. `}
-                {profile.education}. I build end-to-end web apps with React, Node.js, Express and MongoDB.
+                I build end-to-end web apps with React, Node.js, Express and MongoDB.
+                {role && ` Professionally, I'm a ${role.role} at ${role.company}${profile.team ? ` (${profile.team})` : ''}, working on U.S. healthcare payer systems.`}
               </p>
             </div>
             <div className="tile-actions">
@@ -126,7 +127,7 @@ const Bento = () => {
             <img src={profile.photo} alt={`Portrait of ${profile.name}`} />
             <div className="tile-photo-cap">
               <strong>{profile.name}</strong>
-              <span>{role ? role.company : 'GLA University'}</span>
+              <span>{role ? `${role.company}${profile.team ? ` · ${profile.team}` : ''}` : 'Full-stack developer'}</span>
             </div>
           </Tile>
 
@@ -171,7 +172,7 @@ const Bento = () => {
           <Tile i={5} className="tile-grade">
             <div>
               <span className="tile-mid">{cgpa.toFixed(2)}</span>
-              <span>CGPA, B.Tech CSE</span>
+              <span>CGPA, B.Tech (Hons) CS</span>
             </div>
             <div>
               <span className="tile-mid">{Math.round(rate)}<span className="ink">%</span></span>

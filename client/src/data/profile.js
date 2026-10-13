@@ -7,7 +7,9 @@ export const profile = {
   timeZone: 'Asia/Kolkata',
   resumeUrl: '/resume/Sahil_Resume_offline_resume.pdf',
   photo: '/Sahil_Photo.jpg',
-  education: 'B.Tech CSE (Hons) · GLA University',
+  // Team shown next to the current full-time role from the admin DB.
+  // Update this if the role in Admin › Experience changes.
+  team: 'Americas HPC',
   socials: [
     { label: 'GitHub', url: 'https://github.com/Sahilgupta2175' },
     { label: 'LinkedIn', url: 'https://linkedin.com/in/sahilgupta2175' },
@@ -25,8 +27,8 @@ export const stack = [
 
 export const education = [
   {
-    title: 'Bachelor of Technology',
-    field: 'Computer Science (Honors)',
+    title: 'B.Tech (Hons), Computer Science',
+    field: 'Graduated June 2026',
     institution: 'GLA University, Mathura',
     period: 'Jun 2026',
     score: '77.2%'

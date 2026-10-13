@@ -1,26 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
+import React, { useEffect, useState } from "react";
+import {
+  FiTrash2,
+  FiEdit2,
+  FiPlus,
+  FiSave,
+  FiX,
+  FiRefreshCw,
+} from "react-icons/fi";
 import {
   listAllCurrentWork,
   createCurrentWork,
   updateCurrentWork,
-  deleteCurrentWork
-} from '../../../services/currentWorkService';
-import EmojiPicker from '../widgets/EmojiPicker';
-import FormSheet from '../widgets/FormSheet';
+  deleteCurrentWork,
+} from "../../../services/currentWorkService";
+import EmojiPicker from "../widgets/EmojiPicker";
+import FormSheet from "../widgets/FormSheet";
 
 // Pre-defined status options so the badge label stays consistent across cards.
 // Free-form input is still allowed via the "Custom" field below.
-const STATUS_PRESETS = ['Building', 'Learning', 'Researching', 'Designing', 'Planning', 'Shipping'];
+const STATUS_PRESETS = [
+  "Building",
+  "Learning",
+  "Researching",
+  "Designing",
+  "Planning",
+  "Shipping",
+];
 
 const EMPTY = {
   _id: null,
-  title: '',
-  description: '',
-  emoji: '🚀',
-  status: 'Building',
-  link: '',
-  active: true
+  title: "",
+  description: "",
+  emoji: "🚀",
+  status: "Building",
+  link: "",
+  active: true,
 };
 
 const CurrentWorkPanel = () => {
@@ -28,7 +42,7 @@ const CurrentWorkPanel = () => {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
 
   const refresh = () => {
@@ -40,37 +54,39 @@ const CurrentWorkPanel = () => {
   };
 
   // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const startEdit = (item) => {
     setForm({
       _id: item._id,
-      title: item.title || '',
-      description: item.description || '',
-      emoji: item.emoji || '🚀',
-      status: item.status || 'Building',
-      link: item.link || '',
-      active: item.active !== false
+      title: item.title || "",
+      description: item.description || "",
+      emoji: item.emoji || "🚀",
+      status: item.status || "Building",
+      link: item.link || "",
+      active: item.active !== false,
     });
-    setError('');
+    setError("");
     setOpen(true);
   };
 
   const openNew = () => {
     setForm(EMPTY);
-    setError('');
+    setError("");
     setOpen(true);
   };
 
   const close = () => {
     setOpen(false);
     setForm(EMPTY);
-    setError('');
+    setError("");
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setSaving(true);
 
     const payload = {
@@ -79,7 +95,7 @@ const CurrentWorkPanel = () => {
       emoji: form.emoji,
       status: form.status,
       link: form.link,
-      active: form.active
+      active: form.active,
     };
 
     try {
@@ -91,24 +107,31 @@ const CurrentWorkPanel = () => {
       close();
       refresh();
     } catch (err) {
-      setError(err.response?.data?.message || 'Save failed');
+      setError(err.response?.data?.message || "Save failed");
     } finally {
       setSaving(false);
     }
   };
 
   const onDelete = async (id) => {
-    if (!window.confirm('Delete this entry?')) return;
+    if (!window.confirm("Delete this entry?")) return;
     await deleteCurrentWork(id);
     refresh();
   };
 
   return (
     <div className="admin-stack">
-      <FormSheet open={open} onClose={close} title={form._id ? 'Edit current work' : 'Add current work'}>
+      <FormSheet
+        open={open}
+        onClose={close}
+        title={form._id ? "Edit current work" : "Add current work"}
+      >
         <form className="admin-form" onSubmit={onSubmit}>
           <label className="admin-field">
-            <span>Title * (e.g. "Vehicle Rental v2.0") · shown in the homepage "Right now" tile</span>
+            <span>
+              Title * (e.g. "Vehicle Rental v2.0") · shown in the homepage
+              "Right now" tile
+            </span>
             <input
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -117,11 +140,15 @@ const CurrentWorkPanel = () => {
           </label>
 
           <label className="admin-field">
-            <span>Description * (one or two sentences about what you're doing)</span>
+            <span>
+              Description * (one or two sentences about what you're doing)
+            </span>
             <textarea
               rows={3}
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
               required
             />
           </label>
@@ -130,17 +157,23 @@ const CurrentWorkPanel = () => {
             <label className="admin-field">
               <span>Status badge</span>
               <select
-                value={STATUS_PRESETS.includes(form.status) ? form.status : '__custom'}
+                value={
+                  STATUS_PRESETS.includes(form.status)
+                    ? form.status
+                    : "__custom"
+                }
                 onChange={(e) => {
-                  if (e.target.value === '__custom') {
-                    setForm({ ...form, status: '' });
+                  if (e.target.value === "__custom") {
+                    setForm({ ...form, status: "" });
                   } else {
                     setForm({ ...form, status: e.target.value });
                   }
                 }}
               >
                 {STATUS_PRESETS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
                 <option value="__custom">Custom…</option>
               </select>
@@ -159,7 +192,7 @@ const CurrentWorkPanel = () => {
           </div>
 
           <label className="admin-field">
-            <span>Link (optional — GitHub repo, live URL, etc.)</span>
+            <span>Link (optional - GitHub repo, live URL, etc.)</span>
             <input
               type="url"
               value={form.link}
@@ -190,7 +223,7 @@ const CurrentWorkPanel = () => {
           <div className="admin-form-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {form._id ? <FiSave /> : <FiPlus />}
-              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add entry'}
+              {saving ? "Saving…" : form._id ? "Save changes" : "Add entry"}
             </button>
             <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
@@ -201,9 +234,13 @@ const CurrentWorkPanel = () => {
 
       <div className="admin-list">
         <div className="admin-list-header">
-          <h2>Current Work {loading ? '…' : `(${items.length})`}</h2>
+          <h2>Current Work {loading ? "…" : `(${items.length})`}</h2>
           <div className="admin-list-tools">
-            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+            <button
+              type="button"
+              className="btn btn-primary btn-small"
+              onClick={openNew}
+            >
               <FiPlus aria-hidden="true" /> Add current work
             </button>
             <button
@@ -214,7 +251,7 @@ const CurrentWorkPanel = () => {
               title="Refresh current work"
               aria-label="Refresh current work"
             >
-              <FiRefreshCw className={loading ? 'spin' : ''} />
+              <FiRefreshCw className={loading ? "spin" : ""} />
             </button>
           </div>
         </div>
@@ -227,7 +264,7 @@ const CurrentWorkPanel = () => {
         {items.map((item) => (
           <article key={item._id} className="admin-list-item">
             <div className="admin-list-thumb">
-              <span>{item.emoji || '🚀'}</span>
+              <span>{item.emoji || "🚀"}</span>
             </div>
             <div className="admin-list-body">
               <h3>{item.title}</h3>
@@ -238,10 +275,18 @@ const CurrentWorkPanel = () => {
               </div>
             </div>
             <div className="admin-list-actions">
-              <button className="icon-btn" onClick={() => startEdit(item)} aria-label="Edit">
+              <button
+                className="icon-btn"
+                onClick={() => startEdit(item)}
+                aria-label="Edit"
+              >
                 <FiEdit2 />
               </button>
-              <button className="icon-btn danger" onClick={() => onDelete(item._id)} aria-label="Delete">
+              <button
+                className="icon-btn danger"
+                onClick={() => onDelete(item._id)}
+                aria-label="Delete"
+              >
                 <FiTrash2 />
               </button>
             </div>

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const crypto = require('crypto');
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 
 // One person on the "Stay Updated" mailing list.
-// We never hard-delete on unsubscribe — flipping `active` keeps history and
+// We never hard-delete on unsubscribe - flipping `active` keeps history and
 // prevents the same email from re-subscribing-then-unsubscribing repeatedly
 // from looking like a fresh signup every time.
 const subscriberSchema = new mongoose.Schema({
@@ -11,11 +11,11 @@ const subscriberSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
   },
   active: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // Random opaque token included in every email's unsubscribe link.
   // Stored once at create time; clicking the link looks up the doc by token.
@@ -23,19 +23,20 @@ const subscriberSchema = new mongoose.Schema({
     type: String,
     required: true,
     index: true,
-    default: () => crypto.randomBytes(24).toString('hex')
+    default: () => crypto.randomBytes(24).toString("hex"),
   },
   source: {
     type: String,
-    default: 'footer'
+    default: "footer",
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   unsubscribedAt: {
-    type: Date
-  }
+    type: Date,
+  },
 });
 
-module.exports = mongoose.models.Subscriber || mongoose.model('Subscriber', subscriberSchema);
+module.exports =
+  mongoose.models.Subscriber || mongoose.model("Subscriber", subscriberSchema);

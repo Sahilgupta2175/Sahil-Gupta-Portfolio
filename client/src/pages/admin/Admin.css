@@ -315,7 +315,7 @@
   gap: 16px;
 }
 
-/* Label / value / remove — used by the About highlights editor. */
+/* Label / value / remove - used by the About highlights editor. */
 .admin-row-tight {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   align-items: center;

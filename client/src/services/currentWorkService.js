@@ -1,15 +1,15 @@
-import api, { getShared } from './api';
+import api, { getShared } from "./api";
 
-// Public list — only active items, newest first
+// Public list - only active items, newest first
 export const listCurrentWork = () =>
-  getShared('/api/current-work').then((r) => r.data);
+  getShared("/api/current-work").then((r) => r.data);
 
-// Admin list — includes hidden items
+// Admin list - includes hidden items
 export const listAllCurrentWork = () =>
-  api.get('/api/current-work/all').then((r) => r.data);
+  api.get("/api/current-work/all").then((r) => r.data);
 
 export const createCurrentWork = (data) =>
-  api.post('/api/current-work', data).then((r) => r.data);
+  api.post("/api/current-work", data).then((r) => r.data);
 
 export const updateCurrentWork = (id, data) =>
   api.put(`/api/current-work/${id}`, data).then((r) => r.data);

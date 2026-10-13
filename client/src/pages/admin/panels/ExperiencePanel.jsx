@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiEdit2, FiPlus, FiSave, FiX, FiRefreshCw } from 'react-icons/fi';
+import React, { useEffect, useState } from "react";
+import {
+  FiTrash2,
+  FiEdit2,
+  FiPlus,
+  FiSave,
+  FiX,
+  FiRefreshCw,
+} from "react-icons/fi";
 import {
   listExperience,
   createExperience,
   updateExperience,
-  deleteExperience
-} from '../../../services/experienceService';
-import ImageUpload from '../widgets/ImageUpload';
-import { toArr, fromArr } from './helpers';
-import FormSheet from '../widgets/FormSheet';
+  deleteExperience,
+} from "../../../services/experienceService";
+import ImageUpload from "../widgets/ImageUpload";
+import { toArr, fromArr } from "./helpers";
+import FormSheet from "../widgets/FormSheet";
 
 const EMPTY = {
   _id: null,
-  role: '',
-  company: '',
-  location: '',
-  period: '',
-  employmentType: 'Internship',
-  description: '',
-  achievements: '',
-  technologies: '',
+  role: "",
+  company: "",
+  location: "",
+  period: "",
+  employmentType: "Internship",
+  description: "",
+  achievements: "",
+  technologies: "",
   image: null,
-  currentImage: ''
+  currentImage: "",
 };
 
 const ExperiencePanel = () => {
@@ -29,7 +36,7 @@ const ExperiencePanel = () => {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
 
   const refresh = () => {
@@ -41,43 +48,46 @@ const ExperiencePanel = () => {
   };
 
   // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const startEdit = (e) => {
     setForm({
       _id: e._id,
-      role: e.role || '',
-      company: e.company || '',
-      location: e.location || '',
-      period: e.period || '',
-      employmentType: e.employmentType === 'Full-time' ? 'Full-time' : 'Internship',
-      description: e.description || '',
-      // Achievements use newline as a separator in the textarea — friendlier than commas
+      role: e.role || "",
+      company: e.company || "",
+      location: e.location || "",
+      period: e.period || "",
+      employmentType:
+        e.employmentType === "Full-time" ? "Full-time" : "Internship",
+      description: e.description || "",
+      // Achievements use newline as a separator in the textarea - friendlier than commas
       // for free-form bullet text. We translate to/from an array on save/load.
-      achievements: (e.achievements || []).join('\n'),
+      achievements: (e.achievements || []).join("\n"),
       technologies: fromArr(e.technologies),
       image: null,
-      currentImage: e.logo || ''
+      currentImage: e.logo || "",
     });
-    setError('');
+    setError("");
     setOpen(true);
   };
 
   const openNew = () => {
     setForm(EMPTY);
-    setError('');
+    setError("");
     setOpen(true);
   };
 
   const close = () => {
     setOpen(false);
     setForm(EMPTY);
-    setError('');
+    setError("");
   };
 
   const onSubmit = async (ev) => {
     ev.preventDefault();
-    setError('');
+    setError("");
     setSaving(true);
 
     const payload = {
@@ -87,8 +97,11 @@ const ExperiencePanel = () => {
       period: form.period,
       employmentType: form.employmentType,
       description: form.description,
-      achievements: (form.achievements || '').split('\n').map((s) => s.trim()).filter(Boolean),
-      technologies: toArr(form.technologies)
+      achievements: (form.achievements || "")
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      technologies: toArr(form.technologies),
     };
     if (form.image) payload.image = form.image;
 
@@ -101,37 +114,57 @@ const ExperiencePanel = () => {
       close();
       refresh();
     } catch (err) {
-      setError(err.response?.data?.message || 'Save failed');
+      setError(err.response?.data?.message || "Save failed");
     } finally {
       setSaving(false);
     }
   };
 
   const onDelete = async (id) => {
-    if (!window.confirm('Delete this experience entry? This also removes its logo from Cloudinary.')) return;
+    if (
+      !window.confirm(
+        "Delete this experience entry? This also removes its logo from Cloudinary.",
+      )
+    )
+      return;
     await deleteExperience(id);
     refresh();
   };
 
   return (
     <div className="admin-stack">
-      <FormSheet open={open} onClose={close} title={form._id ? 'Edit experience' : 'Add new experience'}>
+      <FormSheet
+        open={open}
+        onClose={close}
+        title={form._id ? "Edit experience" : "Add new experience"}
+      >
         <form className="admin-form" onSubmit={onSubmit}>
           <div className="admin-row">
             <label className="admin-field">
               <span>Role *</span>
-              <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} required />
+              <input
+                value={form.role}
+                onChange={(e) => setForm({ ...form, role: e.target.value })}
+                required
+              />
             </label>
             <label className="admin-field">
               <span>Company *</span>
-              <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required />
+              <input
+                value={form.company}
+                onChange={(e) => setForm({ ...form, company: e.target.value })}
+                required
+              />
             </label>
           </div>
 
           <div className="admin-row">
             <label className="admin-field">
               <span>Location</span>
-              <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+              <input
+                value={form.location}
+                onChange={(e) => setForm({ ...form, location: e.target.value })}
+              />
             </label>
             <label className="admin-field">
               <span>Period *</span>
@@ -148,7 +181,9 @@ const ExperiencePanel = () => {
             <span>Employment type * (drives the tab it appears under)</span>
             <select
               value={form.employmentType}
-              onChange={(e) => setForm({ ...form, employmentType: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, employmentType: e.target.value })
+              }
             >
               <option value="Internship">Internship</option>
               <option value="Full-time">Full-time</option>
@@ -160,7 +195,9 @@ const ExperiencePanel = () => {
             <textarea
               rows={3}
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
             />
           </label>
 
@@ -169,13 +206,20 @@ const ExperiencePanel = () => {
             <textarea
               rows={4}
               value={form.achievements}
-              onChange={(e) => setForm({ ...form, achievements: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, achievements: e.target.value })
+              }
             />
           </label>
 
           <label className="admin-field">
             <span>Technologies (comma separated)</span>
-            <input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} />
+            <input
+              value={form.technologies}
+              onChange={(e) =>
+                setForm({ ...form, technologies: e.target.value })
+              }
+            />
           </label>
 
           <div className="admin-field">
@@ -192,7 +236,11 @@ const ExperiencePanel = () => {
           <div className="admin-form-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
               {form._id ? <FiSave /> : <FiPlus />}
-              {saving ? 'Saving…' : form._id ? 'Save changes' : 'Add experience'}
+              {saving
+                ? "Saving…"
+                : form._id
+                  ? "Save changes"
+                  : "Add experience"}
             </button>
             <button type="button" className="btn btn-secondary" onClick={close}>
               <FiX /> Cancel
@@ -203,9 +251,13 @@ const ExperiencePanel = () => {
 
       <div className="admin-list">
         <div className="admin-list-header">
-          <h2>Existing Experiences {loading ? '…' : `(${items.length})`}</h2>
+          <h2>Existing Experiences {loading ? "…" : `(${items.length})`}</h2>
           <div className="admin-list-tools">
-            <button type="button" className="btn btn-primary btn-small" onClick={openNew}>
+            <button
+              type="button"
+              className="btn btn-primary btn-small"
+              onClick={openNew}
+            >
               <FiPlus aria-hidden="true" /> Add experience
             </button>
             <button
@@ -216,11 +268,13 @@ const ExperiencePanel = () => {
               title="Refresh experience"
               aria-label="Refresh experience"
             >
-              <FiRefreshCw className={loading ? 'spin' : ''} />
+              <FiRefreshCw className={loading ? "spin" : ""} />
             </button>
           </div>
         </div>
-        {!loading && items.length === 0 && <p className="admin-muted">No experience entries yet.</p>}
+        {!loading && items.length === 0 && (
+          <p className="admin-muted">No experience entries yet.</p>
+        )}
         {items.map((e) => (
           <article key={e._id} className="admin-list-item">
             <div className="admin-list-thumb">
@@ -228,15 +282,31 @@ const ExperiencePanel = () => {
             </div>
             <div className="admin-list-body">
               <h3>{e.role}</h3>
-              <p>{e.company} · {e.period}</p>
+              <p>
+                {e.company} · {e.period}
+              </p>
               <div className="admin-list-meta">
-                <span className="admin-badge">{e.employmentType || 'Internship'}</span>
+                <span className="admin-badge">
+                  {e.employmentType || "Internship"}
+                </span>
                 {e.location && <span>{e.location}</span>}
               </div>
             </div>
             <div className="admin-list-actions">
-              <button className="icon-btn" onClick={() => startEdit(e)} aria-label="Edit"><FiEdit2 /></button>
-              <button className="icon-btn danger" onClick={() => onDelete(e._id)} aria-label="Delete"><FiTrash2 /></button>
+              <button
+                className="icon-btn"
+                onClick={() => startEdit(e)}
+                aria-label="Edit"
+              >
+                <FiEdit2 />
+              </button>
+              <button
+                className="icon-btn danger"
+                onClick={() => onDelete(e._id)}
+                aria-label="Delete"
+              >
+                <FiTrash2 />
+              </button>
             </div>
           </article>
         ))}

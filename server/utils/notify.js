@@ -5,7 +5,7 @@
 // HTML for each email lives in server/templates/* so it sits alongside
 // the existing contact-form templates and uses the same visual language.
 //
-// Send timing — IMPORTANT:
+// Send timing - IMPORTANT:
 //   sendWelcomeAndNotify() MUST be awaited by callers. We do NOT use
 //   setImmediate / fire-and-forget anymore because that broke in two
 //   environments:
@@ -17,21 +17,20 @@
 //   With connection pooling (pool: true), parallel sends (Promise.all)
 //   and an eager pre-warm below, the awaited path is ~1-2 seconds.
 
-const nodemailer = require('nodemailer');
-const Subscriber = require('../models/Subscriber');
-const Blog = require('../models/Blog');
-const getSubscriberWelcomeEmailHTML = require('../templates/subscriberWelcomeEmail');
-const getSubscriberNotificationEmailHTML = require('../templates/subscriberNotificationEmail');
-const getContentBlastEmailHTML = require('../templates/contentBlastEmail');
+const nodemailer = require("nodemailer");
+const Subscriber = require("../models/Subscriber");
+const Blog = require("../models/Blog");
+const getSubscriberWelcomeEmailHTML = require("../templates/subscriberWelcomeEmail");
+const getSubscriberNotificationEmailHTML = require("../templates/subscriberNotificationEmail");
+const getContentBlastEmailHTML = require("../templates/contentBlastEmail");
 
 // ---------- URL helpers ----------
 const backendUrl = () =>
   process.env.BACKEND_URL ||
   (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-  'http://localhost:5000';
+  "http://localhost:5000";
 
-const frontendUrl = () =>
-  process.env.FRONTEND_URL || 'http://localhost:3000';
+const frontendUrl = () => process.env.FRONTEND_URL || "http://localhost:3000";
 
 const unsubscribeUrl = (token) =>
   `${backendUrl()}/api/subscribers/unsubscribe?token=${encodeURIComponent(token)}`;
@@ -41,10 +40,10 @@ const unsubscribeUrl = (token) =>
 // UTC). Without `timeZone: 'Asia/Kolkata'` the same .toLocaleString call
 // shows 12:00 PM IST as 06:30 AM UTC in the admin notification email.
 const formatIST = (date) =>
-  new Date(date).toLocaleString('en-IN', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'Asia/Kolkata'
+  new Date(date).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
   });
 
 // ---------- Transporter ----------
@@ -57,16 +56,16 @@ const getTransporter = () => {
   if (_transporter) return _transporter;
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
   _transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     pool: true,
     maxConnections: 3,
     maxMessages: 100,
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
   });
   return _transporter;
 };
 
-// Pre-warm the SMTP pool at module load — verify() opens a connection and
+// Pre-warm the SMTP pool at module load - verify() opens a connection and
 // performs the AUTH handshake immediately. Without this, the very first
 // subscriber pays the full 1-3s connection cost on top of the actual send.
 // Errors here are non-fatal: we'll retry lazily on the first real send.
@@ -74,8 +73,10 @@ const warmupTransporter = () => {
   const t = getTransporter();
   if (!t) return;
   t.verify()
-    .then(() => console.log('📧 SMTP transporter ready (pool pre-warmed)'))
-    .catch((e) => console.warn('⚠️  SMTP pre-warm failed (will retry on send):', e.message));
+    .then(() => console.log("📧 SMTP transporter ready (pool pre-warmed)"))
+    .catch((e) =>
+      console.warn("⚠️  SMTP pre-warm failed (will retry on send):", e.message),
+    );
 };
 warmupTransporter();
 
@@ -83,15 +84,18 @@ warmupTransporter();
 const sendOne = async (mail) => {
   const t = getTransporter();
   if (!t) {
-    console.warn('📭 Skipping email — EMAIL_USER/EMAIL_PASS not configured');
+    console.warn("📭 Skipping email - EMAIL_USER/EMAIL_PASS not configured");
     return false;
   }
-  await t.sendMail({ from: `"Sahil Gupta" <${process.env.EMAIL_USER}>`, ...mail });
+  await t.sendMail({
+    from: `"Sahil Gupta" <${process.env.EMAIL_USER}>`,
+    ...mail,
+  });
   return true;
 };
 
 // Sends both emails (welcome to the subscriber, notification to the admin)
-// in parallel. Caller MUST await — see top-of-file note on why fire-and-
+// in parallel. Caller MUST await - see top-of-file note on why fire-and-
 // forget is broken in our environments.
 const sendWelcomeAndNotify = async (subscriber) => {
   const portfolio = frontendUrl();
@@ -101,8 +105,8 @@ const sendWelcomeAndNotify = async (subscriber) => {
   const welcomeTask = sendOne({
     to: subscriber.email,
     subject: "You're subscribed",
-    html: getSubscriberWelcomeEmailHTML(subscriber, unsubUrl, portfolio)
-  }).catch((e) => console.error('Welcome email failed:', e.message));
+    html: getSubscriberWelcomeEmailHTML(subscriber, unsubUrl, portfolio),
+  }).catch((e) => console.error("Welcome email failed:", e.message));
 
   const notifyTask = Subscriber.countDocuments({ active: true })
     .then((totalCount) =>
@@ -113,16 +117,16 @@ const sendWelcomeAndNotify = async (subscriber) => {
           subscriber,
           totalCount,
           adminDashboardUrl,
-          formatIST(subscriber.createdAt)
-        )
-      })
+          formatIST(subscriber.createdAt),
+        ),
+      }),
     )
-    .catch((e) => console.error('Admin notify email failed:', e.message));
+    .catch((e) => console.error("Admin notify email failed:", e.message));
 
   await Promise.all([welcomeTask, notifyTask]);
 };
 
-const { setTimeout: sleep } = require('timers/promises');
+const { setTimeout: sleep } = require("timers/promises");
 
 // Mails per batch: matches the pool's maxConnections so a batch goes out in
 // parallel; a short pause between batches keeps Gmail from flagging a burst.
@@ -136,30 +140,41 @@ const blastNewContent = async (kind, item) => {
   const result = { total: 0, ok: 0, failed: 0 };
   if (!kind || !item) return result;
   if (!getTransporter()) {
-    console.warn('📭 Blast skipped — no email transporter');
+    console.warn("📭 Blast skipped - no email transporter");
     return result;
   }
 
   const portfolio = frontendUrl();
   const subscribers = await Subscriber.find({ active: true });
   result.total = subscribers.length;
-  console.log(`📣 Blasting ${kind} "${item.title}" to ${subscribers.length} subscriber(s)`);
+  console.log(
+    `📣 Blasting ${kind} "${item.title}" to ${subscribers.length} subscriber(s)`,
+  );
 
-  const subject = `${kind === 'blog' ? 'New post' : 'New project'}: ${item.title}`;
+  const subject = `${kind === "blog" ? "New post" : "New project"}: ${item.title}`;
   for (let i = 0; i < subscribers.length; i += BLAST_BATCH) {
     if (i) await sleep(250);
-    await Promise.all(subscribers.slice(i, i + BLAST_BATCH).map((sub) =>
-      sendOne({
-        to: sub.email,
-        subject,
-        html: getContentBlastEmailHTML(kind, item, unsubscribeUrl(sub.unsubscribeToken), portfolio)
-      })
-        .then(() => { result.ok++; })
-        .catch((e) => {
-          result.failed++;
-          console.error(`Blast to ${sub.email} failed:`, e.message);
+    await Promise.all(
+      subscribers.slice(i, i + BLAST_BATCH).map((sub) =>
+        sendOne({
+          to: sub.email,
+          subject,
+          html: getContentBlastEmailHTML(
+            kind,
+            item,
+            unsubscribeUrl(sub.unsubscribeToken),
+            portfolio,
+          ),
         })
-    ));
+          .then(() => {
+            result.ok++;
+          })
+          .catch((e) => {
+            result.failed++;
+            console.error(`Blast to ${sub.email} failed:`, e.message);
+          }),
+      ),
+    );
   }
   console.log(`📣 Blast done. ok=${result.ok} failed=${result.failed}`);
   return result;
@@ -178,10 +193,10 @@ const sendPendingBlogBlasts = async () => {
     const blog = await Blog.findOneAndUpdate(
       { notifyPending: true, published: true },
       { $set: { notifyPending: false, notifiedAt: new Date() } },
-      { new: true, sort: { createdAt: 1 } }
+      { new: true, sort: { createdAt: 1 } },
     );
     if (!blog) return sent;
-    const stats = await blastNewContent('blog', blog);
+    const stats = await blastNewContent("blog", blog);
     sent.push({ id: String(blog._id), title: blog.title, ...stats });
   }
 };
@@ -191,5 +206,5 @@ module.exports = {
   sendWelcomeAndNotify,
   blastNewContent,
   sendPendingBlogBlasts,
-  frontendUrl
+  frontendUrl,
 };

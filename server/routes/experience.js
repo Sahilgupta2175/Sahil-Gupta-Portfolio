@@ -1,20 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Experience = require('../models/Experience');
-const { protect } = require('../middleware/auth');
-const { upload, destroyImage } = require('../middleware/upload');
-const parseArrayField = require('../utils/parseArrayField');
+const Experience = require("../models/Experience");
+const { protect } = require("../middleware/auth");
+const { upload, destroyImage } = require("../middleware/upload");
+const parseArrayField = require("../utils/parseArrayField");
 
 const buildExpPayload = (body, file) => {
   const payload = {
     role: body.role,
     company: body.company,
-    location: body.location || '',
+    location: body.location || "",
     period: body.period,
-    employmentType: body.employmentType === 'Full-time' ? 'Full-time' : 'Internship',
-    description: body.description || '',
+    employmentType:
+      body.employmentType === "Full-time" ? "Full-time" : "Internship",
+    description: body.description || "",
     achievements: parseArrayField(body.achievements),
-    technologies: parseArrayField(body.technologies)
+    technologies: parseArrayField(body.technologies),
   };
   if (file) {
     payload.logo = file.path;
@@ -23,41 +24,42 @@ const buildExpPayload = (body, file) => {
   return payload;
 };
 
-// GET /api/experience — public. Newest first, most recent role at the top.
-router.get('/', async (req, res) => {
+// GET /api/experience - public. Newest first, most recent role at the top.
+router.get("/", async (req, res) => {
   try {
     const items = await Experience.find().sort({ createdAt: -1 });
     res.json(items);
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const item = await Experience.findById(req.params.id);
-    if (!item) return res.status(404).json({ message: 'Experience not found' });
+    if (!item) return res.status(404).json({ message: "Experience not found" });
     res.json(item);
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-router.post('/', protect, upload.single('image'), async (req, res) => {
+router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
     const exp = new Experience(buildExpPayload(req.body, req.file));
     await exp.save();
     res.status(201).json(exp);
   } catch (error) {
-    console.error('Create experience error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Create experience error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-router.put('/:id', protect, upload.single('image'), async (req, res) => {
+router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
     const existing = await Experience.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Experience not found' });
+    if (!existing)
+      return res.status(404).json({ message: "Experience not found" });
 
     const payload = buildExpPayload(req.body, req.file);
 
@@ -69,20 +71,21 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
     await existing.save();
     res.json(existing);
   } catch (error) {
-    console.error('Update experience error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Update experience error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-router.delete('/:id', protect, async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
     const existing = await Experience.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Experience not found' });
+    if (!existing)
+      return res.status(404).json({ message: "Experience not found" });
     if (existing.logoPublicId) await destroyImage(existing.logoPublicId);
     await existing.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

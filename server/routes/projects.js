@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Project = require('../models/Project');
-const { protect } = require('../middleware/auth');
-const { upload, destroyImage } = require('../middleware/upload');
-const { blastNewContent } = require('../utils/notify');
-const parseArrayField = require('../utils/parseArrayField');
+const Project = require("../models/Project");
+const { protect } = require("../middleware/auth");
+const { upload, destroyImage } = require("../middleware/upload");
+const { blastNewContent } = require("../utils/notify");
+const parseArrayField = require("../utils/parseArrayField");
 
 const buildProjectPayload = (body, file) => {
   const payload = {
@@ -12,11 +12,11 @@ const buildProjectPayload = (body, file) => {
     description: body.description,
     longDescription: body.longDescription,
     technologies: parseArrayField(body.technologies),
-    emoji: body.emoji || '',
+    emoji: body.emoji || "",
     liveUrl: body.liveUrl,
     githubUrl: body.githubUrl,
-    category: body.category || 'web',
-    featured: body.featured === 'true' || body.featured === true
+    category: body.category || "web",
+    featured: body.featured === "true" || body.featured === true,
   };
   if (file) {
     payload.image = file.path;
@@ -25,56 +25,57 @@ const buildProjectPayload = (body, file) => {
   return payload;
 };
 
-// GET /api/projects — public list, supports ?category= and ?featured=
-router.get('/', async (req, res) => {
+// GET /api/projects - public list, supports ?category= and ?featured=
+router.get("/", async (req, res) => {
   try {
     const { category, featured } = req.query;
     const filter = {};
     if (category) filter.category = category;
-    if (featured) filter.featured = featured === 'true';
+    if (featured) filter.featured = featured === "true";
 
-    // Newest first — admin's most recent additions always appear at the top.
+    // Newest first - admin's most recent additions always appear at the top.
     const projects = await Project.find(filter).sort({ createdAt: -1 });
     res.json(projects);
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// GET /api/projects/:id — public detail
-router.get('/:id', async (req, res) => {
+// GET /api/projects/:id - public detail
+router.get("/:id", async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
-    if (!project) return res.status(404).json({ message: 'Project not found' });
+    if (!project) return res.status(404).json({ message: "Project not found" });
     res.json(project);
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// POST /api/projects — admin only, accepts optional image upload
-router.post('/', protect, upload.single('image'), async (req, res) => {
+// POST /api/projects - admin only, accepts optional image upload
+router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
     const project = new Project(buildProjectPayload(req.body, req.file));
     await project.save();
 
     // Awaited, not fire-and-forget: Vercel freezes the function after the
     // response, which used to drop these emails.
-    await blastNewContent('project', project).catch((e) =>
-      console.error('Project blast failed:', e.message)
+    await blastNewContent("project", project).catch((e) =>
+      console.error("Project blast failed:", e.message),
     );
     res.status(201).json(project);
   } catch (error) {
-    console.error('Create project error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Create project error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// PUT /api/projects/:id — admin only. If a new image arrives, the old one is removed.
-router.put('/:id', protect, upload.single('image'), async (req, res) => {
+// PUT /api/projects/:id - admin only. If a new image arrives, the old one is removed.
+router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
     const existing = await Project.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Project not found' });
+    if (!existing)
+      return res.status(404).json({ message: "Project not found" });
 
     const payload = buildProjectPayload(req.body, req.file);
 
@@ -87,21 +88,22 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
     await existing.save();
     res.json(existing);
   } catch (error) {
-    console.error('Update project error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Update project error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// DELETE /api/projects/:id — admin only. Removes Cloudinary asset too.
-router.delete('/:id', protect, async (req, res) => {
+// DELETE /api/projects/:id - admin only. Removes Cloudinary asset too.
+router.delete("/:id", protect, async (req, res) => {
   try {
     const existing = await Project.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Project not found' });
+    if (!existing)
+      return res.status(404).json({ message: "Project not found" });
     if (existing.imagePublicId) await destroyImage(existing.imagePublicId);
     await existing.deleteOne();
     res.json({ success: true });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

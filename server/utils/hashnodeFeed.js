@@ -7,14 +7,15 @@
 // The seed script still exists and now just calls syncBlogs() directly for a
 // forced, verbose run.
 
-const https = require('https');
-const Blog = require('../models/Blog');
+const https = require("https");
+const Blog = require("../models/Blog");
 
-const FEED_URL = process.env.HASHNODE_FEED_URL || 'https://sahilxdev.hashnode.dev/rss.xml';
+const FEED_URL =
+  process.env.HASHNODE_FEED_URL || "https://sahilxdev.hashnode.dev/rss.xml";
 
 // How long a sync is considered fresh. Serverless instances each keep their
 // own timer, so the real-world refresh rate is "at most this often per warm
-// instance" — good enough for a blog, and it keeps us off Hashnode's rate limit.
+// instance" - good enough for a blog, and it keeps us off Hashnode's rate limit.
 // ponytail: per-instance in-memory throttle; move the timestamp into Mongo if
 // you ever need a single global refresh cadence.
 const SYNC_TTL_MS = 5 * 60 * 1000;
@@ -25,36 +26,55 @@ const NOTIFY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Outbound fetch with one redirect hop and a hard timeout, so a slow or hanging
 // Hashnode can never wedge an API request.
-const fetchFeed = (url, redirectsLeft = 1) => new Promise((resolve, reject) => {
-  const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
-    if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-      res.resume();
-      if (!redirectsLeft) return reject(new Error(`Too many redirects from ${url}`));
-      return fetchFeed(res.headers.location, redirectsLeft - 1).then(resolve, reject);
-    }
-    if (res.statusCode !== 200) {
-      res.resume();
-      return reject(new Error(`HTTP ${res.statusCode} from ${url}`));
-    }
-    const chunks = [];
-    res.on('data', (c) => chunks.push(c));
-    res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+const fetchFeed = (url, redirectsLeft = 1) =>
+  new Promise((resolve, reject) => {
+    const req = https.get(
+      url,
+      { headers: { "User-Agent": "Mozilla/5.0" } },
+      (res) => {
+        if (
+          res.statusCode >= 300 &&
+          res.statusCode < 400 &&
+          res.headers.location
+        ) {
+          res.resume();
+          if (!redirectsLeft)
+            return reject(new Error(`Too many redirects from ${url}`));
+          return fetchFeed(res.headers.location, redirectsLeft - 1).then(
+            resolve,
+            reject,
+          );
+        }
+        if (res.statusCode !== 200) {
+          res.resume();
+          return reject(new Error(`HTTP ${res.statusCode} from ${url}`));
+        }
+        const chunks = [];
+        res.on("data", (c) => chunks.push(c));
+        res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+      },
+    );
+    req.setTimeout(8000, () =>
+      req.destroy(new Error(`Timed out fetching ${url}`)),
+    );
+    req.on("error", reject);
   });
-  req.setTimeout(8000, () => req.destroy(new Error(`Timed out fetching ${url}`)));
-  req.on('error', reject);
-});
 
 // ---------- tiny RSS parser (just the fields Hashnode emits) ----------
-const stripCdata = (s) => (s || '').replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, '').trim();
+const stripCdata = (s) =>
+  (s || "")
+    .replace(/^<!\[CDATA\[/, "")
+    .replace(/\]\]>$/, "")
+    .trim();
 
 const matchOne = (item, tag) => {
   const m = item.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
-  return m ? stripCdata(m[1]) : '';
+  return m ? stripCdata(m[1]) : "";
 };
 
 const matchAll = (item, tag) => {
   const out = [];
-  const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'g');
+  const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "g");
   let m;
   while ((m = re.exec(item)) !== null) out.push(stripCdata(m[1]));
   return out;
@@ -62,7 +82,7 @@ const matchAll = (item, tag) => {
 
 const matchAttr = (item, tag, attr) => {
   const m = item.match(new RegExp(`<${tag}[^>]*\\s${attr}="([^"]+)"`));
-  return m ? m[1] : '';
+  return m ? m[1] : "";
 };
 
 const parseRss = (xml) => {
@@ -72,23 +92,29 @@ const parseRss = (xml) => {
   while ((m = re.exec(xml)) !== null) items.push(m[1]);
 
   return items.map((item) => {
-    const description = matchOne(item, 'description');
-    const pubDate = matchOne(item, 'pubDate');
-    const content = matchOne(item, 'content:encoded');
+    const description = matchOne(item, "description");
+    const pubDate = matchOne(item, "pubDate");
+    const content = matchOne(item, "content:encoded");
 
     // Estimate read time from the rendered HTML content (~200 wpm).
-    const plain = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    const words = plain ? plain.split(' ').length : 0;
+    const plain = content
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const words = plain ? plain.split(" ").length : 0;
     const minutes = Math.max(1, Math.round(words / 200));
 
     return {
-      title: matchOne(item, 'title'),
-      externalUrl: matchOne(item, 'link'),
-      excerpt: description.length > 280 ? description.slice(0, 277) + '...' : description,
-      tags: matchAll(item, 'category'),
-      coverImage: matchAttr(item, 'enclosure', 'url'),
+      title: matchOne(item, "title"),
+      externalUrl: matchOne(item, "link"),
+      excerpt:
+        description.length > 280
+          ? description.slice(0, 277) + "..."
+          : description,
+      tags: matchAll(item, "category"),
+      coverImage: matchAttr(item, "enclosure", "url"),
       readTime: `${minutes} min read`,
-      createdAt: pubDate ? new Date(pubDate) : new Date()
+      createdAt: pubDate ? new Date(pubDate) : new Date(),
     };
   });
 };
@@ -106,15 +132,18 @@ const syncBlogs = async (feedUrl = FEED_URL) => {
     const existing = await Blog.findOne({ externalUrl: p.externalUrl });
     if (existing) {
       // Skip the write when nothing changed: most syncs touch no posts at all.
-      const same = existing.title === p.title && existing.excerpt === p.excerpt &&
-        existing.coverImage === p.coverImage && existing.readTime === p.readTime &&
-        existing.tags.join('\n') === p.tags.join('\n');
+      const same =
+        existing.title === p.title &&
+        existing.excerpt === p.excerpt &&
+        existing.coverImage === p.coverImage &&
+        existing.readTime === p.readTime &&
+        existing.tags.join("\n") === p.tags.join("\n");
       if (same) continue;
       existing.title = p.title;
       existing.excerpt = p.excerpt;
       existing.tags = p.tags;
       existing.coverImage = p.coverImage;
-      existing.coverImagePublicId = ''; // Hashnode's CDN, not our Cloudinary
+      existing.coverImagePublicId = ""; // Hashnode's CDN, not our Cloudinary
       existing.readTime = p.readTime;
       await existing.save();
       updated++;
@@ -138,4 +167,11 @@ const syncIfStale = async () => {
   return syncBlogs();
 };
 
-module.exports = { syncBlogs, syncIfStale, parseRss, FEED_URL, SYNC_TTL_MS, NOTIFY_WINDOW_MS };
+module.exports = {
+  syncBlogs,
+  syncIfStale,
+  parseRss,
+  FEED_URL,
+  SYNC_TTL_MS,
+  NOTIFY_WINDOW_MS,
+};

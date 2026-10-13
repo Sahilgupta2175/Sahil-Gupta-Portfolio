@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { FiTrash2, FiDownload, FiMail, FiCheckCircle, FiXCircle, FiRefreshCw } from 'react-icons/fi';
-import { listSubscribers, deleteSubscriber } from '../../../services/subscribersService';
+import React, { useEffect, useState } from "react";
+import {
+  FiTrash2,
+  FiDownload,
+  FiMail,
+  FiCheckCircle,
+  FiXCircle,
+  FiRefreshCw,
+} from "react-icons/fi";
+import {
+  listSubscribers,
+  deleteSubscriber,
+} from "../../../services/subscribersService";
 
 // Read-only-ish panel: admin can see everyone on the list, sort active vs.
 // unsubscribed, and remove rows. Creation happens via the public footer
-// form — not from the dashboard.
+// form - not from the dashboard.
 const SubscribersPanel = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('active');
+  const [filter, setFilter] = useState("active");
 
   const refresh = () => {
     setLoading(true);
@@ -19,31 +29,42 @@ const SubscribersPanel = () => {
   };
 
   // AdminDashboard remounts this panel (key changes) when Refresh is pressed.
-  useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const onDelete = async (id) => {
-    if (!window.confirm('Permanently delete this subscriber? They will receive no future emails.')) return;
+    if (
+      !window.confirm(
+        "Permanently delete this subscriber? They will receive no future emails.",
+      )
+    )
+      return;
     await deleteSubscriber(id);
     refresh();
   };
 
-  // Quick CSV download — useful if you ever want to switch providers or
+  // Quick CSV download - useful if you ever want to switch providers or
   // import the list elsewhere.
   const exportCsv = () => {
-    const rows = [['email', 'active', 'subscribed_at', 'unsubscribed_at', 'source']];
+    const rows = [
+      ["email", "active", "subscribed_at", "unsubscribed_at", "source"],
+    ];
     items.forEach((s) => {
       rows.push([
         s.email,
-        s.active ? 'true' : 'false',
+        s.active ? "true" : "false",
         new Date(s.createdAt).toISOString(),
-        s.unsubscribedAt ? new Date(s.unsubscribedAt).toISOString() : '',
-        s.source || ''
+        s.unsubscribedAt ? new Date(s.unsubscribedAt).toISOString() : "",
+        s.source || "",
       ]);
     });
-    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const csv = rows
+      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
@@ -51,8 +72,8 @@ const SubscribersPanel = () => {
   };
 
   const visible = items.filter((s) => {
-    if (filter === 'active') return s.active;
-    if (filter === 'inactive') return !s.active;
+    if (filter === "active") return s.active;
+    if (filter === "inactive") return !s.active;
     return true;
   });
 
@@ -79,11 +100,11 @@ const SubscribersPanel = () => {
 
         <div className="subscribers-actions">
           <div className="admin-tabs sub-filter">
-            {['active', 'inactive', 'all'].map((key) => (
+            {["active", "inactive", "all"].map((key) => (
               <button
                 key={key}
                 onClick={() => setFilter(key)}
-                className={`admin-tab ${filter === key ? 'active' : ''}`}
+                className={`admin-tab ${filter === key ? "active" : ""}`}
               >
                 {key[0].toUpperCase() + key.slice(1)}
               </button>
@@ -95,7 +116,7 @@ const SubscribersPanel = () => {
             disabled={loading}
             title="Refresh subscribers"
           >
-            <FiRefreshCw className={loading ? 'spin' : ''} /> Refresh
+            <FiRefreshCw className={loading ? "spin" : ""} /> Refresh
           </button>
           <button
             className="btn btn-secondary btn-small"
@@ -108,8 +129,10 @@ const SubscribersPanel = () => {
       </div>
 
       <p className="admin-muted subscribers-blurb">
-        New blog posts and projects automatically email everyone in the <strong>Active</strong> list.
-        Subscribers can opt out via the link in every email — those move to <strong>Unsubscribed</strong> and stop receiving blasts.
+        New blog posts and projects automatically email everyone in the{" "}
+        <strong>Active</strong> list. Subscribers can opt out via the link in
+        every email - those move to <strong>Unsubscribed</strong> and stop
+        receiving blasts.
       </p>
 
       <div className="subscribers-list">
@@ -126,13 +149,19 @@ const SubscribersPanel = () => {
               <h3 className="sub-email">{s.email}</h3>
               <div className="admin-list-meta">
                 {s.active ? (
-                  <span className="sub-badge success"><FiCheckCircle /> Active</span>
+                  <span className="sub-badge success">
+                    <FiCheckCircle /> Active
+                  </span>
                 ) : (
-                  <span className="sub-badge muted"><FiXCircle /> Unsubscribed</span>
+                  <span className="sub-badge muted">
+                    <FiXCircle /> Unsubscribed
+                  </span>
                 )}
                 <span>Joined {new Date(s.createdAt).toLocaleDateString()}</span>
                 {!s.active && s.unsubscribedAt && (
-                  <span>Left {new Date(s.unsubscribedAt).toLocaleDateString()}</span>
+                  <span>
+                    Left {new Date(s.unsubscribedAt).toLocaleDateString()}
+                  </span>
                 )}
                 {s.source && <span>via {s.source}</span>}
               </div>

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AnimatePresence, MotionConfig } from 'framer-motion';
-import HomePage from './pages/HomePage';
-import AllProjects from './pages/AllProjects';
-import AllBlogs from './pages/AllBlogs';
-import AdminLogin from './pages/admin/AdminLogin';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import RequireAdmin from './pages/admin/RequireAdmin';
-import Loader from './components/Loader/Loader';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AnimatePresence, MotionConfig } from "framer-motion";
+import HomePage from "./pages/HomePage";
+import AllProjects from "./pages/AllProjects";
+import AllBlogs from "./pages/AllBlogs";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import RequireAdmin from "./pages/admin/RequireAdmin";
+import Loader from "./components/Loader/Loader";
+import "./App.css";
 
 // Skip the intro SG loader when the user lands directly on (or refreshes)
-// an admin page — they're an authenticated user doing real work, no need
+// an admin page - they're an authenticated user doing real work, no need
 // to make them sit through a 2.5s animation every time.
 const isAdminPath = () =>
-  typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+  typeof window !== "undefined" &&
+  window.location.pathname.startsWith("/admin");
 
 function App() {
   const [loading, setLoading] = useState(() => !isAdminPath());

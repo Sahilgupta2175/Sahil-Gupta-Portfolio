@@ -11,100 +11,109 @@
 // every endpoint now lives in exactly one place: the route modules below.
 // ---------------------------------------------------------------------------
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const dotenv = require('dotenv');
-const path = require('path');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
+const dotenv = require("dotenv");
+const path = require("path");
 
 // Load env from server/.env BEFORE requiring modules that read process.env at
 // load time (e.g. middleware/upload.js, utils/notify.js). On Vercel there is
-// no .env file — vars come from the dashboard — so this is a harmless no-op.
-dotenv.config({ path: path.join(__dirname, '.env') });
+// no .env file - vars come from the dashboard - so this is a harmless no-op.
+dotenv.config({ path: path.join(__dirname, ".env") });
 
-const authRoutes = require('./routes/auth');
-const aboutRoutes = require('./routes/about');
-const contactRoutes = require('./routes/contact');
-const projectRoutes = require('./routes/projects');
-const blogRoutes = require('./routes/blogs');
-const experienceRoutes = require('./routes/experience');
-const currentWorkRoutes = require('./routes/currentWork');
-const subscriberRoutes = require('./routes/subscribers');
+const authRoutes = require("./routes/auth");
+const aboutRoutes = require("./routes/about");
+const contactRoutes = require("./routes/contact");
+const projectRoutes = require("./routes/projects");
+const blogRoutes = require("./routes/blogs");
+const experienceRoutes = require("./routes/experience");
+const currentWorkRoutes = require("./routes/currentWork");
+const subscriberRoutes = require("./routes/subscribers");
 
 const app = express();
 
 // Behind Vercel's proxy, so req.ip reflects the real client via X-Forwarded-For
 // (needed by the rate limiters). 1 = trust a single hop.
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 // Baseline security headers on every API response. CSP is disabled because this
 // origin serves JSON plus one self-contained inline-styled HTML page (the
 // unsubscribe page); CORP is set to cross-origin so the separate frontend
 // origin can consume the API.
-app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 
 // ---------------------------------------------------------------------------
-// CORS — local dev, both deployed frontends, and any FRONTEND_URL override.
+// CORS - local dev, both deployed frontends, and any FRONTEND_URL override.
 // ---------------------------------------------------------------------------
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://sahilgupta-sg.vercel.app',
-    'https://sahilgupta.tech',
-    'https://www.sahilgupta.tech',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://sahilgupta-sg.vercel.app",
+      "https://sahilgupta.tech",
+      "https://www.sahilgupta.tech",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // ---------------------------------------------------------------------------
-// MongoDB — serverless-friendly. Connect lazily and cache the connection
+// MongoDB - serverless-friendly. Connect lazily and cache the connection
 // across invocations (Vercel reuses the module between requests, so we must
 // not open a fresh socket every time).
 // ---------------------------------------------------------------------------
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/portfolio";
 
 const connectDB = async () => {
   if (mongoose.connection.readyState === 1) return;
   await mongoose.connect(MONGODB_URI, {
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 45000,
-    family: 4
+    family: 4,
   });
-  console.log('✅ MongoDB Connected Successfully');
+  console.log("✅ MongoDB Connected Successfully");
 };
 
 // Warm the connection on cold start. Errors are logged, not thrown, so the
 // function still boots and /api/health can report the DB state.
-connectDB().catch((err) => console.error('❌ Initial MongoDB connection failed:', err.message));
+connectDB().catch((err) =>
+  console.error("❌ Initial MongoDB connection failed:", err.message),
+);
 
 // ---------------------------------------------------------------------------
-// Health + root — defined BEFORE the DB gate so they always respond, even
+// Health + root - defined BEFORE the DB gate so they always respond, even
 // when Mongo is unreachable (handy for "is it up?" checks).
 // ---------------------------------------------------------------------------
-app.get('/api/health', (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
-    status: 'Server is running!',
+    status: "Server is running!",
     timestamp: new Date(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
+    environment: process.env.NODE_ENV || "development",
     mongodb: {
       connected: mongoose.connection.readyState === 1,
-      state: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState]
-    }
+      state: ["disconnected", "connected", "connecting", "disconnecting"][
+        mongoose.connection.readyState
+      ],
+    },
   });
 });
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    message: 'Portfolio Backend API',
-    endpoints: { health: '/api/health', contact: '/api/contact' }
+    message: "Portfolio Backend API",
+    endpoints: { health: "/api/health", contact: "/api/contact" },
   });
 });
 
@@ -113,7 +122,7 @@ app.get('/', (req, res) => {
 // env-var driven and never touches Mongo, so it skips the wait to stay snappy.
 // ---------------------------------------------------------------------------
 app.use(async (req, res, next) => {
-  if (req.path.startsWith('/api/auth')) return next();
+  if (req.path.startsWith("/api/auth")) return next();
   try {
     await connectDB();
     next();
@@ -125,31 +134,33 @@ app.use(async (req, res, next) => {
 // ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
-app.use('/api/auth', authRoutes);
-app.use('/api/about', aboutRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/blogs', blogRoutes);
-app.use('/api/experience', experienceRoutes);
-app.use('/api/current-work', currentWorkRoutes);
-app.use('/api/subscribers', subscriberRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/about", aboutRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/experience", experienceRoutes);
+app.use("/api/current-work", currentWorkRoutes);
+app.use("/api/subscribers", subscriberRoutes);
 
 // ---------------------------------------------------------------------------
-// 404 — unmatched routes return JSON, not Express's default HTML, so the API
+// 404 - unmatched routes return JSON, not Express's default HTML, so the API
 // stays JSON-only end to end.
 // ---------------------------------------------------------------------------
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Not found' });
+  res.status(404).json({ success: false, message: "Not found" });
 });
 
 // ---------------------------------------------------------------------------
-// Fallback error handler — always returns JSON (never an HTML stack trace) and
+// Fallback error handler - always returns JSON (never an HTML stack trace) and
 // keeps the serverless function from crashing on an unhandled route error.
 // ---------------------------------------------------------------------------
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err.message);
-  res.status(err.status || 500).json({ success: false, message: 'Server error' });
+  console.error("Unhandled error:", err.message);
+  res
+    .status(err.status || 500)
+    .json({ success: false, message: "Server error" });
 });
 
 // ---------------------------------------------------------------------------

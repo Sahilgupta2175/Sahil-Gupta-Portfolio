@@ -13,11 +13,11 @@
 
 ## Projects
 
-- Vehicle Rental Services — full-stack rental platform with multi-role auth, payments and an AI chatbot.
-- Zerodha Clone — stock-trading platform with portfolio management and order execution.
-- Wanderlust — Airbnb-style property rental app with interactive maps.
-- InShare — secure file-sharing app with expiring download links.
-- Netflix UI Clone — responsive Netflix homepage powered by the TMDB API.
+- Vehicle Rental Services - full-stack rental platform with multi-role auth, payments and an AI chatbot.
+- Zerodha Clone - stock-trading platform with portfolio management and order execution.
+- Wanderlust - Airbnb-style property rental app with interactive maps.
+- InShare - secure file-sharing app with expiring download links.
+- Netflix UI Clone - responsive Netflix homepage powered by the TMDB API.
 
 ## Contact
 

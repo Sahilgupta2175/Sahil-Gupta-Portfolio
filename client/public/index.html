@@ -25,13 +25,15 @@
       // Apply the saved (or system) theme before first paint so there's no flash.
       (function () {
         try {
-          var t = localStorage.getItem('theme');
-          if (t !== 'light' && t !== 'dark') {
-            t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          var t = localStorage.getItem("theme");
+          if (t !== "light" && t !== "dark") {
+            t = window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
           }
-          document.documentElement.setAttribute('data-theme', t);
+          document.documentElement.setAttribute("data-theme", t);
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.setAttribute("data-theme", "dark");
         }
       })();
     </script>
@@ -133,22 +135,77 @@
         padding: 40px 24px;
         box-sizing: border-box;
         background: #000000;
-        color: #EEEDE6;
-        font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #eeede6;
+        font-family:
+          "Hanken Grotesk",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
         line-height: 1.6;
       }
-      .boot-screen a { color: #C8F169; text-decoration: none; }
-      .boot-screen a:hover { text-decoration: underline; }
-      .boot-inner { max-width: 760px; margin: 0 auto; }
-      .boot-header { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 40px; }
-      .boot-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff; }
-      .boot-nav a { margin-left: 16px; font-size: 0.95rem; }
-      .boot-screen h1 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.2rem; color: #fff; margin: 0 0 12px; }
-      .boot-screen h2 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.4rem; color: #fff; margin: 32px 0 8px; }
-      .boot-screen h3 { font-size: 1.05rem; color: #fff; margin: 18px 0 4px; }
-      .boot-loading { margin-top: 40px; color: #8A887F; font-size: 0.9rem; }
-      .boot-skip { position: absolute; left: -9999px; }
-      .boot-skip:focus { left: 16px; top: 16px; background: #C8F169; color: #000; padding: 8px 14px; border-radius: 6px; }
+      .boot-screen a {
+        color: #c8f169;
+        text-decoration: none;
+      }
+      .boot-screen a:hover {
+        text-decoration: underline;
+      }
+      .boot-inner {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .boot-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+      }
+      .boot-logo {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #fff;
+      }
+      .boot-nav a {
+        margin-left: 16px;
+        font-size: 0.95rem;
+      }
+      .boot-screen h1 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 2.2rem;
+        color: #fff;
+        margin: 0 0 12px;
+      }
+      .boot-screen h2 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 1.4rem;
+        color: #fff;
+        margin: 32px 0 8px;
+      }
+      .boot-screen h3 {
+        font-size: 1.05rem;
+        color: #fff;
+        margin: 18px 0 4px;
+      }
+      .boot-loading {
+        margin-top: 40px;
+        color: #8a887f;
+        font-size: 0.9rem;
+      }
+      .boot-skip {
+        position: absolute;
+        left: -9999px;
+      }
+      .boot-skip:focus {
+        left: 16px;
+        top: 16px;
+        background: #c8f169;
+        color: #000;
+        padding: 8px 14px;
+        border-radius: 6px;
+      }
     </style>
   </head>
   <body>
@@ -178,74 +235,132 @@
           </header>
 
           <main id="boot-main">
-            <h1>Sahil Gupta — Full Stack MERN Developer</h1>
+            <h1>Sahil Gupta - Full Stack MERN Developer</h1>
             <p>
-              Hi, I'm Sahil Gupta, a full-stack <strong>MERN developer</strong> from
-              Orai, Uttar Pradesh, India. I build fast, scalable and accessible web
-              applications with React, Node.js, Express and MongoDB. Professionally,
-              I'm a Programmer Analyst Trainee at Cognizant in the Americas
-              Healthcare Product Consulting (HPC) team.
+              Hi, I'm Sahil Gupta, a full-stack
+              <strong>MERN developer</strong> from Orai, Uttar Pradesh, India. I
+              build fast, scalable and accessible web applications with React,
+              Node.js, Express and MongoDB. Professionally, I'm a Programmer
+              Analyst Trainee at Cognizant in the Americas Healthcare Product
+              Consulting (HPC) team.
             </p>
 
             <section id="boot-about">
               <h2>About</h2>
               <p>
-                I'm a passionate developer focused on clean code, thoughtful user
-                experience, and solving real-world problems. I've solved 150+ coding
-                challenges on platforms like LeetCode and HackerRank with an 85%
-                success rate, building a strong foundation in data structures and
-                algorithms.
+                I'm a passionate developer focused on clean code, thoughtful
+                user experience, and solving real-world problems. I've solved
+                150+ coding challenges on platforms like LeetCode and HackerRank
+                with an 85% success rate, building a strong foundation in data
+                structures and algorithms.
               </p>
             </section>
 
             <section id="boot-skills">
               <h2>Skills &amp; Technologies</h2>
               <ul>
-                <li><strong>Frontend:</strong> React.js, JavaScript, HTML5, CSS3, Bootstrap</li>
-                <li><strong>Backend:</strong> Node.js, Express.js, Java, REST APIs, Passport.js</li>
-                <li><strong>Databases:</strong> MongoDB, Mongoose, MySQL, PostgreSQL</li>
-                <li><strong>Tools:</strong> Git, GitHub, Postman, Vercel, VS Code, Cloudinary</li>
+                <li>
+                  <strong>Frontend:</strong> React.js, JavaScript, HTML5, CSS3,
+                  Bootstrap
+                </li>
+                <li>
+                  <strong>Backend:</strong> Node.js, Express.js, Java, REST
+                  APIs, Passport.js
+                </li>
+                <li>
+                  <strong>Databases:</strong> MongoDB, Mongoose, MySQL,
+                  PostgreSQL
+                </li>
+                <li>
+                  <strong>Tools:</strong> Git, GitHub, Postman, Vercel, VS Code,
+                  Cloudinary
+                </li>
               </ul>
             </section>
 
             <section id="boot-projects">
               <h2>Featured Projects</h2>
               <ul>
-                <li><strong>Vehicle Rental Services</strong> — full-stack rental platform with multi-role auth, payments and an AI chatbot.</li>
-                <li><strong>Zerodha Clone</strong> — stock-trading platform with portfolio management and order execution.</li>
-                <li><strong>Wanderlust</strong> — Airbnb-style property rental app with interactive maps.</li>
-                <li><strong>InShare</strong> — secure file-sharing app with expiring download links.</li>
-                <li><strong>Netflix UI Clone</strong> — responsive Netflix homepage powered by the TMDB API.</li>
+                <li>
+                  <strong>Vehicle Rental Services</strong> - full-stack rental
+                  platform with multi-role auth, payments and an AI chatbot.
+                </li>
+                <li>
+                  <strong>Zerodha Clone</strong> - stock-trading platform with
+                  portfolio management and order execution.
+                </li>
+                <li>
+                  <strong>Wanderlust</strong> - Airbnb-style property rental app
+                  with interactive maps.
+                </li>
+                <li>
+                  <strong>InShare</strong> - secure file-sharing app with
+                  expiring download links.
+                </li>
+                <li>
+                  <strong>Netflix UI Clone</strong> - responsive Netflix
+                  homepage powered by the TMDB API.
+                </li>
               </ul>
-              <p><a href="/projects">View all projects</a> · <a href="/blogs">Read the blog</a></p>
+              <p>
+                <a href="/projects">View all projects</a> ·
+                <a href="/blogs">Read the blog</a>
+              </p>
             </section>
 
             <section id="boot-faq">
               <h2>Frequently Asked Questions</h2>
               <h3>Who is Sahil Gupta?</h3>
-              <p>A full-stack MERN developer from Orai, India, building scalable web apps with React, Node.js, Express and MongoDB, and a Programmer Analyst Trainee at Cognizant (Americas HPC).</p>
+              <p>
+                A full-stack MERN developer from Orai, India, building scalable
+                web apps with React, Node.js, Express and MongoDB, and a
+                Programmer Analyst Trainee at Cognizant (Americas HPC).
+              </p>
               <h3>What technologies does Sahil work with?</h3>
-              <p>The MERN stack (React, Node.js, Express, MongoDB) plus JavaScript, Java, REST APIs and SQL/PostgreSQL.</p>
+              <p>
+                The MERN stack (React, Node.js, Express, MongoDB) plus
+                JavaScript, Java, REST APIs and SQL/PostgreSQL.
+              </p>
               <h3>Is Sahil open to freelance work or collaborations?</h3>
-              <p>He works full-time at Cognizant and is open to freelance projects and collaborations.</p>
+              <p>
+                He works full-time at Cognizant and is open to freelance
+                projects and collaborations.
+              </p>
               <h3>How can I contact Sahil?</h3>
-              <p>Email <a href="mailto:guptasahil2175@gmail.com">guptasahil2175@gmail.com</a> or use the contact form on this site.</p>
+              <p>
+                Email
+                <a href="mailto:guptasahil2175@gmail.com"
+                  >guptasahil2175@gmail.com</a
+                >
+                or use the contact form on this site.
+              </p>
             </section>
 
             <section id="boot-contact">
               <h2>Contact</h2>
               <p>
-                Email: <a href="mailto:guptasahil2175@gmail.com">guptasahil2175@gmail.com</a><br />
+                Email:
+                <a href="mailto:guptasahil2175@gmail.com"
+                  >guptasahil2175@gmail.com</a
+                ><br />
                 Phone: <a href="tel:+919956564108">+91 9956564108</a><br />
                 Location: Orai, Uttar Pradesh, India<br />
-                <a href="https://github.com/Sahilgupta2175" rel="noopener">GitHub</a> ·
-                <a href="https://linkedin.com/in/sahilgupta2175" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/Sahilgupta2175" rel="noopener"
+                  >GitHub</a
+                >
+                ·
+                <a href="https://linkedin.com/in/sahilgupta2175" rel="noopener"
+                  >LinkedIn</a
+                >
               </p>
             </section>
           </main>
 
           <footer>
-            <p>© Sahil Gupta — Full Stack Developer based in Orai, Uttar Pradesh, India.</p>
+            <p>
+              © Sahil Gupta - Full Stack Developer based in Orai, Uttar Pradesh,
+              India.
+            </p>
           </footer>
 
           <p class="boot-loading">Loading the full interactive experience…</p>

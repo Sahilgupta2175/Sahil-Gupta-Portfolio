@@ -23,7 +23,10 @@
     <title>Sahil Gupta · Full-stack Developer</title>
     <script>
       // Apply the saved (or system) theme before first paint so there's no flash.
+      // The "js" class tells the CSS below that React is on its way, so the
+      // crawler-only fallback in #root is hidden instead of flashing on screen.
       (function () {
+        document.documentElement.classList.add("js");
         try {
           var t = localStorage.getItem("theme");
           if (t !== "light" && t !== "dark") {
@@ -126,9 +129,49 @@
     </script>
 
     <style>
-      /* Pre-render content shown in the raw HTML response and to JS-disabled
-         visitors / crawlers. React replaces #root on mount, so users with JS
-         see this only for a split second before the app boots. */
+      /* Static fallback content for crawlers, AI engines and visitors without
+         JavaScript. It used to be visible to everyone until the JS bundle had
+         downloaded (seconds on mobile data), so every visitor first saw a
+         plain text page. Browsers that run JS (html.js, set in <head>) now
+         hide it and show a pre-loader matching the app's loader instead;
+         React replaces both when it mounts. */
+      html {
+        background: #000000;
+      }
+      html[data-theme="light"] {
+        background: #f3f2ec;
+      }
+      .js .boot-screen {
+        display: none;
+      }
+      .boot-preloader {
+        display: none;
+      }
+      .js .boot-preloader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .boot-preloader-mark {
+        width: 220px;
+        font-family: "Bricolage Grotesque", "Arial Black", sans-serif;
+        font-weight: 800;
+        font-size: 96px;
+        line-height: 0.9;
+        letter-spacing: -0.05em;
+        color: #eeede6;
+      }
+      .boot-preloader-mark span {
+        color: #c8f169;
+      }
+      html[data-theme="light"] .boot-preloader-mark {
+        color: #0b0c09;
+      }
+      html[data-theme="light"] .boot-preloader-mark span {
+        color: #4f6128;
+      }
       .boot-screen {
         min-height: 100vh;
         margin: 0;
@@ -218,6 +261,10 @@
       ></iframe>
     </noscript>
     <div id="root">
+      <!-- Shown (to JS browsers only) until React mounts and replaces #root. -->
+      <div class="boot-preloader" aria-hidden="true">
+        <div class="boot-preloader-mark">SG<span>.</span></div>
+      </div>
       <!-- Static fallback for crawlers, AI engines and no-JS visitors.
            Replaced by the React app as soon as it mounts. -->
       <div class="boot-screen">
